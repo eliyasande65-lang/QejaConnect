@@ -85,42 +85,44 @@
     </table>
 
     <script>
-        function login(){
-        let pass = document.getElementById("pass").value;
+        let loggedIn = false;
 
-        // simple test password (change later)
-        if(pass === "admin123"){
-        document.getElementById("loginBox").style.display = "none";
-        document.getElementById("tenantTable").style.display = "table";
-        loadData();
-        } else {
-        alert("Wrong password");
-        }
+        function login(){
+            let pass = document.getElementById("pass").value;
+
+            if(pass === "admin123"){
+                loggedIn = true;
+                document.getElementById("loginBox").style.display = "none";
+                document.getElementById("tenantTable").style.display = "table";
+                loadData();
+            } else {
+                alert("Wrong password");
+            }
         }
 
         // Read data from URL (no localStorage used)
         function loadData(){
 
-        const params = new URLSearchParams(window.location.search);
+            const params = new URLSearchParams(window.location.search);
 
-        let name = params.get("name");
-        let email = params.get("email");
-        let phone = params.get("phone");
-        let location = params.get("location");
+            let name = params.get("name");
+            let email = params.get("email");
+            let phone = params.get("phone");
+            let location = params.get("location");
 
-        if(name || email || phone || location){
+            if(name && email){
 
-        let table = document.getElementById("tenantTable");
+                let table = document.getElementById("tenantTable");
 
-        let row = table.insertRow();
+                let row = table.insertRow();
 
-        row.innerHTML = `
-        <td>${name || ""}</td>
-        <td>${email || ""}</td>
-        <td>${phone || ""}</td>
-        <td>${location || ""}</td>
-        `;
-        }
+                row.innerHTML = `
+                    <td>${name}</td>
+                    <td>${email}</td>
+                    <td>${phone}</td>
+                    <td>${location}</td>
+                `;
+            }
         }
     </script>
 
