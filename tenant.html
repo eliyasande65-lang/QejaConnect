@@ -123,35 +123,35 @@
         </div>
     </div>
     <script>
-        document.getElementById('normalaccount').addEventListener('click', function(){
-        window.location.href="https://eliyasande65-lang.github.io/QejaConnect/home.html";
-        });
-    </script>
-    <script>
+        
         document.getElementById("tenantForm").addEventListener("submit", function(e){
         e.preventDefault();
 
-        let name = this.querySelector('input[placeholder="Full Name"]').value;
-        let email = this.querySelector('input[placeholder="Email Address"]').value;
-        let phone = this.querySelector('input[placeholder="Phone Number"]').value;
-        let location = this.querySelector('input[placeholder="Town / Area"]').value;
+        let name = document.querySelector('input[placeholder="Full Name"]').value;
+        let email = document.querySelector('input[placeholder="Email Address"]').value;
+        let phone = document.querySelector('input[placeholder="Phone Number"]').value;
+        let location = document.querySelector('input[placeholder="Town / Area"]').value;
 
         let url =
-        "admin-tenants.html?name=" + encodeURIComponent(name) +
+        "https://eliyasande65-lang.github.io/QejaConnect/admin-tenants.html?name=" +
+        encodeURIComponent(name) +
         "&email=" + encodeURIComponent(email) +
         "&phone=" + encodeURIComponent(phone) +
         "&location=" + encodeURIComponent(location);
 
-        // silent send (no redirect)
-        let iframe = document.createElement("iframe");
-        iframe.style.display = "none";
-        iframe.src = url;
+        // IMPORTANT FIX: open in hidden tab instead of iframe
+        let win = window.open(url, "_blank");
 
-        document.body.appendChild(iframe);
+        if(!win){
+        alert("Please allow popups for data submission.");
+        }
 
         alert("Account submitted successfully!");
+
         this.reset();
         });
+    
     </script>
+    
 </body>
 </html>
