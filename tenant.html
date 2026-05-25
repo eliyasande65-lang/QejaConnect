@@ -86,31 +86,19 @@
 
             <h1>Tenant Sign Up</h1>
 
-            <form id="tenantForm">
+            <form id="signupForm">
 
-                <input type="text" placeholder="Full Name" required>
+                <input type="text" name="fullname" placeholder="Full Name" required>
 
-                <input type="email" placeholder="Email Address" required>
+                <input type="email" name="email" placeholder="Email" required>
 
-                <input type="tel" placeholder="Phone Number" required>
+                <input type="password" name="password" placeholder="Password" required>
 
-                <select required>
-                    <option value="">Select Gender</option>
-                    <option>Male</option>
-                    <option>Female</option>
-                </select>
-
-                <input type="text" placeholder="County" required>
-
-                <input type="text" placeholder="Town / Area" required>
-
-                <input type="password" placeholder="Password" required>
-
-                <input type="password" placeholder="Confirm Password" required>
-
-                <button type="submit" id="normalaccount">Create Tenant Account</button>
+                <button type="submit">Sign Up</button>
 
             </form>
+
+            
 
         </div>
         <div class="foot">
@@ -123,35 +111,34 @@
         </div>
     </div>
     <script>
-        
-        document.getElementById("tenantForm").addEventListener("submit", function(e){
+        document.getElementById("signupForm")
+        .addEventListener("submit", async function(e) {
+
         e.preventDefault();
 
-        let name = document.querySelector('input[placeholder="Full Name"]').value;
-        let email = document.querySelector('input[placeholder="Email Address"]').value;
-        let phone = document.querySelector('input[placeholder="Phone Number"]').value;
-        let location = document.querySelector('input[placeholder="Town / Area"]').value;
+        const formData = {
+        fullname: this.fullname.value,
+        email: this.email.value,
+        password: this.password.value
+        };
 
-        let url =
-        "https://eliyasande65-lang.github.io/QejaConnect/admin-tenants.html?name=" +
-        encodeURIComponent(name) +
-        "&email=" + encodeURIComponent(email) +
-        "&phone=" + encodeURIComponent(phone) +
-        "&location=" + encodeURIComponent(location);
-
-        // IMPORTANT FIX: open in hidden tab instead of iframe
-        let win = window.open(url, "_blank");
-
-        if(!win){
-        alert("Please allow popups for data submission.");
-        }
-
-        alert("Account submitted successfully!");
-
-        this.reset();
+        const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
         });
-    
+
+        const data = await response.json();
+
+        alert(data.message);
+
+        // ✅ redirect to home after successful signup
+        if (response.ok) {
+        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/home.html";
+        }
+        });
     </script>
-    
 </body>
 </html>
