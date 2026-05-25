@@ -1,0 +1,557 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qeja Connect | Home</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+        }
+
+        
+
+        header {
+            width: 100%;
+            background: linear-gradient(45deg, indigo, darkviolet);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand {
+            color: white;
+        }
+
+            .brand h2 {
+                margin: 0;
+            }
+
+            .brand p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+        nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+                padding: 10px 15px;
+                border-radius: 8px;
+                transition: 0.3s;
+            }
+
+                nav a:hover {
+                    background: rgba(255,255,255,0.15);
+                }
+
+       
+
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            min-height: 350px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem,5vw,4rem);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+
+        
+
+        .search-section {
+            width: 100%;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+            gap: 15px;
+        }
+
+            .search-box input,
+            .search-box select {
+                padding: 14px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                font-size: 15px;
+            }
+
+            .search-box button {
+                border: none;
+                border-radius: 10px;
+                background: indigo;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+                .search-box button:hover {
+                    background: darkviolet;
+                }
+
+        
+
+        .properties {
+            padding: 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .section-title h2 {
+                color: indigo;
+                font-size: 2rem;
+            }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            gap: 25px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: 0.3s;
+        }
+
+            .property-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .property-card img {
+                width: 100%;
+                height: 230px;
+                object-fit: cover;
+            }
+
+        .property-info {
+            padding: 20px;
+        }
+
+            .property-info h3 {
+                margin-top: 0;
+                color: indigo;
+            }
+
+        .price {
+            color: darkviolet;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .location {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .features {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+            .features span {
+                background: #eee;
+                padding: 8px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+            }
+
+        .view-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: indigo;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            .view-btn:hover {
+                background: darkviolet;
+            }
+
+        
+
+        footer {
+            margin-top: 50px;
+            background: #1b1b1b;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+            gap: 30px;
+        }
+
+        footer h3 {
+            color: violet;
+        }
+
+        footer p {
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+        }
+
+        
+
+        @media(max-width:768px) {
+
+            header {
+                justify-content: center;
+                gap: 20px;
+            }
+
+            nav {
+                justify-content: center;
+            }
+
+            .hero {
+                min-height: 280px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+
+
+    <header>
+
+        <div class="logo-area">
+
+            <img src="logo.jpg" id="logo" alt="logo">
+
+            <div class="brand">
+                <h2>Qeja Connect</h2>
+                <p>Quality accommodation providence</p>
+            </div>
+
+        </div>
+
+        <nav>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+        </nav>
+
+    </header>
+
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>Find Trusted Housing Across Kenya</h1>
+
+            <p>
+                Discover verified rentals, hostels, apartments and affordable
+                accommodation posted directly by landlords and property owners.
+            </p>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="search-section">
+
+        <div class="search-box">
+
+            <input type="text" placeholder="Enter town or area">
+
+            <select>
+                <option>Property Type</option>
+                <option>Apartment</option>
+                <option>Bedsitter</option>
+                <option>Single Room</option>
+                <option>Hostel</option>
+            </select>
+
+            <select>
+                <option>Budget</option>
+                <option>Below Ksh 5,000</option>
+                <option>Ksh 5,000 - 10,000</option>
+                <option>Ksh 10,000 - 20,000</option>
+                <option>Above Ksh 20,000</option>
+            </select>
+
+            <button onclick="searchProperty()">Search Property</button>
+
+        </div>
+
+    </section>
+
+
+
+    <section class="properties">
+
+        <div class="section-title">
+            <h2>Available Properties</h2>
+        </div>
+
+        <div class="property-grid">
+
+
+
+            <div class="property-card">
+
+                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="property-info">
+
+                    <h3>Modern Bedsitter</h3>
+
+                    <div class="price">Ksh 7,500 / Month</div>
+
+                    <div class="location">
+                        Kahawa West, Nairobi
+                    </div>
+
+                    <p>
+                        Spacious bedsitter with WiFi, water included and secure compound.
+                    </p>
+
+                    <div class="features">
+                        <span>WiFi</span>
+                        <span>Parking</span>
+                        <span>Water Included</span>
+                    </div>
+
+                    <button class="view-btn">View Details</button>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="property-card">
+
+                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="property-info">
+
+                    <h3>Student Hostel</h3>
+
+                    <div class="price">Ksh 4,500 / Month</div>
+
+                    <div class="location">
+                        Juja, Kiambu County
+                    </div>
+
+                    <p>
+                        Affordable student rooms near universities with tight security.
+                    </p>
+
+                    <div class="features">
+                        <span>Electricity</span>
+                        <span>Security</span>
+                        <span>Water</span>
+                    </div>
+
+                    <button class="view-btn">View Details</button>
+
+                </div>
+
+            </div>
+
+
+
+            <div class="property-card">
+
+                <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop">
+
+                <div class="property-info">
+
+                    <h3>Executive Apartment</h3>
+
+                    <div class="price">Ksh 25,000 / Month</div>
+
+                    <div class="location">
+                        Kisumu CBD
+                    </div>
+
+                    <p>
+                        Two bedroom apartment with balcony, parking and 24/7 water supply.
+                    </p>
+
+                    <div class="features">
+                        <span>Balcony</span>
+                        <span>Parking</span>
+                        <span>Security</span>
+                    </div>
+
+                    <button class="view-btn">View Details</button>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+
+    <footer>
+
+        <div class="footer-content">
+
+            <div>
+
+                <h3>Qeja Connect</h3>
+
+                <p>
+                    Kenya's modern housing connection platform helping tenants
+                    and landlords connect safely and efficiently.
+                </p>
+
+            </div>
+
+            <div>
+
+                <h3>Contact</h3>
+
+                <p>Email: qejaconnect@outlook.com</p>
+                <p>Phone: +254714104737</p>
+                <p>Nairobi, Kenya</p>
+
+            </div>
+
+            <div>
+
+                <h3>Quick Links</h3>
+
+                <p>About Us</p>
+                <p>Privacy Policy</p>
+                <p>Terms and Conditions</p>
+
+            </div>
+
+        </div>
+
+        <div class="copyright">
+            © 2026 Qeja Connect Kenya Ltd. All Rights Reserved.
+        </div>
+
+    </footer>
+    <script>
+
+        function searchProperty() {
+
+        let location =
+        document.querySelector('input').value.toLowerCase();
+
+        let cards =
+        document.querySelectorAll('.property-card');
+
+        cards.forEach(card => {
+
+        let text =
+        card.innerText.toLowerCase();
+
+        if(text.includes(location)) {
+
+        card.style.display = "block";
+
+        } else {
+
+        card.style.display = "none";
+
+        }
+
+        });
+
+        }
+
+    </script>
+</body>
+</html>

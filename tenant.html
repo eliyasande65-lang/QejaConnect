@@ -1,0 +1,131 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tenant Sign Up</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            margin-top: 100px;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, indigo, darkviolet);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            padding-top: 40px;
+            padding-bottom: 40px;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: indigo;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        h1 {
+            text-align: center;
+            color: purple;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, select {
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+        .foot {
+            margin-top: 30px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        button {
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: purple;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            button:hover {
+                background: darkviolet;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="container">
+
+            <h1>Tenant Sign Up</h1>
+
+            <form>
+
+                <input type="text" placeholder="Full Name" required>
+
+                <input type="email" placeholder="Email Address" required>
+
+                <input type="tel" placeholder="Phone Number" required>
+
+                <select required>
+                    <option value="">Select Gender</option>
+                    <option>Male</option>
+                    <option>Female</option>
+                </select>
+
+                <input type="text" placeholder="County" required>
+
+                <input type="text" placeholder="Town / Area" required>
+
+                <input type="password" placeholder="Password" required>
+
+                <input type="password" placeholder="Confirm Password" required>
+
+                <button type="submit" id="normalaccount">Create Tenant Account</button>
+
+            </form>
+
+        </div>
+        <div class="foot">
+            <h3>Qeja Connect Credits</h3><br />
+            <p>Developed by QejaConnect_Kenya ltd.</p><br />
+            <p>Company Email address: qejaconnect@outlook.com</p>
+            <p>Customer hotline: +254714 104 737</p>
+            <p>Customer Hotline2: +25471 203 443</p>
+            <p><em>Regulated by Communication Authority of Kenya</em></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('normalaccount').addEventListener('click', function(){
+            window.location.href="https://eliyasande65-lang.github.io/QejaConnect/home.html";
+        });
+    </script>
+</body>
+</html>

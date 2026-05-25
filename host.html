@@ -1,0 +1,151 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Host Sign Up</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, indigo, darkviolet);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .foot {
+            margin-top: 30px;
+            text-align: center;
+            color: #555;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .container {
+            width: 100%;
+            max-width: 650px;
+            background: indigo;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            color: purple;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        input, textarea, select {
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        textarea {
+            resize: none;
+            height: 100px;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: purple;
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            button:hover {
+                background: darkviolet;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="page">
+        <div class="container">
+
+            <h1>Host / Landlord Sign Up</h1>
+
+            <form>
+
+                <input type="text" placeholder="Full Name" required>
+
+                <input type="email" placeholder="Email Address" required>
+
+                <input type="tel" placeholder="Phone Number" required>
+
+                <input type="text" placeholder="National ID Number" required>
+
+                <input type="text" placeholder="KRA PIN" required>
+
+                <input type="text" placeholder="County" required>
+
+                <input type="text" placeholder="Town / Estate" required>
+
+                <input type="text" placeholder="Property Name" required>
+
+                <select required>
+                    <option value="">Property Type</option>
+                    <option>Apartment</option>
+                    <option>Bedsitter</option>
+                    <option>Hostel</option>
+                    <option>Single Room</option>
+                    <option>Office Space</option>
+                    <option>Other</option>
+                </select>
+
+                <input type="number" placeholder="Number of Units" required>
+
+                <textarea placeholder="Describe your property"></textarea>
+
+                <input type="file" required>
+
+                <input type="password" placeholder="Password" required>
+
+                <input type="password" placeholder="Confirm Password" required>
+
+                <button type="submit" id="createaccount">Create Host Account</button>
+
+            </form>
+
+        </div>
+        <div class="foot">
+            <h3>Qeja Connect Credits</h3><br />
+            <p>Developed by QejaConnect_Kenya ltd.</p><br />
+            <p>Company Email address: qejaconnect@outlook.com</p>
+            <p>Customer hotline: +254714 104 737</p>
+            <p>Customer Hotline2: +25471 203 443</p>
+            <p><em>Regulated by Communication Authority of Kenya</em></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('createaccount').addEventListener('click', function(){
+            window.location.href="https://eliyasande65-lang.github.io/QejaConnect/home.html";
+        });
+    </script>
+</body>
+</html>

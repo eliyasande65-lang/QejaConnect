@@ -1,0 +1,172 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact | Qeja Connect</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+        }
+
+        header {
+            background: linear-gradient(45deg, indigo, darkviolet);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            color: white;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+            nav a {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        .contact-section {
+            max-width: 1000px;
+            margin: auto;
+            padding: 50px 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            gap: 30px;
+        }
+
+        .contact-box,
+        .form-box {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: indigo;
+        }
+
+        input,
+        textarea {
+            width: 100%;
+            padding: 14px;
+            margin-top: 15px;
+            border-radius: 10px;
+            border: 1px solid #ccc;
+            font-size: 15px;
+        }
+
+        textarea {
+            resize: none;
+            height: 120px;
+        }
+
+        button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            background: indigo;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 30px;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+
+        <div class="logo-area">
+            <img src="logo.jpg" id="logo">
+            <h2>Qeja Connect</h2>
+        </div>
+
+        <nav>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+        </nav>
+
+    </header>
+
+    <section class="contact-section">
+
+        <div class="contact-box">
+
+            <h1>Contact Us</h1>
+
+            <p>Email: qejaconnect@outlook.com</p>
+            <p>Phone: +254714104737</p>
+            <p>Alternative: +25471203443</p>
+            <p>Nairobi, Kenya</p>
+
+            <p>
+                Reach out to Qeja Connect support for complaints,
+                inquiries, partnership requests or technical support.
+            </p>
+
+        </div>
+
+        <div class="form-box">
+
+            <h1>Send Message</h1>
+
+            <form>
+
+                <input type="text" placeholder="Your Full Name" required>
+
+                <input type="email" placeholder="Your Email Address" required>
+
+                <textarea placeholder="Type your message"></textarea>
+
+                <button type="submit">Send Message</button>
+
+            </form>
+
+        </div>
+
+    </section>
+
+    <footer>
+        <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
+    </footer>
+
+</body>
+</html>
