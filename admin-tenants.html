@@ -86,6 +86,7 @@
 
     <script>
         let loggedIn = false;
+        let tenants = [];
 
         function login(){
             let pass = document.getElementById("pass").value;
@@ -100,7 +101,6 @@
             }
         }
 
-        // Read data from URL (no localStorage used)
         function loadData(){
 
             const params = new URLSearchParams(window.location.search);
@@ -110,19 +110,40 @@
             let phone = params.get("phone");
             let location = params.get("location");
 
+            // prevent empty reload rows
             if(name && email){
 
-                let table = document.getElementById("tenantTable");
+                // store in memory
+                tenants.push({name, email, phone, location});
 
+                renderTable();
+            }
+        }
+
+        function renderTable(){
+
+            let table = document.getElementById("tenantTable");
+
+            // remove old rows except header
+            table.innerHTML = `
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                </tr>
+            `;
+
+            tenants.forEach(t => {
                 let row = table.insertRow();
 
                 row.innerHTML = `
-                    <td>${name}</td>
-                    <td>${email}</td>
-                    <td>${phone}</td>
-                    <td>${location}</td>
+                    <td>${t.name}</td>
+                    <td>${t.email}</td>
+                    <td>${t.phone}</td>
+                    <td>${t.location}</td>
                 `;
-            }
+            });
         }
     </script>
 
