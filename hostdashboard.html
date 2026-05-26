@@ -1,0 +1,225 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Landlord Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial;
+            margin: 0;
+            background: #f4f4f4;
+        }
+        /* SIDE MENU */
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: #1b1b1b;
+            z-index: 9999;
+            transition: 0.3s;
+            padding-top: 80px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+
+            .side-menu a {
+                display: block;
+                color: white;
+                text-decoration: none;
+                padding: 18px 25px;
+                border-bottom: 1px solid #333;
+                transition: 0.3s;
+                font-size: 16px;
+            }
+
+                .side-menu a:hover {
+                    background: indigo;
+                }
+
+            .side-menu.active {
+                left: 0;
+            }
+
+        /* MENU BUTTON */
+
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: indigo;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10000;
+            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 9998;
+        }
+
+            .overlay.active {
+                display: block;
+            }
+        header {
+            background: linear-gradient(45deg, indigo, darkviolet);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .dashboard {
+            max-width: 1100px;
+            margin: 30px auto;
+            padding: 20px;
+        }
+
+        .booking-card {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+            .booking-card h3 {
+                color: indigo;
+                margin-top: 0;
+            }
+
+            .booking-card p {
+                line-height: 1.8;
+            }
+
+        .empty {
+            text-align: center;
+            color: #777;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <h1>Landlord Dashboard</h1>
+    </header>
+
+    <button class="menu-btn"
+            onclick="toggleMenu()">
+        ☰
+    </button>
+
+
+    <div class="overlay"
+         id="overlay"
+         onclick="closeMenu()"></div>
+
+
+    <div class="side-menu"
+         id="sideMenu">
+
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+
+    </div>
+    <div class="dashboard" id="dashboard"></div>
+
+    <script>
+
+        let bookings =
+        JSON.parse(localStorage.getItem("bookings")) || [];
+
+        let dashboard =
+        document.getElementById("dashboard");
+
+
+        if(bookings.length === 0){
+
+        dashboard.innerHTML = `
+        <div class="empty">
+        <h2>No booking requests yet</h2>
+        </div>
+        `;
+
+        }else{
+
+        bookings.reverse().forEach(booking => {
+
+        dashboard.innerHTML += `
+
+        <div class="booking-card">
+
+        <h3>${booking.property}</h3>
+
+        <p>
+        <strong>Name:</strong>
+        ${booking.fullname}
+        </p>
+
+        <p>
+        <strong>Email:</strong>
+        ${booking.email}
+        </p>
+
+        <p>
+        <strong>Phone:</strong>
+        ${booking.phone}
+        </p>
+
+        <p>
+        <strong>Message:</strong>
+        ${booking.message}
+        </p>
+
+        </div>
+
+        `;
+
+        });
+
+        }
+
+    </script>
+    <script>
+
+        function toggleMenu(){
+
+        document.getElementById(
+        "sideMenu").classList.toggle("active");
+
+        document.getElementById(
+        "overlay").classList.toggle("active");
+
+        }
+
+
+        function closeMenu(){
+
+        document.getElementById(
+        "sideMenu").classList.remove("active");
+
+        document.getElementById(
+        "overlay").classList.remove("active");
+
+        }
+    </script>
+</body>
+</html>
