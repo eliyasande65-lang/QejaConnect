@@ -154,9 +154,10 @@
 
                 <input type="email" placeholder="Your Email Address" required>
 
-                <textarea placeholder="Type your message"></textarea>
+                <input type="text" id="messageBox" placeholder="Type message">
 
-                <button type="submit">Send Message</button>
+                <button onclick="sendMessage()">Send Message</button>
+
 
             </form>
 
@@ -167,6 +168,47 @@
     <footer>
         <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
     </footer>
+    <script>
+        let token = null;
 
+        // LOGIN
+        async function login(email, password) {
+
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        token = data.token;
+
+        // store ONLY token (safe)
+        localStorage.setItem("token", token);
+
+        alert("Login successful");
+        }
+
+        // SEND MESSAGE
+        async function sendMessage() {
+
+        const message = document.getElementById("messageBox").value;
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/send-message", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`
+        },
+        body: JSON.stringify({ message })
+        });
+
+        const data = await res.json();
+        alert(data.message);
+        }
+    </script>
 </body>
 </html>
