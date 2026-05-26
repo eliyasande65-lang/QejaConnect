@@ -98,7 +98,7 @@
 
                 <input type="password" name="password" placeholder="Password" required>
 
-                <button type="submit">Sign Up</button>
+                <button type="submit">Login</button>
                 <p>No account? <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Sign up</a></p>
 
             </form>
@@ -116,34 +116,78 @@
         </div>
     </div>
     <script>
-        document.getElementById("signupForm")
+
+        document.getElementById("loginForm")
         .addEventListener("submit", async function(e) {
 
         e.preventDefault();
 
         const formData = {
-        fullname: this.fullname.value,
+
         email: this.email.value,
+
         password: this.password.value
+
         };
 
-        const response = await fetch("https://qeja-backend-azkf.onrender.com/signup", {
+
+        try {
+
+        const response = await fetch(
+        "https://qeja-backend-azkf.onrender.com/login",
+        {
+
         method: "POST",
+
         headers: {
         "Content-Type": "application/json"
         },
+
         body: JSON.stringify(formData)
+
         });
+
 
         const data = await response.json();
 
-        alert(data.message);
 
-        // ✅ redirect to home after successful signup
-        if (response.ok) {
-        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/home.html";
+        // LOGIN SUCCESS
+
+        if(response.ok){
+
+        alert("Login successful");
+
+        // optional local storage
+        localStorage.setItem(
+        "loggedUser",
+        JSON.stringify(data.user)
+        );
+
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/home.html";
+
         }
+
+        // WRONG PASSWORD / EMAIL
+
+        else{
+
+        alert(data.message || "Invalid email or password");
+
+        }
+
+        }
+
+        catch(error){
+
+        console.log(error);
+
+        alert("Server error. Please try again later.");
+
+        }
+
         });
+
     </script>
 </body>
 </html>
