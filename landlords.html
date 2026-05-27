@@ -132,37 +132,64 @@
         <p>Meet trusted property owners and accommodation providers.</p>
     </section>
 
-    <section class="landlord-grid">
+    <section class="landlord-grid" id="landlordGrid">
 
-        <div class="profile">
-            <img src="https://web.facebook.com/photo.php?fbid=122129397483027109&set=pb.61580813273199.-2207520000&type=3">
-            <h3>Elias Sande</h3>
-            <p class="verified">✔ Verified Host</p>
-            <p>15 active properties in Nairobi and Kiambu.</p>
-            <button>View Profile</button>
-        </div>
-
-        <div class="profile">
-            <img src="https://web.facebook.com/photo.php?fbid=122126021103027109&set=pb.61580813273199.-2207520000&type=3">
-            <h3>Sarah Achieng</h3>
-            <p class="verified">✔ Verified Host</p>
-            <p>Affordable student accommodation provider in Juja.</p>
-            <button>View Profile</button>
-        </div>
-
-        <div class="profile">
-            <img src="https://web.facebook.com/photo.php?fbid=122121560817027109&set=pb.61580813273199.-2207520000&type=3">
-            <h3>David Kiptoo</h3>
-            <p class="verified">✔ Verified Host</p>
-            <p>Executive apartments and modern rental units.</p>
-            <button>View Profile</button>
-        </div>
 
     </section>
 
     <footer>
         <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
     </footer>
+    <script>
+        function viewLandlord(id) {
+            window.location.href = `landlord-profile.html?id=${id}`;
+        }
+    </script>
+    <script>
+        async function loadLandlords() {
 
+            try {
+                const res = await fetch("https://qeja-backend-azkf.onrender.com/landlords");
+                const data = await res.json();
+
+                const grid = document.getElementById("landlordGrid");
+
+                grid.innerHTML = "";
+
+                data.landlords.forEach(landlord => {
+
+                    grid.innerHTML += `
+                        <div class="profile">
+
+                            <img src="https://eliyasande65-lang.github.io/QejaConnect/default-user.png">
+
+                            <h3>${landlord.fullname}</h3>
+
+                            <p class="verified">✔ Verified Host</p>
+
+                            <p>
+                                ${landlord.property_name || "No property listed yet"}
+                            </p>
+
+                            <small>
+                                ${landlord.town}, ${landlord.county}
+                            </small>
+
+                            <button onclick="viewLandlord(${landlord.id})">
+                                View Profile
+                            </button>
+
+                        </div>
+                    `;
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load landlords");
+            }
+        }
+
+        loadLandlords();
+    </script>
 </body>
 </html>
