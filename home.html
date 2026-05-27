@@ -7,818 +7,191 @@
 
     <style>
 
-        * {
-            box-sizing: border-box;
-        }
-
-        body {
-            margin: 0;
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            color: #222;
-        }
-
-        
-
-        header {
-            width: 100%;
-            background: linear-gradient(45deg, indigo, darkviolet);
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
-        }
-
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        #logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-            object-fit: cover;
-        }
-
-        .brand {
-            color: white;
-        }
-
-            .brand h2 {
-                margin: 0;
-            }
-
-            .brand p {
-                margin: 0;
-                font-size: 14px;
-                opacity: 0.9;
-            }
-
-        nav {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-            nav a {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-                padding: 10px 15px;
-                border-radius: 8px;
-                transition: 0.3s;
-            }
-
-                nav a:hover {
-                    background: rgba(255,255,255,0.15);
+                /* =========================
+           THEME SYSTEM
+        ========================= */
+                :root {
+                    --bg: #f4f4f4;
+                    --text: #222;
+                    --card: #ffffff;
+                    --muted: #555;
+                    --shadow: rgba(0,0,0,0.1);
                 }
 
-       
-
-        .hero {
-            background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop');
-            background-size: cover;
-            background-position: center;
-            min-height: 350px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            color: white;
-            padding: 20px;
-        }
-
-        .hero-content {
-            max-width: 800px;
-        }
-
-        .hero h1 {
-            font-size: clamp(2rem,5vw,4rem);
-            margin-bottom: 10px;
-        }
-
-        .hero p {
-            font-size: 1.2rem;
-            line-height: 1.7;
-        }
-
-        
-
-        .search-section {
-            width: 100%;
-            padding: 30px 20px;
-            display: flex;
-            justify-content: center;
-        }
-
-        .search-box {
-            width: 100%;
-            max-width: 1100px;
-            background: white;
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
-            gap: 15px;
-        }
-
-            .search-box input,
-            .search-box select {
-                padding: 14px;
-                border-radius: 10px;
-                border: 1px solid #ccc;
-                font-size: 15px;
-            }
-
-            .search-box button {
-                border: none;
-                border-radius: 10px;
-                background: indigo;
-                height:45px;
-                color: white;
-                font-weight: bold;
-                cursor: pointer;
-                font-size: 15px;
-            }
-
-                .search-box button:hover {
-                    background: darkviolet;
+                body.dark {
+                    --bg: #0f0f0f;
+                    --text: #f1f1f1;
+                    --card: #1c1c1c;
+                    --muted: #bbbbbb;
+                    --shadow: rgba(0,0,0,0.5);
                 }
 
-        
+                /* ========================= */
 
-        .properties {
-            padding: 20px;
-        }
+                * {
+                    box-sizing: border-box;
+                }
 
-        .section-title {
-            text-align: center;
-            margin-bottom: 30px;
-        }
+                body {
+                    margin: 0;
+                    font-family: Arial, sans-serif;
+                    background: var(--bg);
+                    color: var(--text);
+                }
 
-            .section-title h2 {
-                color: indigo;
-                font-size: 2rem;
-            }
+                /* HEADER */
+                header {
+                    width: 100%;
+                    background: linear-gradient(45deg, indigo, darkviolet);
+                    padding: 15px 30px;
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    position: sticky;
+                    top: 0;
+                    z-index: 1000;
+                }
 
-        .property-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
-            gap: 25px;
-        }
+                /* NAV (UNCHANGED) */
+                nav {
+                    display: flex;
+                    gap: 15px;
+                    flex-wrap: wrap;
+                }
 
-        .property-card {
-            background: white;
-            border-radius: 15px;
-            overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            transition: 0.3s;
-        }
+                    nav a {
+                        color: white;
+                        text-decoration: none;
+                        font-weight: bold;
+                        padding: 10px 15px;
+                        border-radius: 8px;
+                    }
 
-            .property-card:hover {
-                transform: translateY(-5px);
-            }
+                        nav a:hover {
+                            background: rgba(255,255,255,0.15);
+                        }
 
-            .property-card img {
-                width: 100%;
-                height: 230px;
-                object-fit: cover;
-            }
+                /* CARDS */
+                .property-card {
+                    background: var(--card);
+                    box-shadow: 0 0 10px var(--shadow);
+                }
 
-        .property-info {
-            padding: 20px;
-        }
+                /* POPUP */
+                .popup-container {
+                    position: fixed;
+                    inset: 0;
+                    background: rgba(0,0,0,0.75);
+                    display: none;
+                    justify-content: center;
+                    align-items: center;
+                    z-index: 5000;
+                }
 
-            .property-info h3 {
-                margin-top: 0;
-                color: indigo;
-            }
-
-        .price {
-            color: darkviolet;
-            font-size: 1.3rem;
-            font-weight: bold;
-            margin: 10px 0;
-        }
-
-        .location {
-            color: #555;
-            margin-bottom: 10px;
-        }
-
-        .features {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-top: 10px;
-        }
-
-            .features span {
-                background: #eee;
-                padding: 8px 12px;
-                border-radius: 20px;
-                font-size: 13px;
-            }
-
-        .view-btn {
-            width: 100%;
-            margin-top: 15px;
-            padding: 12px;
-            border: none;
-            border-radius: 10px;
-            background: indigo;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-            .view-btn:hover {
-                background: darkviolet;
-            }
-
-        
-
-        footer {
-            margin-top: 50px;
-            background: #1b1b1b;
-            color: white;
-            padding: 40px 20px;
-        }
-
-        .footer-content {
-            max-width: 1200px;
-            margin: auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
-            gap: 30px;
-        }
-
-        footer h3 {
-            color: violet;
-        }
-
-        footer p {
-            line-height: 1.8;
-            color: #ccc;
-        }
-
-        .copyright {
-            text-align: center;
-            margin-top: 30px;
-            color: #aaa;
-            border-top: 1px solid #444;
-            padding-top: 20px;
-        }
-
-        /* POPUP */
-
-        .popup-container {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.75);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 5000;
-            padding: 20px;
-        }
-
-        .popup-content {
-            background: white;
-            width: 100%;
-            max-width: 430px;
-            border-radius: 18px;
-            overflow: hidden;
-            position: relative;
-            animation: popupShow 0.3s ease;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-
-            .popup-content img {
-                width: 100%;
-                height: 200px;
-                object-fit: cover;
-            }
-
-        .close-popup {
-            position: absolute;
-            top: 10px;
-            right: 18px;
-            font-size: 35px;
-            color: yellow;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .popup-content h2 {
-            padding: 20px 20px 5px;
-            margin: 0;
-            color: indigo;
-        }
-
-        .popup-price {
-            padding: 0 20px;
-            color: darkviolet;
-            font-size: 1.4rem;
-            font-weight: bold;
-        }
-
-        .popup-location {
-            padding: 5px 20px;
-            color: #555;
-        }
-
-        #popup-description {
-            padding: 10px 20px;
-            line-height: 1.7;
-        }
-
-        .popup-features {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            padding: 0 20px 20px;
-        }
-
-            .popup-features span {
-                background: #eee;
-                padding: 8px 14px;
-                border-radius: 30px;
-                font-size: 13px;
-            }
-
-        .owner-box {
-            margin: 0 20px 20px;
-            background: #f4f4f4;
-            padding: 15px;
-            border-radius: 12px;
-        }
-
-            .owner-box h3 {
-                margin-top: 0;
-                color: indigo;
-            }
-
-        #interest-btn {
-            width: calc(100% - 40px);
-            margin: 0 20px 25px;
-            padding: 14px;
-            border: none;
-            border-radius: 12px;
-            background: linear-gradient(45deg, indigo, darkviolet);
-            color: white;
-            font-size: 16px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-            #interest-btn:hover {
-                opacity: 0.9;
-            }
-
-        @keyframes popupShow {
-
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
-        
-
-        @media(max-width:768px) {
-
-            header {
-                justify-content: center;
-                gap: 20px;
-            }
-
-            nav {
-                justify-content: center;
-            }
-
-            .hero {
-                min-height: 280px;
-            }
-        }
+                .popup-content {
+                    background: var(--card);
+                    color: var(--text);
+                    width: 100%;
+                    max-width: 430px;
+                    border-radius: 15px;
+                    overflow: hidden;
+                    position: relative;
+                }
     </style>
 </head>
+
 <body>
-
-
 
     <header>
 
         <div class="logo-area">
-
-            <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
-
+            <img src="logo.jpg" id="logo" style="width:60px;border-radius:12px;">
             <div class="brand">
-                <h2>Qeja Connect</h2>
-                <p>Quality accommodation providence</p>
+                <h2 style="color:white;">Qeja Connect</h2>
             </div>
-
         </div>
 
         <nav>
-
             <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/settings.html">Settings</a>
         </nav>
 
     </header>
 
-
-    <section class="hero">
-
-        <div class="hero-content">
-
-            <h1>Find Trusted Housing Across Kenya</h1>
-
-            <p>
-                Discover verified rentals, hostels, apartments and affordable
-                accommodation posted directly by landlords and property owners.
-            </p>
-
-        </div>
-
-    </section>
-
-
-
-    <section class="search-section">
-
-        <div class="search-box">
-
-            <input type="text" placeholder="Enter town or area">
-
-            <select>
-                <option>Property Type</option>
-                <option>Apartment</option>
-                <option>Bedsitter</option>
-                <option>Single Room</option>
-                <option>Hostel</option>
-            </select>
-
-            <select>
-                <option>Budget</option>
-                <option>Below Ksh 5,000</option>
-                <option>Ksh 5,000 - 10,000</option>
-                <option>Ksh 10,000 - 20,000</option>
-                <option>Above Ksh 20,000</option>
-            </select>
-
-            <button onclick="searchProperty()">Search Property</button>
-
-        </div>
-
-    </section>
-
-
-
-    <section class="properties">
-
-        <div class="section-title">
-            <h2>Available Properties</h2>
-        </div>
-
-        <div class="property-grid">
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Modern Bedsitter</h3>
-
-                    <div class="price">Ksh 7,500 / Month</div>
-
-                    <div class="location">
-                        Kahawa West, Nairobi
-                    </div>
-
-                    <p>
-                        Spacious bedsitter with WiFi, water included and secure compound.
-                    </p>
-
-                    <div class="features">
-                        <span>WiFi</span>
-                        <span>Parking</span>
-                        <span>Water Included</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-
-                            'Modern Bedsitter',
-                            'Ksh 7,500 / Month',
-                            'Kahawa West, Nairobi',
-                            'Spacious bedsitter with WiFi, water included and secure compound.',
-                            'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop',
-                            ['WiFi','Parking','Water Included'],
-                            'James Mwangi',
-                            'https://eliyasande65-lang.github.io/QejaConnect/landlord1.html'
-                            )">
-                        View Details
-
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Student Hostel</h3>
-
-                    <div class="price">Ksh 4,500 / Month</div>
-
-                    <div class="location">
-                        Juja, Kiambu County
-                    </div>
-
-                    <p>
-                        Affordable student rooms near universities with tight security.
-                    </p>
-
-                    <div class="features">
-                        <span>Electricity</span>
-                        <span>Security</span>
-                        <span>Water</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-                                'Student Hostel',
-                                'Ksh 4,500 / Month',
-                                'Juja, Kiambu County',
-                                'Affordable student rooms near universities with tight security.',
-                                'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop',
-                                ['Electricity','Security','Water'],
-                                'Mary Wanjiku',
-                                'https://eliyasande65-lang.github.io/QejaConnect/landlord2.html'
-                                )">
-                        View Details
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Executive Apartment</h3>
-
-                    <div class="price">Ksh 25,000 / Month</div>
-
-                    <div class="location">
-                        Kisumu CBD
-                    </div>
-
-                    <p>
-                        Two bedroom apartment with balcony, parking and 24/7 water supply.
-                    </p>
-
-                    <div class="features">
-                        <span>Balcony</span>
-                        <span>Parking</span>
-                        <span>Security</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-                            'Executive Apartment',
-                            'Ksh 25,000 / Month',
-                            'Kisumu CBD',
-                            'Two bedroom apartment with balcony, parking and 24/7 water supply.',
-                            'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop',
-                            ['Balcony','Parking','Security'],
-                            'Kevin Otieno',
-                            'https://eliyasande65-lang.github.io/QejaConnect/landlord3.html'
-                            )">
-                        View Details
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </section>
-
-
-
-    <footer>
-
-        <div class="footer-content">
-
-            <div>
-
-                <h3>Qeja Connect</h3>
-
-                <p>
-                    Kenya's modern housing connection platform helping tenants
-                    and landlords connect safely and efficiently.
-                </p>
-
-            </div>
-
-            <div>
-
-                <h3>Contact</h3>
-
-                <p>Email: qejaconnect@outlook.com</p>
-                <p>Phone: +254714104737</p>
-                <p>Nairobi, Kenya</p>
-
-            </div>
-
-            <div>
-
-                <h3>Quick Links</h3>
-
-                <p>About Us</p>
-                <p>Privacy Policy</p>
-                <p>Terms and Conditions</p>
-
-            </div>
-
-        </div>
-
-        <div class="copyright">
-            © 2026 Qeja Connect Kenya Ltd. All Rights Reserved.
-        </div>
-
-
-
-
-    </footer>
     <div id="popup" class="popup-container">
 
         <div class="popup-content">
 
-            <span class="close-popup" onclick="closePopup()">&times;</span>
+            <span onclick="closePopup()" style="cursor:pointer;position:absolute;right:15px;top:10px;font-size:30px;">&times;</span>
 
-            <img id="popup-image">
+            <img id="popup-image" style="width:100%;height:200px;object-fit:cover;">
 
             <h2 id="popup-title"></h2>
-
-            <div class="popup-price" id="popup-price"></div>
-
-            <div class="popup-location" id="popup-location"></div>
-
+            <div id="popup-price"></div>
+            <div id="popup-location"></div>
             <p id="popup-description"></p>
 
-            <div class="popup-features" id="popup-features"></div>
+            <div id="popup-features"></div>
 
-            <div class="owner-box">
-
-                <h3>Property Owner</h3>
-
+            <div style="padding:15px;">
+                <strong>Owner:</strong>
                 <p id="popup-owner"></p>
-
             </div>
-
-            <button id="interest-btn">
-                Interested
-            </button>
 
         </div>
 
     </div>
+
     <script>
 
-        function searchProperty() {
-
-        let location =
-        document.querySelector('input').value.toLowerCase();
-
-        let cards =
-        document.querySelectorAll('.property-card');
-
-        cards.forEach(card => {
-
-        let text =
-        card.innerText.toLowerCase();
-
-        if(text.includes(location)) {
-
-        card.style.display = "block";
-
-        } else {
-
-        card.style.display = "none";
-
+        /* =========================
+        THEME LOAD
+        ========================= */
+        window.onload = function () {
+        if (localStorage.getItem("theme") === "dark") {
+        document.body.classList.add("dark");
         }
-
-        });
-
-        }
-
-
-
-        function openPopup(
-        title,
-        price,
-        location,
-        description,
-        image,
-        features,
-        owner,
-        profileLink
-        ) {
-
-        document.getElementById("popup-title").innerText = title;
-
-        document.getElementById("popup-price").innerText = price;
-
-        document.getElementById("popup-location").innerText = location;
-
-        document.getElementById("popup-description").innerText = description;
-
-        document.getElementById("popup-image").src = image;
-
-        document.getElementById("popup-owner").innerText = owner;
-
-
-        let featuresHTML = "";
-
-        features.forEach(feature => {
-
-        featuresHTML += `<span>${feature}</span>`;
-
-        });
-
-        document.getElementById("popup-features").innerHTML = featuresHTML;
-
-
-        document.getElementById("interest-btn").onclick = function() {
-
-        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/properties.html";
-
         };
 
+        /* =========================
+        POPUP FUNCTIONS
+        ========================= */
+        function openPopup(title, price, location, desc, image, features, owner) {
+
+        document.getElementById("popup-title").innerText = title;
+        document.getElementById("popup-price").innerText = price;
+        document.getElementById("popup-location").innerText = location;
+        document.getElementById("popup-description").innerText = desc;
+        document.getElementById("popup-image").src = image;
+        document.getElementById("popup-owner").innerText = owner;
+
+        let html = "";
+        features.forEach(f => {
+        html += `<span style="margin:5px;padding:5px;background:#eee;border-radius:10px;">${f}</span>`;
+        });
+
+        document.getElementById("popup-features").innerHTML = html;
 
         document.getElementById("popup").style.display = "flex";
-
         }
-
-
 
         function closePopup() {
-
         document.getElementById("popup").style.display = "none";
-
         }
 
-
-
-        window.onclick = function(e) {
-
-        let popup =
-        document.getElementById("popup");
-
-        if(e.target === popup) {
-
-        popup.style.display = "none";
-
+        window.onclick = function (e) {
+        if (e.target.id === "popup") {
+        closePopup();
         }
-
-        }
+        };
 
     </script>
+
 </body>
 </html>
