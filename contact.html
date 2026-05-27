@@ -99,6 +99,10 @@
             cursor: pointer;
         }
 
+            button:hover {
+                background: darkviolet;
+            }
+
         footer {
             background: #1a1a1a;
             color: white;
@@ -148,16 +152,25 @@
 
             <h1>Send Message</h1>
 
-            <form>
+            <form id="messageForm">
 
-                <input type="text" placeholder="Your Full Name" required>
+                <input type="email"
+                       id="email"
+                       placeholder="Your Email Address"
+                       required>
 
-                <input type="email" placeholder="Your Email Address" required>
+                <input type="password"
+                       id="password"
+                       placeholder="Your Password"
+                       required>
 
-                <input type="text" id="messageBox" placeholder="Type message">
+                <textarea id="messageBox"
+                          placeholder="Type your message here..."
+                          required></textarea>
 
-                <button onclick="sendMessage()">Send Message</button>
-
+                <button type="button" onclick="sendMessage()">
+                    Send Message
+                </button>
 
             </form>
 
@@ -168,47 +181,110 @@
     <footer>
         <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
     </footer>
-    <script>
-        let token = null;
 
-        // LOGIN
+    <script>
+
+        // =========================
+        // LOGIN + GET TOKEN
+        // =========================
         async function login(email, password) {
 
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/login", {
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/login",
+        {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password })
-        });
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+        email,
+        password
+        })
+        }
+        );
 
         const data = await res.json();
 
-        token = data.token;
+        if (data.token) {
 
-        // store ONLY token (safe)
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", data.token);
 
-        alert("Login successful");
+        return true;
+
+        } else {
+
+        alert(data.message || "Login failed");
+
+        return false;
+        }
         }
 
+        // =========================
         // SEND MESSAGE
+        // =========================
         async function sendMessage() {
 
-        const message = document.getElementById("messageBox").value;
+        const email =
+        document.getElementById("email").value;
+
+        const password =
+        document.getElementById("password").value;
+
+        const message =
+        document.getElementById("messageBox").value;
+
+        if (!email || !password || !message) {
+
+        alert("Please fill all fields");
+
+        return;
+        }
+
+        // LOGIN FIRST
+        const loggedIn = await login(email, password);
+
+        if (!loggedIn) return;
 
         const token = localStorage.getItem("token");
 
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/send-message", {
+        try {
+
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/send-message",
+        {
         method: "POST",
         headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ message })
-        });
+        body: JSON.stringify({
+        message
+        })
+        }
+        );
 
         const data = await res.json();
-        alert(data.message);
+
+        if (data.success) {
+
+        alert("Message sent successfully ✅");
+
+        document.getElementById("messageBox").value = "";
+
+        } else {
+
+        alert(data.message || "Failed to send");
         }
+
+        } catch (err) {
+
+        console.log(err);
+
+        alert("Server error");
+        }
+        }
+
     </script>
+
 </body>
 </html>
