@@ -96,7 +96,7 @@
 
                 <input type="email" placeholder="Email Address" required>
 
-                <input type="tel" placeholder="Phone Number" required>
+                <input type="tel" placeholder="254712457632" required>
 
                 <input type="text" placeholder="National ID Number" required>
 
@@ -142,10 +142,71 @@
             <p><em>Regulated by Communication Authority of Kenya</em></p>
         </div>
     </div>
+    
     <script>
-        document.getElementById('createaccount').addEventListener('click', function(){
-            window.location.href="https://eliyasande65-lang.github.io/QejaConnect/home.html";
+        document.querySelector("form").addEventListener("submit", async function(e) {
+        e.preventDefault();
+
+        const formData = {
+        fullname: this.querySelector('input[placeholder="Full Name"]').value,
+        email: this.querySelector('input[type="email"]').value,
+        phone: this.querySelector('input[type="tel"]').value,
+        id: this.querySelector('input[placeholder="National ID Number"]').value,
+        kra: this.querySelector('input[placeholder="KRA PIN"]').value,
+        county: this.querySelectorAll('input')[5].value,
+        town: this.querySelectorAll('input')[6].value,
+        property: this.querySelectorAll('input')[7].value,
+        units: this.querySelector('input[type="number"]').value,
+        password: this.querySelectorAll('input[type="password"]')[0].value
+        };
+
+        try {
+        const res = await fetch("http://localhost:3000/register-landlord", {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json"
+        },
+        body: JSON.stringify(formData)
         });
+
+        const data = await res.json();
+
+        if (data.success) {
+        alert("STK Push sent to your phone. Complete payment to continue.");
+
+        // wait for payment confirmation
+        pollPaymentStatus(data.transactionId);
+        } else {
+        alert(data.message);
+        }
+
+        } catch (err) {
+        console.error(err);
+        alert("Something went wrong");
+        }
+        });
+
+        async function pollPaymentStatus(transactionId) {
+        let attempts = 0;
+
+        const check = setInterval(async () => {
+        attempts++;
+
+        const res = await fetch(`http://localhost:3000/payment-status/${transactionId}`);
+        const data = await res.json();
+
+        if (data.paid) {
+        clearInterval(check);
+        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+        }
+
+        if (attempts > 20) {
+        clearInterval(check);
+        alert("Payment timeout. Please try again.");
+        }
+
+        }, 3000);
+        }
     </script>
 </body>
 </html>
