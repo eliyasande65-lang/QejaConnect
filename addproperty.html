@@ -145,69 +145,85 @@
             console.error(err);
             alert("Upload failed");
         });
+
+    </script>
+    <script>
         const form =
         document.getElementById("propertyForm");
 
-        form.addEventListener("submit", function(e){
+        form.addEventListener("submit", async function(e){
 
-        e.preventDefault();
+            e.preventDefault();
 
-        const loggedUser =
-        JSON.parse(localStorage.getItem("loggedUser"));
+            const loggedUser =
+            JSON.parse(localStorage.getItem("loggedUser"));
 
-        if(!loggedUser){
+            if(!loggedUser){
 
-        alert("Login first");
-        return;
+                alert("Login first");
+                return;
+            }
 
-        }
+            const propertyData = {
 
-        const property = {
+                landlord_id: loggedUser.id,
 
-        id: Date.now(),
+                title:
+                document.getElementById("title").value,
 
-        landlordId: loggedUser.id,
+                price:
+                document.getElementById("price").value,
 
-        landlordName: loggedUser.fullname,
+                location:
+                document.getElementById("location").value,
 
-        title:
-        document.getElementById("title").value,
+                type:
+                document.getElementById("type").value,
 
-        price:
-        document.getElementById("price").value,
+                image_url:
+                document.getElementById("image").value,
 
-        location:
-        document.getElementById("location").value,
+                description:
+                document.getElementById("description").value
 
-        type:
-        document.getElementById("type").value,
+            };
 
-        image:
-        document.getElementById("image").value,
+            try {
 
-        description:
-        document.getElementById("description").value
+                const res = await fetch(
+                "https://qeja-backend-azkf.onrender.com/upload-property",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(propertyData)
+                });
 
-        };
+                const data = await res.json();
 
-        let properties =
-        JSON.parse(localStorage.getItem("properties")) || [];
+                if(data.success){
 
-        properties.push(property);
+                    alert("Property uploaded successfully");
 
-        localStorage.setItem(
-        "properties",
-        JSON.stringify(properties)
-        );
+                    window.location.href =
+                    "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
 
-        alert("Property uploaded successfully");
+                } else {
 
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+                    alert(data.message || "Upload failed");
+
+                }
+
+            } catch(err){
+
+                console.log(err);
+
+                alert("Server error");
+
+            }
 
         });
-
     </script>
-
 </body>
 </html>
