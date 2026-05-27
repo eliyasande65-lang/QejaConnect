@@ -1,0 +1,192 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Add Property</title>
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial;
+            background: #0f172a;
+            color: white;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 700px;
+            margin: auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        input,
+        textarea,
+        select {
+            padding: 14px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            background: #334155;
+            color: white;
+        }
+
+        textarea {
+            height: 120px;
+            resize: none;
+        }
+
+        button {
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(45deg,indigo,darkviolet);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+            button:hover {
+                opacity: 0.9;
+            }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <h1>Add Property</h1>
+
+        <form id="propertyForm">
+
+            <input type="text"
+                   id="title"
+                   placeholder="Property Title"
+                   required>
+
+            <input type="text"
+                   id="price"
+                   placeholder="Price e.g Ksh 7000/month"
+                   required>
+
+            <input type="text"
+                   id="location"
+                   placeholder="Location"
+                   required>
+
+            <select id="type">
+
+                <option>Apartment</option>
+                <option>Bedsitter</option>
+                <option>Hostel</option>
+                <option>Single Room</option>
+
+            </select>
+
+            <input type="text"
+                   id="image"
+                   placeholder="Paste Image URL"
+                   required>
+
+<textarea id="description"
+          placeholder="Describe property"
+          required></textarea>
+
+            <button type="submit">
+                Upload Property
+            </button>
+
+        </form>
+
+    </div>
+
+    <script>
+
+        const form =
+        document.getElementById("propertyForm");
+
+        form.addEventListener("submit", function(e){
+
+        e.preventDefault();
+
+        const loggedUser =
+        JSON.parse(localStorage.getItem("loggedUser"));
+
+        if(!loggedUser){
+
+        alert("Login first");
+        return;
+
+        }
+
+        const property = {
+
+        id: Date.now(),
+
+        landlordId: loggedUser.id,
+
+        landlordName: loggedUser.fullname,
+
+        title:
+        document.getElementById("title").value,
+
+        price:
+        document.getElementById("price").value,
+
+        location:
+        document.getElementById("location").value,
+
+        type:
+        document.getElementById("type").value,
+
+        image:
+        document.getElementById("image").value,
+
+        description:
+        document.getElementById("description").value
+
+        };
+
+        let properties =
+        JSON.parse(localStorage.getItem("properties")) || [];
+
+        properties.push(property);
+
+        localStorage.setItem(
+        "properties",
+        JSON.stringify(properties)
+        );
+
+        alert("Property uploaded successfully");
+
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+
+        });
+
+    </script>
+
+</body>
+</html>

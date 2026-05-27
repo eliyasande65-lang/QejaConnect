@@ -158,14 +158,14 @@
         alert("Login successful");
 
         // optional local storage
+        
+
+       localStorage.setItem("token", data.token);
+        localStorage.setItem("role", data.role);
         localStorage.setItem(
         "loggedUser",
         JSON.stringify(data.user)
         );
-
-       localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-
         if(data.role === "landlord"){
 
         window.location.href =
