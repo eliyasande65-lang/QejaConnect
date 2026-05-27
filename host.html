@@ -144,69 +144,45 @@
     </div>
     
     <script>
-        document.querySelector("form").addEventListener("submit", async function(e) {
-        e.preventDefault();
+        document.querySelector("form").addEventListener("submit", async function (e) {
+            e.preventDefault();
 
-        const formData = {
-        fullname: this.querySelector('input[placeholder="Full Name"]').value,
-        email: this.querySelector('input[type="email"]').value,
-        phone: this.querySelector('input[type="tel"]').value,
-        id: this.querySelector('input[placeholder="National ID Number"]').value,
-        kra: this.querySelector('input[placeholder="KRA PIN"]').value,
-        county: this.querySelectorAll('input')[5].value,
-        town: this.querySelectorAll('input')[6].value,
-        property: this.querySelectorAll('input')[7].value,
-        units: this.querySelector('input[type="number"]').value,
-        password: this.querySelectorAll('input[type="password"]')[0].value
-        };
+            const formData = {
+                fullname: this.querySelector('input[placeholder="Full Name"]').value,
+                email: this.querySelector('input[type="email"]').value,
+                phone: this.querySelector('input[type="tel"]').value,
+                id: this.querySelector('input[placeholder="National ID Number"]').value,
+                kra: this.querySelector('input[placeholder="KRA PIN"]').value,
+                county: this.querySelector('input[placeholder="County"]').value,
+                town: this.querySelector('input[placeholder="Town / Estate"]').value,
+                property: this.querySelector('input[placeholder="Property Name"]').value,
+                units: this.querySelector('input[type="number"]').value,
+                password: this.querySelectorAll('input[type="password"]')[0].value
+            };
 
-        try {
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
+            try {
+                const res = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    alert("Account created successfully");
+                    window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+                } else {
+                    alert(data.message || "Signup failed");
+                }
+
+            } catch (err) {
+                console.error(err);
+                alert("Network error. Try again later.");
+            }
         });
-
-        const data = await res.json();
-
-        if (data.success) {
-        alert("STK Push sent to your phone. Complete payment to continue.");
-
-        // wait for payment confirmation
-        pollPaymentStatus(data.transactionId);
-        } else {
-        alert(data.message);
-        }
-
-        } catch (err) {
-        console.error(err);
-        alert("Something went wrong");
-        }
-        });
-
-        async function pollPaymentStatus(transactionId) {
-        let attempts = 0;
-
-        const check = setInterval(async () => {
-        attempts++;
-
-        const res = await fetch(`http://localhost:3000/payment-status/${transactionId}`);
-        const data = await res.json();
-
-        if (data.paid) {
-        clearInterval(check);
-        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-        }
-
-        if (attempts > 20) {
-        clearInterval(check);
-        alert("Payment timeout. Please try again.");
-        }
-
-        }, 3000);
-        }
     </script>
 </body>
 </html>
