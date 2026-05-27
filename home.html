@@ -382,7 +382,22 @@
             color: white;
             padding: 40px 20px;
         }
+        .view-btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: indigo;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            margin-top: 15px;
+            font-size: 15px;
+        }
 
+            .view-btn:hover {
+                background: darkviolet;
+            }
         .footer-content {
             max-width: 1200px;
             margin: auto;
@@ -777,32 +792,31 @@
         };
     </script>
     <script>
-        function openPopup(title, price, location, description, image) {
+        function openPopup(property) {
 
-        document.getElementById("popup-title").innerText = title;
-        document.getElementById("popup-price").innerText = price;
-        document.getElementById("popup-location").innerText = location;
-        document.getElementById("popup-description").innerText = description;
-        document.getElementById("popup-image").src = image;
+            document.getElementById("popup-image").src =
+            property.image_url;
 
-        document.getElementById("popup").style.display = "flex";
+            document.getElementById("popup-title").innerText =
+            property.title;
 
-        document.getElementById("interest-btn").onclick = function () {
-        alert("Interest sent to landlord 👍");
-        };
+            document.getElementById("popup-price").innerText =
+            property.price;
+
+            document.getElementById("popup-location").innerText =
+            property.location;
+
+            document.getElementById("popup-description").innerText =
+            property.description;
+
+            document.getElementById("popup").style.display = "flex";
+
+            document.getElementById("interest-btn")
+            .setAttribute(
+                "onclick",
+                `interested(${property.id})`
+            );
         }
-
-        function closePopup() {
-        document.getElementById("popup").style.display = "none";
-        }
-
-        // click outside popup closes it
-        window.onclick = function (e) {
-        const popup = document.getElementById("popup");
-        if (e.target === popup) {
-        popup.style.display = "none";
-        }
-        };
     </script>
     <script>
         fetch("https://qeja-backend-azkf.onrender.com/send-message", {

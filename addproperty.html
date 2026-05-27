@@ -225,5 +225,13 @@
 
         });
     </script>
+    <script>
+        if(!propertyData.image_url.startsWith("http")){
+
+            alert("Image URL must start with https://");
+
+            return;
+        }
+    </script>
 </body>
 </html>
