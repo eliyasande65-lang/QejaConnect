@@ -481,7 +481,7 @@
             <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboardt</a>
+            <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/settings.html">Settings</a>
             <button onclick="toggleTheme()"
                     style="
@@ -743,7 +743,7 @@
 
             <div class="popup-features" id="popup-features"></div>
 
-            <button id="interest-btn">Interested</button>
+            <button id="interest-btn" onclick="interested()">Interested</button>
 
         </div>
 
@@ -777,6 +777,64 @@
 
         }
 
+    </script>
+    <script>
+        let currentPropertyId = null;
+        async function interested(propertyId) {
+
+            const message = prompt("Send message to landlord:");
+
+            const token = localStorage.getItem("token");
+
+            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    property_id: propertyId,
+                    message
+                })
+            });
+
+            const data = await res.json();
+
+            alert(data.message);
+        }
+
+
+
+
+
+
+        async function interested() {
+
+            if (!currentPropertyId) {
+                alert("Property not selected");
+                return;
+            }
+
+            const message = prompt("Send message to landlord:");
+
+            const token = localStorage.getItem("token");
+
+            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
+                body: JSON.stringify({
+                    property_id: currentPropertyId,
+                    message
+                })
+            });
+
+            const data = await res.json();
+
+            alert(data.message);
+        }
     </script>
     <script>
         function toggleTheme() {
