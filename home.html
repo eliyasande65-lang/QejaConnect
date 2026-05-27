@@ -669,52 +669,70 @@
 
     </script>
     <script>
+        
         let currentProperty = null;
 
         function openPopup(property) {
 
-            currentProperty = property;
+        currentProperty = property;
 
-            document.getElementById("popup-title").innerText = property.title;
-            document.getElementById("popup-price").innerText = "Ksh " + property.price;
-            document.getElementById("popup-location").innerText = property.location;
-            document.getElementById("popup-description").innerText = property.description;
-            document.getElementById("popup-image").src = property.image_url;
+        document.getElementById("popup-image").src =
+        property.image_url;
 
-            document.getElementById("popup").style.display = "block";
+        document.getElementById("popup-title").innerText =
+        property.title || "No title";
+
+        document.getElementById("popup-price").innerText =
+        property.price || "No price";
+
+        document.getElementById("popup-location").innerText =
+        property.location || "No location";
+
+        document.getElementById("popup-description").innerText =
+        property.description || "No description";
+
+        document.getElementById("popup").style.display = "flex";
         }
 
+        function closePopup() {
+        document.getElementById("popup").style.display = "none";
+        }
 
-
-        //interested
         async function interested() {
 
-            if (!currentProperty) {
-                alert("No property selected");
-                return;
-            }
-
-            const message = prompt("Send message to landlord:");
-
-            const token = localStorage.getItem("token");
-
-            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({
-                    property_id: currentProperty.id,
-                    message
-                })
-            });
-
-            const data = await res.json();
-            alert(data.message);
+        if (!currentProperty) {
+        alert("No property selected");
+        return;
         }
-        
+
+        const message = prompt("Send message to landlord:");
+
+        if (!message) return;
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/send-message",
+        {
+        method: "POST",
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+        message:
+        `Interested in ${currentProperty.title}: ${message}`
+        })
+        });
+
+        const data = await res.json();
+
+        alert(data.message || "Message sent");
+        }
+
     </script>
+        
+    
     <script>
         async function loadProperties() {
 
@@ -791,48 +809,6 @@
         }
         };
     </script>
-    <script>
-        function openPopup(property) {
-
-            document.getElementById("popup-image").src =
-            property.image_url;
-
-            document.getElementById("popup-title").innerText =
-            property.title;
-
-            document.getElementById("popup-price").innerText =
-            property.price;
-
-            document.getElementById("popup-location").innerText =
-            property.location;
-
-            document.getElementById("popup-description").innerText =
-            property.description;
-
-            document.getElementById("popup").style.display = "flex";
-
-            document.getElementById("interest-btn")
-            .setAttribute(
-                "onclick",
-                `interested(${property.id})`
-            );
-        }
-    </script>
-    <script>
-        fetch("https://qeja-backend-azkf.onrender.com/send-message", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": "Bearer " + localStorage.getItem("token")
-            },
-            body: JSON.stringify({
-                message: `Interested in: ${propertyTitle}`
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert("Message sent to landlord");
-        });
-    </script>
+   
 </body>
 </html>
