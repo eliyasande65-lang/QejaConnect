@@ -123,7 +123,28 @@
     </div>
 
     <script>
-
+        fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                landlord_id: 1,
+                title,
+                price,
+                location,
+                description,
+                image_url
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Property uploaded");
+        })
+        .catch(err => {
+            console.error(err);
+            alert("Upload failed");
+        });
         const form =
         document.getElementById("propertyForm");
 

@@ -827,5 +827,21 @@
         }
         };
     </script>
+    <script>
+        fetch("https://qeja-backend-azkf.onrender.com/send-message", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": "Bearer " + localStorage.getItem("token")
+            },
+            body: JSON.stringify({
+                message: `Interested in: ${propertyTitle}`
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            alert("Message sent to landlord");
+        });
+    </script>
 </body>
 </html>
