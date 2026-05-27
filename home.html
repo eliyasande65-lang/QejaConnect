@@ -551,132 +551,7 @@
             <h2>Available Properties</h2>
         </div>
 
-        <div class="property-grid">
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Modern Bedsitter</h3>
-
-                    <div class="price">Ksh 7,500 / Month</div>
-
-                    <div class="location">
-                        Kahawa West, Nairobi
-                    </div>
-
-                    <p>
-                        Spacious bedsitter with WiFi, water included and secure compound.
-                    </p>
-
-                    <div class="features">
-                        <span>WiFi</span>
-                        <span>Parking</span>
-                        <span>Water Included</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-                                'Modern Bedsitter',
-                                'Ksh 7,500 / Month',
-                                'Kahawa West, Nairobi',
-                                'Spacious bedsitter with WiFi, water included and secure compound.',
-                                'https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?q=80&w=1200&auto=format&fit=crop'
-                                )">
-                        View Details
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Student Hostel</h3>
-
-                    <div class="price">Ksh 4,500 / Month</div>
-
-                    <div class="location">
-                        Juja, Kiambu County
-                    </div>
-
-                    <p>
-                        Affordable student rooms near universities with tight security.
-                    </p>
-
-                    <div class="features">
-                        <span>Electricity</span>
-                        <span>Security</span>
-                        <span>Water</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-                                'Student Hostel',
-                                'Ksh 4,500 / Month',
-                                'Juja, Kiambu County',
-                                'Affordable student rooms near universities with tight security.',
-                                'https://images.unsplash.com/photo-1494526585095-c41746248156?q=80&w=1200&auto=format&fit=crop'
-                                )">
-                        View Details
-                    </button>
-
-                </div>
-
-            </div>
-
-
-
-            <div class="property-card">
-
-                <img src="https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop">
-
-                <div class="property-info">
-
-                    <h3>Executive Apartment</h3>
-
-                    <div class="price">Ksh 25,000 / Month</div>
-
-                    <div class="location">
-                        Kisumu CBD
-                    </div>
-
-                    <p>
-                        Two bedroom apartment with balcony, parking and 24/7 water supply.
-                    </p>
-
-                    <div class="features">
-                        <span>Balcony</span>
-                        <span>Parking</span>
-                        <span>Security</span>
-                    </div>
-
-                    <button class="view-btn"
-                            onclick="openPopup(
-                                'Executive Apartment',
-                                'Ksh 25,000 / Month',
-                                'Kisumu CBD',
-                                'Two bedroom apartment with balcony, parking and 24/7 water supply.',
-                                'https://images.unsplash.com/photo-1484154218962-a197022b5858?q=80&w=1200&auto=format&fit=crop'
-                                )">
-                        View Details
-                    </button>
-
-                </div>
-
-            </div>
-
-        </div>
+        <div class="property-grid" id="propertyGrid"></div>
 
     </section>
 
@@ -779,39 +654,28 @@
 
     </script>
     <script>
-        let currentPropertyId = null;
-        async function interested(propertyId) {
+        let currentProperty = null;
 
-            const message = prompt("Send message to landlord:");
+        function openPopup(property) {
 
-            const token = localStorage.getItem("token");
+            currentProperty = property;
 
-            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + token
-                },
-                body: JSON.stringify({
-                    property_id: propertyId,
-                    message
-                })
-            });
+            document.getElementById("popup-title").innerText = property.title;
+            document.getElementById("popup-price").innerText = "Ksh " + property.price;
+            document.getElementById("popup-location").innerText = property.location;
+            document.getElementById("popup-description").innerText = property.description;
+            document.getElementById("popup-image").src = property.image_url;
 
-            const data = await res.json();
-
-            alert(data.message);
+            document.getElementById("popup").style.display = "block";
         }
 
 
 
-
-
-
+        //interested
         async function interested() {
 
-            if (!currentPropertyId) {
-                alert("Property not selected");
+            if (!currentProperty) {
+                alert("No property selected");
                 return;
             }
 
@@ -826,15 +690,70 @@
                     "Authorization": "Bearer " + token
                 },
                 body: JSON.stringify({
-                    property_id: currentPropertyId,
+                    property_id: currentProperty.id,
                     message
                 })
             });
 
             const data = await res.json();
-
             alert(data.message);
         }
+        
+    </script>
+    <script>
+        async function loadProperties() {
+
+            try {
+                const res = await fetch("https://qeja-backend-azkf.onrender.com/properties");
+                const data = await res.json();
+
+                const grid = document.getElementById("propertyGrid");
+
+                grid.innerHTML = "";
+
+                data.properties.forEach(property => {
+
+                    grid.innerHTML += `
+                        <div class="property-card">
+
+                            <img src="${property.image_url}" />
+
+                            <div class="property-info">
+
+                                <h3>${property.title}</h3>
+
+                                <div class="price">
+                                    Ksh ${property.price}
+                                </div>
+
+                                <div class="location">
+                                    ${property.location}
+                                </div>
+
+                                <p>
+                                    ${property.description}
+                                </p>
+
+                                <small>
+                                    Posted by: ${property.landlord_name || "Unknown"}
+                                </small>
+
+                                <button onclick='openPopup(${JSON.stringify(property)})'>
+                                    View Details
+                                </button>
+
+                            </div>
+                        </div>
+                    `;
+                });
+
+            } catch (err) {
+                console.error(err);
+                alert("Failed to load properties");
+            }
+        }
+
+        loadProperties();
     </script>
     <script>
         function toggleTheme() {
