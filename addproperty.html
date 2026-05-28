@@ -2,13 +2,10 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, initial-scale=1.0">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Property</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -27,7 +24,6 @@
             background: #1e293b;
             padding: 30px;
             border-radius: 20px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.3);
         }
 
         h1 {
@@ -41,15 +37,13 @@
             gap: 15px;
         }
 
-        input,
-        textarea,
-        select {
+        input, textarea, select {
             padding: 14px;
             border: none;
             border-radius: 10px;
-            font-size: 16px;
             background: #334155;
             color: white;
+            font-size: 16px;
         }
 
         textarea {
@@ -57,11 +51,33 @@
             resize: none;
         }
 
+        /* ✅ INDIGO LABEL UPLOAD BUTTON */
+        .upload-label {
+            display: inline-block;
+            padding: 14px;
+            text-align: center;
+            border-radius: 10px;
+            background: indigo;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            .upload-label:hover {
+                background: darkviolet;
+            }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* SUBMIT BUTTON */
         button {
             padding: 15px;
             border: none;
             border-radius: 10px;
-            background: linear-gradient(45deg,indigo,darkviolet);
+            background: linear-gradient(45deg, indigo, darkviolet);
             color: white;
             font-size: 16px;
             font-weight: bold;
@@ -73,6 +89,7 @@
             }
     </style>
 </head>
+
 <body>
 
     <div class="container">
@@ -81,95 +98,92 @@
 
         <form id="propertyForm" enctype="multipart/form-data">
 
-            <input type="text"
-                   id="title"
-                   name="title"
-                   placeholder="Property Title"
-                   required>
+            <input type="text" id="title" placeholder="Property Title" required>
 
-            <input type="text"
-                   id="price"
-                   name="price"
-                   placeholder="Price e.g Ksh 7000/month"
-                   required>
+            <input type="text" id="price" placeholder="Price e.g Ksh 7000/month" required>
 
-            <input type="text"
-                   id="location"
-                   name="location"
-                   placeholder="Location"
-                   required>
+            <input type="text" id="location" placeholder="Location" required>
 
-            <select id="type" name="type">
-
+            <select id="type">
                 <option>Apartment</option>
                 <option>Bedsitter</option>
                 <option>Hostel</option>
                 <option>Single Room</option>
-
             </select>
-                        
-            <input type="file"
-                   id="image"
-                   name="image"
-                   accept="image/*"
-                   required>
 
-            <textarea id="description"
-                      name="description"
-                      placeholder="Describe property"
-                      required></textarea>
+            <!-- ✅ INDIGO LABEL BUTTON -->
+            <label for="image" class="upload-label">
+                📷 Choose Property Image
+            </label>
+            <input type="file" id="image" accept="image/*" required>
 
-            <button type="submit">
-                Upload Property
-            </button>
+            <textarea id="description" placeholder="Describe property" required></textarea>
+
+            <button type="submit">Upload Property</button>
 
         </form>
 
     </div>
 
     <script>
+        const form = document.getElementById("propertyForm");
+
         form.addEventListener("submit", async function(e) {
-            e.preventDefault();
+        e.preventDefault();
 
-            const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-            if (!loggedUser) {
-                alert("Please login first");
-                return;
-            }
+        if (!loggedUser) {
+        alert("Please login first");
+        return;
+        }
 
-            const formData = new FormData();
-            formData.append("landlord_id", loggedUser.id);
-            formData.append("title", title.value);
-            formData.append("price", price.value);
-            formData.append("location", location.value);
-            formData.append("type", type.value);
-            formData.append("description", description.value);
-            formData.append("image", image.files[0]);
+        if (!document.getElementById("image").files[0]) {
+        alert("Please select an image");
+        return;
+        }
 
-            try {
-                const res = await fetch(
-                    "https://qeja-backend-azkf.onrender.com/upload-property",
-                    { method: "POST", body: formData }
-                );
+        const formData = new FormData();
 
-                const data = await res.json();
+        formData.append("landlord_id", loggedUser.id);
+        formData.append("title", document.getElementById("title").value);
+        formData.append("price", document.getElementById("price").value);
+        formData.append("location", document.getElementById("location").value);
+        formData.append("type", document.getElementById("type").value);
+        formData.append("description", document.getElementById("description").value);
+        formData.append("image", document.getElementById("image").files[0]);
 
-                if (data.success) {
-                    alert("Property uploaded successfully ✅");
+        try {
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/upload-property",
+        {
+        method: "POST",
+        body: formData
+        }
+        );
 
-                    // IMPORTANT: keep your flow stable
-                    window.location.href =
-                        "hostdashboard.html";
-                } else {
-                    alert(data.error || "Upload failed");
-                }
+        const data = await res.json();
 
-            } catch (err) {
-                console.log(err);
-                alert("Server error. Try again.");
-            }
+        // ✅ RESTORED ALERTS
+        if (data.success) {
+        alert("✅ Property uploaded successfully");
+
+        // optional reset
+        form.reset();
+
+        // redirect
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+        } else {
+        alert(data.error || "Upload failed");
+        }
+
+        } catch (err) {
+        console.log(err);
+        alert("Server error. Try again later.");
+        }
         });
     </script>
+
 </body>
 </html>
