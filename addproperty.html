@@ -79,24 +79,27 @@
 
         <h1>Add Property</h1>
 
-        <form id="propertyForm">
+        <form id="propertyForm" enctype="multipart/form-data">
 
             <input type="text"
                    id="title"
+                   name="title"
                    placeholder="Property Title"
                    required>
 
             <input type="text"
                    id="price"
+                   name="price"
                    placeholder="Price e.g Ksh 7000/month"
                    required>
 
             <input type="text"
                    id="location"
+                   name="location"
                    placeholder="Location"
                    required>
 
-            <select id="type">
+            <select id="type" name="type">
 
                 <option>Apartment</option>
                 <option>Bedsitter</option>
@@ -105,14 +108,17 @@
 
             </select>
 
-            <input type="text"
+            
+            <input type="file"
                    id="image"
-                   placeholder="Paste Image URL"
+                   name="image"
+                   accept="image/*"
                    required>
 
-<textarea id="description"
-          placeholder="Describe property"
-          required></textarea>
+            <textarea id="description"
+                      name="description"
+                      placeholder="Describe property"
+                      required></textarea>
 
             <button type="submit">
                 Upload Property
@@ -123,28 +129,54 @@
     </div>
 
     <script>
-        fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({
-                landlord_id: 1,
-                title,
-                price,
-                location,
-                description,
-                image_url
-            })
-        })
-        .then(res => res.json())
-        .then(data => {
-            alert("Property uploaded");
-        })
-        .catch(err => {
-            console.error(err);
-            alert("Upload failed");
+        <script>
+
+        document.getElementById("propertyForm")
+        .addEventListener("submit", async function(e){
+
+        e.preventDefault();
+
+        const formData = new FormData();
+
+        formData.append("title",
+        document.getElementById("title").value);
+
+        formData.append("price",
+        document.getElementById("price").value);
+
+        formData.append("location",
+        document.getElementById("location").value);
+
+        formData.append("type",
+        document.getElementById("type").value);
+
+        formData.append("description",
+        document.getElementById("description").value);
+
+        // IMAGE FILE
+        formData.append(
+        "image",
+        document.getElementById("image").files[0]
+        );
+
+
+
+        const response = await fetch("/upload-property", {
+
+        method: "POST",
+        body: formData
+
         });
+
+        const data = await response.json();
+
+        console.log(data);
+
+        alert("Property uploaded successfully!");
+
+        });
+
+    </script>
 
     </script>
     <script>
