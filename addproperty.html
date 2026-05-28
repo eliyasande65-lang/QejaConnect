@@ -158,20 +158,27 @@
     <script>
         const form = document.getElementById("propertyForm");
 
-        form.addEventListener("submit", async function(e) {
+        form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const status = document.getElementById("uploadStatus");
 
-        if (!loggedUser) {
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const token = localStorage.getItem("token"); // IMPORTANT
+
+        if (!loggedUser || !token) {
         alert("Please login first");
         return;
         }
 
-        if (!document.getElementById("image").files[0]) {
+        const file = document.getElementById("image").files[0];
+
+        if (!file) {
         alert("Please select an image");
         return;
         }
+
+        status.innerHTML = `<div class="loader"></div><p>Uploading...</p>`;
 
         const formData = new FormData();
 
@@ -181,77 +188,39 @@
         formData.append("location", document.getElementById("location").value);
         formData.append("type", document.getElementById("type").value);
         formData.append("description", document.getElementById("description").value);
-        formData.append("image", document.getElementById("image").files[0]);
+        formData.append("image", file);
 
         try {
         const res = await fetch(
         "https://qeja-backend-azkf.onrender.com/upload-property",
         {
         method: "POST",
+        headers: {
+        Authorization: `Bearer ${token}`
+        },
         body: formData
         }
         );
 
         const data = await res.json();
 
-        // ✅ RESTORED ALERTS
         if (data.success) {
-        alert("✅ Property uploaded successfully");
-
-        // optional reset
+        status.innerHTML = `<p class="success-text">✅ Uploaded successfully</p>`;
         form.reset();
 
-        // redirect
+        setTimeout(() => {
         window.location.href =
         "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+        }, 1000);
+
         } else {
-        alert(data.error || "Upload failed");
+        status.innerHTML = `<p class="error-text">❌ ${data.message}</p>`;
         }
 
         } catch (err) {
-        console.log(err);
-        alert("Server error. Try again later.");
+        status.innerHTML = `<p class="error-text">❌ Server error</p>`;
         }
         });
-    </script>
-    <script>
-        async function uploadProperty(e) {
-            e.preventDefault();
-
-            const status = document.getElementById("uploadStatus");
-
-            status.innerHTML = `<div class="loader"></div><p>Uploading property...</p>`;
-
-            const form = document.getElementById("propertyForm");
-            const formData = new FormData(form);
-
-            try {
-                const res = await fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
-                    method: "POST",
-                    body: formData
-                });
-
-                const data = await res.json();
-
-                if (data.success) {
-                    status.innerHTML = `
-                        <p class="success-text">✅ Uploaded successfully</p>
-                    `;
-
-                    form.reset();
-
-                } else {
-                    status.innerHTML = `
-                        <p class="error-text">❌ Upload failed</p>
-                    `;
-                }
-
-            } catch (err) {
-                status.innerHTML = `
-                    <p class="error-text">❌ Server error</p>
-                `;
-            }
-        }
     </script>
 </body>
 </html>
