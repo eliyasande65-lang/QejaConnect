@@ -46,7 +46,7 @@
                 left: 0;
             }
 
-        /* MENU BUTTON */
+        
 
         .menu-btn {
             position: fixed;
@@ -56,12 +56,12 @@
             height: 50px;
             border: none;
             border-radius: 12px;
-            background: indigo;
+            background: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
             z-index: 10000;
-            box-shadow: 0 0 10px rgba(0,0,0,0.3);
+            
         }
 
         .overlay {
@@ -132,7 +132,7 @@
                     cursor:pointer;
                     ">
 
-                                + Add Property
+            + Add Property
 
         </button>
 
@@ -154,8 +154,21 @@
         <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
         <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
         <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
         <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
         <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+        <button onclick="toggleTheme()"
+                style="
+                padding:10px 15px;
+                border:none;
+                color:white;
+                border-radius:8px;
+                background:none;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+            🌙 Theme
+        </button>
 
     </div>
     <div class="dashboard" id="dashboard"></div>
@@ -283,6 +296,27 @@
         "overlay").classList.remove("active");
 
         }
+    </script>
+    <script>
+        function toggleTheme() {
+        document.body.classList.toggle("dark");
+
+        // save preference
+        if (document.body.classList.contains("dark")) {
+        localStorage.setItem("theme", "dark");
+        } else {
+        localStorage.setItem("theme", "light");
+        }
+        }
+
+        // load theme on page start
+        window.onload = function () {
+        const savedTheme = localStorage.getItem("theme");
+
+        if (savedTheme === "dark") {
+        document.body.classList.add("dark");
+        }
+        };
     </script>
 </body>
 </html>

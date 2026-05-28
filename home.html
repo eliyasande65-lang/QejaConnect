@@ -17,10 +17,20 @@
             background: #f4f4f4;
             color: #222;
         }
-
-        /* =========================
-   POPUP
-========================= */
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10000;
+        }
 
         .popup-container {
             position: fixed;
@@ -126,6 +136,7 @@
         .logo-area {
             display: flex;
             align-items: center;
+            position:relative;
             gap: 15px;
         }
 
@@ -150,26 +161,7 @@
                 opacity: 0.9;
             }
 
-        nav {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-            nav a {
-                color: white;
-                text-decoration: none;
-                font-weight: bold;
-                padding: 10px 15px;
-                border-radius: 8px;
-                transition: 0.3s;
-            }
-
-                nav a:hover {
-                    background: rgba(255,255,255,0.15);
-                }
-
-       
+             
 
         .hero {
             background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop');
@@ -183,7 +175,23 @@
             color: white;
             padding: 20px;
         }
+        .side-menu a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 18px 25px;
+            border-bottom: 1px solid #333;
+            transition: 0.3s;
+            font-size: 16px;
+        }
 
+            .side-menu a:hover {
+                background: indigo;
+            }
+
+        .side-menu.active {
+            left: 0;
+        }
         .hero-content {
             max-width: 800px;
         }
@@ -382,6 +390,17 @@
             color: white;
             padding: 40px 20px;
         }
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 9998;
+        }
+
+            .overlay.active {
+                display: block;
+            }
         .view-btn {
             width: 100%;
             padding: 12px;
@@ -418,7 +437,18 @@
             background: #1e1e1e;
             color: white;
         }
-
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: #1b1b1b;
+            z-index: 9999;
+            transition: 0.3s;
+            padding-top: 80px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
         body.dark .popup-location {
             color: #ccc;
         }
@@ -460,7 +490,7 @@
 
             header {
                 justify-content: center;
-                gap: 20px;
+                gap: 10px;
             }
 
             nav {
@@ -489,26 +519,41 @@
             </div>
 
         </div>
+        <button class="menu-btn"
+                onclick="toggleMenu()">
+            ☰
+        </button>
+        <div class="overlay"
+             id="overlay"
+             onclick="closeMenu()"></div>
 
-        <nav>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/settings.html">Settings</a>
-            <button onclick="toggleTheme()"
-                    style="
-                        padding:10px 15px;
-                        border:none;
-                        border-radius:8px;
-                        cursor:pointer;
-                        font-weight:bold;
-                    ">
-                🌙 Theme
-            </button>
-        </nav>
+
+        <div class="side-menu"
+             id="sideMenu">
+            <nav>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+                <button onclick="toggleTheme()"
+                        style="
+                padding:10px 15px;
+                border:none;
+                color:white;
+                border-radius:8px;
+                background:none;
+                cursor:pointer;
+                font-weight:bold;
+            ">
+                    🌙 Theme
+                </button>
+            </nav>
+
+
+        </div>
+
 
     </header>
 
@@ -810,6 +855,26 @@
         }
         };
     </script>
-   
+    <script>
+
+        function toggleMenu(){
+
+        document.getElementById("sideMenu").classList.toggle("active");
+
+        document.getElementById("overlay").classList.toggle("active");
+
+        }
+
+
+        function closeMenu(){
+
+        document.getElementById(
+        "sideMenu").classList.remove("active");
+
+        document.getElementById(
+        "overlay").classList.remove("active");
+
+        }
+    </script>
 </body>
 </html>
