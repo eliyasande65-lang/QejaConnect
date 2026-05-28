@@ -87,6 +87,35 @@
             button:hover {
                 opacity: 0.9;
             }
+        .loader {
+            width: 25px;
+            height: 25px;
+            border: 3px solid #ddd;
+            border-top: 3px solid indigo;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .success-text {
+            color: green;
+            font-weight: bold;
+        }
+
+        .error-text {
+            color: red;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -96,7 +125,7 @@
 
         <h1>Add Property</h1>
 
-        <form id="propertyForm" enctype="multipart/form-data">
+        <form id="propertyForm" enctype="multipart/form-data" onsubmit="uploadProperty(event)">
 
             <input type="text" id="title" placeholder="Property Title" required>
 
@@ -116,6 +145,7 @@
                 📷 Choose Property Image
             </label>
             <input type="file" id="image" accept="image/*" required>
+            <div id="uploadStatus" style="margin-top:10px; text-align:center;"></div>
 
             <textarea id="description" placeholder="Describe property" required></textarea>
 
@@ -184,6 +214,44 @@
         }
         });
     </script>
+    <script>
+        async function uploadProperty(e) {
+            e.preventDefault();
 
+            const status = document.getElementById("uploadStatus");
+
+            status.innerHTML = `<div class="loader"></div><p>Uploading property...</p>`;
+
+            const form = document.getElementById("propertyForm");
+            const formData = new FormData(form);
+
+            try {
+                const res = await fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
+                    method: "POST",
+                    body: formData
+                });
+
+                const data = await res.json();
+
+                if (data.success) {
+                    status.innerHTML = `
+                        <p class="success-text">✅ Uploaded successfully</p>
+                    `;
+
+                    form.reset();
+
+                } else {
+                    status.innerHTML = `
+                        <p class="error-text">❌ Upload failed</p>
+                    `;
+                }
+
+            } catch (err) {
+                status.innerHTML = `
+                    <p class="error-text">❌ Server error</p>
+                `;
+            }
+        }
+    </script>
 </body>
 </html>
