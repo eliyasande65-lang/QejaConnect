@@ -128,101 +128,39 @@
     </div>
 
     <script>
-
-        const form =
-        document.getElementById("propertyForm");
-
-        form.addEventListener("submit", async function(e){
-
+        form.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const loggedUser =
-        JSON.parse(localStorage.getItem("loggedUser"));
+        const user = JSON.parse(localStorage.getItem("loggedUser"));
 
-        if(!loggedUser){
-
-        alert("Login first");
+        if (!user) {
+        alert("Login required");
         return;
-
         }
 
-        // CREATE FORM DATA
         const formData = new FormData();
+        formData.append("landlord_id", user.id);
+        formData.append("title", title.value);
+        formData.append("price", price.value);
+        formData.append("location", location.value);
+        formData.append("type", type.value);
+        formData.append("description", description.value);
+        formData.append("image", image.files[0]);
 
-        formData.append(
-        "landlord_id",
-        loggedUser.id
-        );
-
-        formData.append(
-        "title",
-        document.getElementById("title").value
-        );
-
-        formData.append(
-        "price",
-        document.getElementById("price").value
-        );
-
-        formData.append(
-        "location",
-        document.getElementById("location").value
-        );
-
-        formData.append(
-        "type",
-        document.getElementById("type").value
-        );
-
-        formData.append(
-        "description",
-        document.getElementById("description").value
-        );
-
-        // IMAGE FILE
-        formData.append(
-        "image",
-        document.getElementById("image").files[0]
-        );
-
-
-
-        try {
-
-        const res = await fetch(
-        "https://qeja-backend-azkf.onrender.com/upload-property",
-        {
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
         method: "POST",
         body: formData
         });
 
         const data = await res.json();
 
-        console.log(data);
-
-        if(data.success){
-
-        alert("Property uploaded successfully");
-
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-
+        if (data.success) {
+        alert("Uploaded successfully");
+        location.href = "hostdashboard.html";
         } else {
-
-        alert(data.error || "Upload failed");
-
+        alert(data.message || "Upload failed");
         }
-
-        } catch(err){
-
-        console.log(err);
-
-        alert("Server error");
-
-        }
-
         });
-
     </script>
 </body>
 </html>

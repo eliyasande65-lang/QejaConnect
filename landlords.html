@@ -141,52 +141,48 @@
         <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
     </footer>
     <script>
-        function viewLandlord(id) {
-            window.location.href = `landlord-profile.html?id=${id}`;
-        }
-    </script>
-    <script>
         async function loadLandlords() {
 
-            try {
-                const res = await fetch("https://qeja-backend-azkf.onrender.com/landlords");
-                const data = await res.json();
+        try {
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/landlords");
+        const data = await res.json();
 
-                const grid = document.getElementById("landlordGrid");
+        const grid = document.getElementById("landlordGrid");
+        grid.innerHTML = "";
 
-                grid.innerHTML = "";
+        data.landlords.forEach(landlord => {
 
-                data.landlords.forEach(landlord => {
+        grid.innerHTML += `
+        <div class="profile">
 
-                    grid.innerHTML += `
-                        <div class="profile">
+        <img src="${landlord.profile_pic
+        ? landlord.profile_pic
+        : 'https://eliyasande65-lang.github.io/QejaConnect/default-user.png'}">
 
-                            <img src="https://eliyasande65-lang.github.io/QejaConnect/default-user.png">
+        <h3>${landlord.fullname}</h3>
 
-                            <h3>${landlord.fullname}</h3>
+        <p class="verified">✔ Verified Host</p>
 
-                            <p class="verified">✔ Verified Host</p>
+        <p>${landlord.property_name || "No property listed yet"}</p>
 
-                            <p>
-                                ${landlord.property_name || "No property listed yet"}
-                            </p>
+        <small>${landlord.town}, ${landlord.county}</small>
 
-                            <small>
-                                ${landlord.town}, ${landlord.county}
-                            </small>
+        <button onclick="viewLandlord(${landlord.id})">
+        View Profile
+        </button>
 
-                            <button onclick="viewLandlord(${landlord.id})">
-                                View Profile
-                            </button>
+        </div>
+        `;
+        });
 
-                        </div>
-                    `;
-                });
+        } catch (err) {
+        console.error(err);
+        alert("Failed to load landlords");
+        }
+        }
 
-            } catch (err) {
-                console.error(err);
-                alert("Failed to load landlords");
-            }
+        function viewLandlord(id) {
+        window.location.href = `landlord-profile.html?id=${id}`;
         }
 
         loadLandlords();
