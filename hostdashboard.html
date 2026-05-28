@@ -142,6 +142,42 @@
             color: white;
             cursor: pointer;
         }
+        .chat-section {
+            margin-top: 30px;
+        }
+
+        .chat-card {
+            background: white;
+            padding: 18px;
+            border-radius: 14px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+            .chat-card h3 {
+                margin: 0 0 10px;
+                color: indigo;
+            }
+
+            .chat-card p {
+                margin: 5px 0;
+                color: #555;
+            }
+
+        .open-chat-btn {
+            margin-top: 12px;
+            padding: 12px 18px;
+            border: none;
+            background: indigo;
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+            .open-chat-btn:hover {
+                background: darkviolet;
+            }
     </style>
 </head>
 
@@ -160,10 +196,10 @@
         </div>
     </div>
 
-   
+
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-   
+
     <div class="side-menu" id="sideMenu">
         <a href="home.html">Home</a>
         <a href="landlords.html">Landlords</a>
@@ -176,14 +212,22 @@
         </button>
     </div>
 
-    
+
     <button class="add" onclick="location.href='addproperty.html'">
         + Add Property
     </button>
 
-    
+
     <div class="dashboard" id="dashboard"></div>
+    <div class="chat-section">
+
+        <h2>Your Chats</h2>
+
+        <div id="tenantChats"></div>
+
+    </div>
     <div id="chatList"></div>
+
     <script>
         async function loadRequests() {
 
@@ -299,6 +343,78 @@
         }
 
         loadChats();
+
+    </script>
+    <script>
+
+        async function loadTenantChats() {
+
+        const token =
+        localStorage.getItem("token");
+
+        const loggedUser =
+        JSON.parse(localStorage.getItem("loggedUser"));
+
+        if (!loggedUser) return;
+
+        const res = await fetch(
+        `https://qeja-backend-azkf.onrender.com/tenant-chats/${loggedUser.id}`,
+        {
+        headers: {
+        "Authorization": "Bearer " + token
+        }
+        }
+        );
+
+        const data = await res.json();
+
+        const container =
+        document.getElementById("tenantChats");
+
+        container.innerHTML = "";
+
+        if (data.chats.length === 0) {
+
+        container.innerHTML =
+        "<p>No chats yet</p>";
+
+        return;
+        }
+
+        data.chats.forEach(chat => {
+
+        container.innerHTML += `
+        <div class="chat-card">
+
+        <h3>${chat.fullname}</h3>
+
+        <p>${chat.email}</p>
+
+        <button
+        class="open-chat-btn"
+        onclick="openTenantChat(${chat.landlord_id})">
+
+        Open Chat
+
+        </button>
+
+        </div>
+        `;
+        });
+        }
+
+        function openTenantChat(landlord_id) {
+
+        localStorage.setItem(
+        "chatLandlord",
+        landlord_id
+        );
+
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        }
+
+        loadTenantChats();
 
     </script>
 </body>
