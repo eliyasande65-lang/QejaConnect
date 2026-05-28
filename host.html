@@ -145,43 +145,63 @@
     
     <script>
         document.querySelector("form").addEventListener("submit", async function (e) {
-            e.preventDefault();
+        e.preventDefault();
 
-            const formData = {
-                fullname: this.querySelector('input[placeholder="Full Name"]').value,
-                email: this.querySelector('input[type="email"]').value,
-                phone: this.querySelector('input[type="tel"]').value,
-                id: this.querySelector('input[placeholder="National ID Number"]').value,
-                kra: this.querySelector('input[placeholder="KRA PIN"]').value,
-                county: this.querySelector('input[placeholder="County"]').value,
-                town: this.querySelector('input[placeholder="Town / Estate"]').value,
-                property: this.querySelector('input[placeholder="Property Name"]').value,
-                units: this.querySelector('input[type="number"]').value,
-                password: this.querySelectorAll('input[type="password"]')[0].value
-            };
+        const password = this.querySelectorAll('input[type="password"]')[0].value;
+        const confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
 
-            try {
-                const res = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(formData)
-                });
+        // 🔴 password check
+        if (password !== confirmPassword) {
+        alert("Passwords do not match");
+        return;
+        }
 
-                const data = await res.json();
+        const fileInput = this.querySelector('input[type="file"]');
+        const file = fileInput.files[0];
 
-                if (data.success) {
-                    alert("Account created successfully");
-                    window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-                } else {
-                    alert(data.message || "Signup failed");
-                }
+        if (!file) {
+        alert("Please upload a profile picture");
+        return;
+        }
 
-            } catch (err) {
-                console.error(err);
-                alert("Network error. Try again later.");
-            }
+        // ✅ Use FormData (required for multer)
+        const formData = new FormData();
+
+        formData.append("fullname", this.querySelector('input[placeholder="Full Name"]').value);
+        formData.append("email", this.querySelector('input[type="email"]').value);
+        formData.append("phone", this.querySelector('input[type="tel"]').value);
+        formData.append("id", this.querySelector('input[placeholder="National ID Number"]').value);
+        formData.append("kra", this.querySelector('input[placeholder="KRA PIN"]').value);
+        formData.append("county", this.querySelector('input[placeholder="County"]').value);
+        formData.append("town", this.querySelector('input[placeholder="Town / Estate"]').value);
+        formData.append("property", this.querySelector('input[placeholder="Property Name"]').value);
+        formData.append("type", this.querySelector("select").value);
+        formData.append("units", this.querySelector('input[type="number"]').value);
+        formData.append("description", this.querySelector("textarea").value);
+        formData.append("password", password);
+
+        // 👇 profile picture
+        formData.append("profile_pic", file);
+
+        try {
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
+        method: "POST",
+        body: formData // ❗ DO NOT set headers when using FormData
+        });
+
+        const data = await res.json();
+
+        if (data.success) {
+        alert("Account created successfully 🎉");
+        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+        } else {
+        alert(data.message || "Signup failed");
+        }
+
+        } catch (err) {
+        console.error(err);
+        alert("Network error. Try again later.");
+        }
         });
     </script>
 </body>

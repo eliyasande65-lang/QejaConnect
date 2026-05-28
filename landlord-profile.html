@@ -1,0 +1,39 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Landlord Profile</title>
+</head>
+<body>
+
+    <div id="profile"></div>
+
+    <script>
+        async function loadProfile() {
+
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+
+        const res = await fetch(`https://qeja-backend-azkf.onrender.com/landlords/${id}`);
+        const data = await res.json();
+
+        const l = data.landlord;
+
+        document.getElementById("profile").innerHTML = `
+        <img src="https://qeja-backend-azkf.onrender.com/uploads/${l.profile_pic}" width="150">
+
+        <h1>${l.fullname}</h1>
+        <p>${l.email}</p>
+        <p>${l.phone}</p>
+
+        <h3>Property</h3>
+        <p>${l.property_name}</p>
+        <p>${l.description}</p>
+        <p>${l.town}, ${l.county}</p>
+        `;
+        }
+
+        loadProfile();
+    </script>
+
+</body>
+</html>
