@@ -7,33 +7,59 @@
 
     <div id="profile"></div>
 
+    <div id="profile"></div>
+
     <script>
         async function loadProfile() {
 
         const params = new URLSearchParams(window.location.search);
         const id = params.get("id");
 
+        const profileBox = document.getElementById("profile");
+
+        try {
         const res = await fetch(`https://qeja-backend-azkf.onrender.com/landlords/${id}`);
         const data = await res.json();
 
+        if (!data.success || !data.landlord) {
+        profileBox.innerHTML = "<h2>Landlord not found</h2>";
+        return;
+        }
+
         const l = data.landlord;
 
-        document.getElementById("profile").innerHTML = `
-        <img src="https://qeja-backend-azkf.onrender.com/uploads/${l.profile_pic}" width="150">
+        profileBox.innerHTML = `
+        <div style="max-width:600px;margin:40px auto;text-align:center;font-family:Arial;">
 
-        <h1>${l.fullname}</h1>
-        <p>${l.email}</p>
-        <p>${l.phone}</p>
+        <img
+        src="${l.profile_pic || 'https://eliyasande65-lang.github.io/QejaConnect/default-user.png'}"
+        style="width:120px;height:120px;border-radius:50%;object-fit:cover;"
+        >
 
-        <h3>Property</h3>
-        <p>${l.property_name}</p>
-        <p>${l.description}</p>
-        <p>${l.town}, ${l.county}</p>
+        <h2 style="margin:10px 0;">${l.fullname || "No name provided"}</h2>
+
+        <p><strong>Email:</strong> ${l.email || "Not available"}</p>
+        <p><strong>Phone:</strong> ${l.phone || "Not available"}</p>
+        <p><strong>Location:</strong> ${l.town || ""} ${l.county || ""}</p>
+        <p><strong>Property:</strong> ${l.property_name || "Not listed"}</p>
+
+        <hr>
+
+        <h3>About Host</h3>
+        <p>
+        ${l.description || "No description provided by this landlord."}
+        </p>
+
+        </div>
         `;
+
+        } catch (err) {
+        console.error(err);
+        profileBox.innerHTML = "<h2>Error loading profile</h2>";
+        }
         }
 
         loadProfile();
     </script>
-
 </body>
 </html>
