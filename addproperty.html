@@ -127,56 +127,6 @@
     </div>
 
     <script>
-        <script>
-
-        document.getElementById("propertyForm")
-        .addEventListener("submit", async function(e){
-
-        e.preventDefault();
-
-        const formData = new FormData();
-
-        formData.append("title",
-        document.getElementById("title").value);
-
-        formData.append("price",
-        document.getElementById("price").value);
-
-        formData.append("location",
-        document.getElementById("location").value);
-
-        formData.append("type",
-        document.getElementById("type").value);
-
-        formData.append("description",
-        document.getElementById("description").value);
-
-        // IMAGE FILE
-        formData.append(
-        "image",
-        document.getElementById("image").files[0]
-        );
-
-
-
-        const response = await fetch("/upload-property", {
-
-        method: "POST",
-        body: formData
-
-        });
-
-        const data = await response.json();
-
-        console.log(data);
-
-        alert("Property uploaded successfully!");
-
-        });
-
-    </script>
-
-    <script>
 
         const form =
         document.getElementById("propertyForm");
@@ -192,9 +142,10 @@
 
         alert("Login first");
         return;
+
         }
 
-        // CREATE FORMDATA
+        // CREATE FORM DATA
         const formData = new FormData();
 
         formData.append(
@@ -227,7 +178,7 @@
         document.getElementById("description").value
         );
 
-        // REAL IMAGE FILE
+        // IMAGE FILE
         formData.append(
         "image",
         document.getElementById("image").files[0]
@@ -240,12 +191,8 @@
         const res = await fetch(
         "https://qeja-backend-azkf.onrender.com/upload-property",
         {
-
         method: "POST",
-
-        // NO JSON HEADERS HERE
         body: formData
-
         });
 
         const data = await res.json();
@@ -261,7 +208,7 @@
 
         } else {
 
-        alert(data.message || "Upload failed");
+        alert(data.error || "Upload failed");
 
         }
 
@@ -275,15 +222,6 @@
 
         });
 
-    </script>
-    
-    <script>
-        if(!propertyData.image_url.startsWith("http")){
-
-            alert("Image URL must start with https://");
-
-            return;
-        }
     </script>
 </body>
 </html>
