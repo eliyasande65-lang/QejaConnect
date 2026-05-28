@@ -128,38 +128,47 @@
     </div>
 
     <script>
-        form.addEventListener("submit", async (e) => {
-        e.preventDefault();
+        form.addEventListener("submit", async function(e) {
+            e.preventDefault();
 
-        const user = JSON.parse(localStorage.getItem("loggedUser"));
+            const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-        if (!user) {
-        alert("Login required");
-        return;
-        }
+            if (!loggedUser) {
+                alert("Please login first");
+                return;
+            }
 
-        const formData = new FormData();
-        formData.append("landlord_id", user.id);
-        formData.append("title", title.value);
-        formData.append("price", price.value);
-        formData.append("location", location.value);
-        formData.append("type", type.value);
-        formData.append("description", description.value);
-        formData.append("image", image.files[0]);
+            const formData = new FormData();
+            formData.append("landlord_id", loggedUser.id);
+            formData.append("title", title.value);
+            formData.append("price", price.value);
+            formData.append("location", location.value);
+            formData.append("type", type.value);
+            formData.append("description", description.value);
+            formData.append("image", image.files[0]);
 
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/upload-property", {
-        method: "POST",
-        body: formData
-        });
+            try {
+                const res = await fetch(
+                    "https://qeja-backend-azkf.onrender.com/upload-property",
+                    { method: "POST", body: formData }
+                );
 
-        const data = await res.json();
+                const data = await res.json();
 
-        if (data.success) {
-        alert("Uploaded successfully");
-        location.href = "hostdashboard.html";
-        } else {
-        alert(data.message || "Upload failed");
-        }
+                if (data.success) {
+                    alert("Property uploaded successfully ✅");
+
+                    // IMPORTANT: keep your flow stable
+                    window.location.href =
+                        "hostdashboard.html";
+                } else {
+                    alert(data.error || "Upload failed");
+                }
+
+            } catch (err) {
+                console.log(err);
+                alert("Server error. Try again.");
+            }
         });
     </script>
 </body>
