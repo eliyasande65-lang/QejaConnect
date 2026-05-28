@@ -107,11 +107,9 @@
                 <option>Single Room</option>
 
             </select>
-
-            
+                        
             <input type="file"
                    id="image"
-                   name="image"
                    accept="image/*"
                    required>
 
@@ -178,85 +176,107 @@
 
     </script>
 
-    </script>
     <script>
+
         const form =
         document.getElementById("propertyForm");
 
         form.addEventListener("submit", async function(e){
 
-            e.preventDefault();
+        e.preventDefault();
 
-            const loggedUser =
-            JSON.parse(localStorage.getItem("loggedUser"));
+        const loggedUser =
+        JSON.parse(localStorage.getItem("loggedUser"));
 
-            if(!loggedUser){
+        if(!loggedUser){
 
-                alert("Login first");
-                return;
-            }
+        alert("Login first");
+        return;
+        }
 
-            const propertyData = {
+        // CREATE FORMDATA
+        const formData = new FormData();
 
-                landlord_id: loggedUser.id,
+        formData.append(
+        "landlord_id",
+        loggedUser.id
+        );
 
-                title:
-                document.getElementById("title").value,
+        formData.append(
+        "title",
+        document.getElementById("title").value
+        );
 
-                price:
-                document.getElementById("price").value,
+        formData.append(
+        "price",
+        document.getElementById("price").value
+        );
 
-                location:
-                document.getElementById("location").value,
+        formData.append(
+        "location",
+        document.getElementById("location").value
+        );
 
-                type:
-                document.getElementById("type").value,
+        formData.append(
+        "type",
+        document.getElementById("type").value
+        );
 
-                image_url:
-                document.getElementById("image").value,
+        formData.append(
+        "description",
+        document.getElementById("description").value
+        );
 
-                description:
-                document.getElementById("description").value
+        // REAL IMAGE FILE
+        formData.append(
+        "image",
+        document.getElementById("image").files[0]
+        );
 
-            };
 
-            try {
 
-                const res = await fetch(
-                "https://qeja-backend-azkf.onrender.com/upload-property",
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify(propertyData)
-                });
+        try {
 
-                const data = await res.json();
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/upload-property",
+        {
 
-                if(data.success){
+        method: "POST",
 
-                    alert("Property uploaded successfully");
-
-                    window.location.href =
-                    "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-
-                } else {
-
-                    alert(data.message || "Upload failed");
-
-                }
-
-            } catch(err){
-
-                console.log(err);
-
-                alert("Server error");
-
-            }
+        // NO JSON HEADERS HERE
+        body: formData
 
         });
+
+        const data = await res.json();
+
+        console.log(data);
+
+        if(data.success){
+
+        alert("Property uploaded successfully");
+
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+
+        } else {
+
+        alert(data.message || "Upload failed");
+
+        }
+
+        } catch(err){
+
+        console.log(err);
+
+        alert("Server error");
+
+        }
+
+        });
+
     </script>
+    
     <script>
         if(!propertyData.image_url.startsWith("http")){
 
