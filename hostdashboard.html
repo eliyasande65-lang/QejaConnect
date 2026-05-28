@@ -12,7 +12,7 @@
             background: #f4f4f4;
         }
 
-        /* HEADER AREA */
+        
         .logo-area {
             display: flex;
             align-items: center;
@@ -44,7 +44,9 @@
                 opacity: 0.9;
             }
 
-        /* MENU BUTTON */
+        #chatList{
+            margin:20px;
+        }
         .menu-btn {
             position: fixed;
             top: 15px;
@@ -158,10 +160,10 @@
         </div>
     </div>
 
-    <!-- OVERLAY -->
+   
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <!-- SIDE MENU -->
+   
     <div class="side-menu" id="sideMenu">
         <a href="home.html">Home</a>
         <a href="landlords.html">Landlords</a>
@@ -174,12 +176,12 @@
         </button>
     </div>
 
-    <!-- ADD PROPERTY -->
+    
     <button class="add" onclick="location.href='addproperty.html'">
         + Add Property
     </button>
 
-    <!-- DASHBOARD -->
+    
     <div class="dashboard" id="dashboard"></div>
     <div id="chatList"></div>
     <script>
