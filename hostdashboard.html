@@ -181,7 +181,7 @@
 
     <!-- DASHBOARD -->
     <div class="dashboard" id="dashboard"></div>
-
+    <div id="chatList"></div>
     <script>
         async function loadRequests() {
 
@@ -250,6 +250,54 @@
         if (saved === "dark") document.body.classList.add("dark");
         };
     </script>
+    <script>
 
+        async function loadChats() {
+
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+        const token = localStorage.getItem("token");
+
+        const res = await fetch(
+        `https://qeja-backend-azkf.onrender.com/landlord-chats/${loggedUser.id}`,
+        {
+        headers: {
+        "Authorization": "Bearer " + token
+        }
+        }
+        );
+
+        const data = await res.json();
+
+        const chatList = document.getElementById("chatList");
+
+        chatList.innerHTML = "";
+
+        data.chats.forEach(chat => {
+
+        chatList.innerHTML += `
+        <div class="card"
+        onclick="openChat(${chat.tenant_id})"
+        style="cursor:pointer;">
+
+        <h3>${chat.fullname}</h3>
+
+        <p>${chat.email}</p>
+
+        </div>
+        `;
+        });
+        }
+
+        function openChat(tenant_id) {
+
+        localStorage.setItem("chatTenant", tenant_id);
+
+        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
+        }
+
+        loadChats();
+
+    </script>
 </body>
 </html>
