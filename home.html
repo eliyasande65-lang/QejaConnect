@@ -679,7 +679,9 @@
 
             <div class="popup-features" id="popup-features"></div>
 
-            <button id="interest-btn" onclick="interested()">Interested</button>
+            <button onclick="interested(<?= landlord_id ?>)">
+                Interested
+            </button>
 
         </div>
 
@@ -746,30 +748,47 @@
 
         //
         async function interested(landlord_id) {
+            console.log("🔥 Interested clicked");
+
+            const token = localStorage.getItem("token");
             const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": "Bearer " + localStorage.getItem("token")
-                },
-                body: JSON.stringify({
-                    landlord_id,
-                    tenant_id: loggedUser.id,
-                    message: "Hi, I am interested in this property"
-                })
-            });
+            console.log("User:", loggedUser);
+            console.log("Token:", token);
 
-            const data = await res.json();
+            if (!loggedUser || !token) {
+                alert("Please login first");
+                return;
+            }
 
-            if (data.success) {
-                alert("Chat started successfully ✅");
+            try {
+                const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + token
+                    },
+                    body: JSON.stringify({
+                        landlord_id,
+                        tenant_id: loggedUser.id,
+                        message: "Hi, I am interested in this property"
+                    })
+                });
 
-                // redirect to chat page
-                window.location.href = `/chat.html?landlord=${landlord_id}`;
-            } else {
-                alert(data.message || "Failed to start chat");
+                console.log("Response status:", res.status);
+
+                const data = await res.json();
+                console.log("Response data:", data);
+
+                if (data.success) {
+                    alert("Chat started successfully ✅");
+                } else {
+                    alert(data.message || "Failed to start chat");
+                }
+
+            } catch (err) {
+                console.error("ERROR:", err);
+                alert("Network error. Check console.");
             }
         }
 
