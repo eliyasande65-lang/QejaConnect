@@ -323,7 +323,7 @@
 
         chatList.innerHTML += `
         <div class="card"
-        onclick="openChat(${chat.tenant_id})"
+        onclick="openChat(${chat.conversation_id})"
         style="cursor:pointer;">
 
         <h3>${chat.fullname}</h3>
@@ -335,14 +335,16 @@
         });
         }
 
-        function openChat(tenant_id) {
+        function openChat(conversation_id) {
 
-        localStorage.setItem("chatTenant", tenant_id);
+            localStorage.setItem(
+                "conversation_id",
+                conversation_id
+            );
 
-        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
+            location.href =
+            "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
         }
-
-        loadChats();
 
     </script>
     <script>
@@ -392,7 +394,7 @@
 
         <button
         class="open-chat-btn"
-        onclick="openTenantChat(${chat.landlord_id})">
+        onclick="openTenantChat(${chat.conversation_id})"
 
         Open Chat
 
@@ -403,18 +405,16 @@
         });
         }
 
-        function openTenantChat(landlord_id) {
+        function openTenantChat(conversation_id) {
 
-        localStorage.setItem(
-        "chatLandlord",
-        landlord_id
-        );
+            localStorage.setItem(
+                "conversation_id",
+                conversation_id
+            );
 
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+            window.location.href =
+            "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
         }
-
-        loadTenantChats();
 
     </script>
 </body>
