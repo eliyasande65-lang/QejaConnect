@@ -745,49 +745,32 @@
         }
 
         //
-        async function interested() {
+        async function interested(landlord_id) {
+            const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-            if (!currentProperty) {
-                alert("No property selected");
-                return;
-            }
-
-            const message = prompt("Send message to landlord:");
-
-            if (!message) return;
-
-            const token = localStorage.getItem("token");
-
-            const loggedUser =
-                JSON.parse(localStorage.getItem("loggedUser"));
-
-            if (!loggedUser) {
-                alert("Please login first");
-                return;
-            }
-
-            const res = await fetch(
-                "https://qeja-backend-azkf.onrender.com/send-chat",
-                {
-                    method: "POST",
-
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    },
-
-                    body: JSON.stringify({
-                        landlord_id: currentProperty.landlord_id,
-                        tenant_id: loggedUser.id,
-                        sender_role: "tenant",
-                        message: message
-                    })
-                }
-            );
+            const res = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + localStorage.getItem("token")
+                },
+                body: JSON.stringify({
+                    landlord_id,
+                    tenant_id: loggedUser.id,
+                    message: "Hi, I am interested in this property"
+                })
+            });
 
             const data = await res.json();
 
-            alert(data.message);
+            if (data.success) {
+                alert("Chat started successfully ✅");
+
+                // redirect to chat page
+                window.location.href = `/chat.html?landlord=${landlord_id}`;
+            } else {
+                alert(data.message || "Failed to start chat");
+            }
         }
 
     </script>
