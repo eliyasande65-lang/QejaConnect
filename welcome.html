@@ -3,6 +3,8 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4b0082">
     <meta charset="utf-8" />
     <title>welcome</title>
     <style>
@@ -13,13 +15,13 @@
         body {
             background: linear-gradient(45deg, indigo, darkviolet);
             margin: 0;
-            margin-top:100px;
+            margin-top: 100px;
             padding: 0;
             color: white;
             font-family: Arial, sans-serif;
         }
 
-        
+
         .top-section {
             display: flex;
             gap: 20px;
@@ -77,7 +79,7 @@
             border-radius: 10px;
             padding: 20px;
             box-shadow: 0 0 5px 4px rgba(0,0,0,0.2);
-            background-color:indigo;
+            background-color: indigo;
         }
 
             .steps ul {
@@ -143,6 +145,7 @@
         #signup {
             background-color: indigo;
         }
+
         .popup1 {
             position: fixed;
             top: 50%;
@@ -153,7 +156,7 @@
             border-radius: 15px;
             text-align: center;
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
-            display: none; 
+            display: none;
             z-index: 1000;
         }
 
@@ -164,7 +167,7 @@
                 border-radius: 10px;
                 cursor: pointer;
             }
-        
+
         .bar-fill {
             margin-top: 40px;
             width: 100%;
@@ -212,15 +215,18 @@
                 width: 100%;
                 max-width: 250px;
             }
+
             .tenant {
                 background-color: mediumpurple;
             }
-            .crimson{
-                background-color:crimson;
+
+            .crimson {
+                background-color: crimson;
             }
         }
-        .privacy{
-            color:white;
+
+        .privacy {
+            color: white;
         }
     </style>
 </head>
@@ -288,14 +294,21 @@
     </script>
     <script>
         document.getElementById('tenant').addEventListener('click', function(){
-             window.location.href="https://eliyasande65-lang.github.io/QejaConnect/tenant.html";
+        window.location.href="https://eliyasande65-lang.github.io/QejaConnect/tenant.html";
         });
         document.getElementById('host').addEventListener('click', function(){
-             window.location.href="https://eliyasande65-lang.github.io/QejaConnect/host.html";
+        window.location.href="https://eliyasande65-lang.github.io/QejaConnect/host.html";
         });
         document.getElementById('login').addEventListener('click', function(){
-             window.location.href="https://eliyasande65-lang.github.io/QejaConnect/login.html";
+        window.location.href="https://eliyasande65-lang.github.io/QejaConnect/login.html";
         });
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
+        }
     </script>
 </body>
 </html>
