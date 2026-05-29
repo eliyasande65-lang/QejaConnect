@@ -6,7 +6,6 @@
     <title>Contact | Qeja Connect</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -56,7 +55,7 @@
             margin: auto;
             padding: 50px 20px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
             gap: 30px;
         }
 
@@ -80,6 +79,7 @@
             border-radius: 10px;
             border: 1px solid #ccc;
             font-size: 15px;
+            box-sizing: border-box;
         }
 
         textarea {
@@ -97,11 +97,52 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
+            font-size: 15px;
+            transition: background 0.2s;
         }
 
-            button:hover {
+            button:hover:not(:disabled) {
                 background: darkviolet;
             }
+
+            button:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
+            }
+
+        .alert {
+            margin-top: 15px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: none;
+        }
+
+            .alert.success {
+                background: #e6f9ee;
+                color: #1a7a3f;
+                border: 1px solid #a3d9b1;
+                display: block;
+            }
+
+            .alert.error {
+                background: #fdecea;
+                color: #a32d2d;
+                border: 1px solid #f5aaaa;
+                display: block;
+            }
+
+        /* Login notice — shown when user is not logged in */
+        .login-notice {
+            background: #fff8e1;
+            border: 1px solid #ffe082;
+            border-radius: 10px;
+            padding: 14px 16px;
+            font-size: 14px;
+            color: #7a5c00;
+            margin-top: 15px;
+            display: none;
+        }
 
         footer {
             background: #1a1a1a;
@@ -115,65 +156,47 @@
 <body>
 
     <header>
-
         <div class="logo-area">
-            <img src="logo.jpg" id="logo">
+            <img src="logo.jpg" id="logo" alt="logo">
             <h2>Qeja Connect</h2>
         </div>
-
         <nav>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
             <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
         </nav>
-
     </header>
 
     <section class="contact-section">
 
         <div class="contact-box">
-
             <h1>Contact Us</h1>
-
             <p>Email: qejaconnect@outlook.com</p>
             <p>Phone: +254714104737</p>
             <p>Alternative: +25471203443</p>
             <p>Nairobi, Kenya</p>
-
             <p>
                 Reach out to Qeja Connect support for complaints,
                 inquiries, partnership requests or technical support.
             </p>
-
         </div>
 
         <div class="form-box">
-
             <h1>Send Message</h1>
 
-            <form id="messageForm">
+            <!-- Shown when not logged in -->
+            <div class="login-notice" id="loginNotice">
+                You need to be logged in to send a message.
+                <a href="welcome.html" style="color:indigo;font-weight:bold;">Login here →</a>
+            </div>
 
-                <input type="email"
-                       id="email"
-                       placeholder="Your Email Address"
-                       required>
-
-                <input type="password"
-                       id="password"
-                       placeholder="Your Password"
-                       required>
-
-                <textarea id="messageBox"
-                          placeholder="Type your message here..."
-                          required></textarea>
-
-                <button type="button" onclick="sendMessage()">
-                    Send Message
-                </button>
-
-            </form>
-
+            <!-- Message form — only usable when logged in -->
+            <div id="formArea">
+                <textarea id="messageBox" placeholder="Type your message here..." required></textarea>
+                <button id="sendBtn" onclick="sendMessage()">Send Message</button>
+                <div class="alert" id="alertBox"></div>
+            </div>
         </div>
 
     </section>
@@ -184,104 +207,74 @@
 
     <script>
 
-        // =========================
-        // LOGIN + GET TOKEN
-        // =========================
-        async function login(email, password) {
+        // ── Check login state on load ───────────────────────
+        const token      = localStorage.getItem("token");
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-        const res = await fetch(
-        "https://qeja-backend-azkf.onrender.com/login",
-        {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-        email,
-        password
-        })
+        window.onload = function () {
+        if (!token || !loggedUser) {
+        document.getElementById("loginNotice").style.display = "block";
+        document.getElementById("formArea").style.display    = "none";
         }
-        );
+        };
 
-        const data = await res.json();
-
-        if (data.token) {
-
-        localStorage.setItem("token", data.token);
-
-        return true;
-
-        } else {
-
-        alert(data.message || "Login failed");
-
-        return false;
-        }
+        // ── Show alert helper ──────────────────────────────
+        function showAlert(type, msg) {
+        const box = document.getElementById("alertBox");
+        box.className = "alert " + type;
+        box.textContent = msg;
         }
 
         // =========================
-        // SEND MESSAGE
+        // SEND SUPPORT MESSAGE
+        // Uses the /contact endpoint — no conversation_id needed.
+        // The server stores it in the contact_messages table.
         // =========================
         async function sendMessage() {
+        const message = document.getElementById("messageBox").value.trim();
 
-        const email =
-        document.getElementById("email").value;
-
-        const password =
-        document.getElementById("password").value;
-
-        const message =
-        document.getElementById("messageBox").value;
-
-        if (!email || !password || !message) {
-
-        alert("Please fill all fields");
-
+        if (!message) {
+        showAlert("error", "Please type a message before sending.");
         return;
         }
 
-        // LOGIN FIRST
-        const loggedIn = await login(email, password);
+        if (!token) {
+        showAlert("error", "Please log in first.");
+        return;
+        }
 
-        if (!loggedIn) return;
-
-        const token = localStorage.getItem("token");
+        const btn = document.getElementById("sendBtn");
+        btn.disabled    = true;
+        btn.textContent = "Sending...";
 
         try {
-
         const res = await fetch(
-        "https://qeja-backend-azkf.onrender.com/send-message",
+        "https://qeja-backend-azkf.onrender.com/contact",
         {
-        method: "POST",
+        method:  "POST",
         headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
+        "Content-Type":  "application/json",
+        "Authorization": "Bearer " + token
         },
-        body: JSON.stringify({
-        message
-        })
+        body: JSON.stringify({ message })
         }
         );
 
         const data = await res.json();
 
         if (data.success) {
-
-        alert("Message sent successfully ✅");
-
+        showAlert("success", "✅ Message sent to Qeja Connect support!");
         document.getElementById("messageBox").value = "";
-
         } else {
-
-        alert(data.message || "Failed to send");
+        showAlert("error", data.message || "Failed to send message.");
         }
 
         } catch (err) {
-
-        console.log(err);
-
-        alert("Server error");
+        showAlert("error", "Network error. Please try again.");
         }
+
+        btn.disabled    = false;
+        btn.textContent = "Send Message";
         }
 
     </script>

@@ -3,23 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Landlord Profile</title>
+    <title>Landlord Profile | Qeja Connect</title>
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: Arial;
             margin: 0;
             background: #f4f4f4;
         }
 
+        /* ── Header (matching home.html) ── */
         header {
             background: linear-gradient(45deg, indigo, darkviolet);
-            color: white;
-            padding: 20px;
-            text-align: center;
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
         }
 
+        .menu-btn {
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10001;
+            flex-shrink: 0;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand {
+            color: white;
+        }
+
+            .brand h2 {
+                margin: 0;
+            }
+
+            .brand p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+        /* ── Side menu ── */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: #1b1b1b;
+            z-index: 9999;
+            transition: 0.3s;
+            padding-top: 80px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+        }
+
+            .side-menu.active {
+                left: 0;
+            }
+
+            .side-menu a {
+                display: block;
+                color: white;
+                text-decoration: none;
+                padding: 18px 25px;
+                border-bottom: 1px solid #333;
+                font-size: 16px;
+            }
+
+                .side-menu a:hover {
+                    background: indigo;
+                }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 9998;
+        }
+
+            .overlay.active {
+                display: block;
+            }
+
+        /* ── Profile card ── */
         .container {
             max-width: 900px;
             margin: 30px auto;
@@ -29,14 +113,14 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
         }
 
-        .top {
+        .top-banner {
             background: linear-gradient(45deg, indigo, darkviolet);
             text-align: center;
             padding: 30px;
             color: white;
         }
 
-            .top img {
+            .top-banner img {
                 width: 120px;
                 height: 120px;
                 border-radius: 50%;
@@ -44,18 +128,32 @@
                 border: 4px solid white;
             }
 
+            .top-banner h2 {
+                margin: 12px 0 4px;
+            }
+
+            .top-banner p {
+                margin: 0;
+                opacity: 0.9;
+            }
+
         .content {
-            padding: 20px;
+            padding: 25px;
         }
 
-        .card {
+        .info-card {
             background: #f7f7f7;
-            padding: 15px;
+            padding: 15px 18px;
             border-radius: 10px;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
+            font-size: 15px;
         }
 
-        button {
+            .info-card b {
+                color: indigo;
+            }
+
+        .action-btn {
             width: 100%;
             padding: 15px;
             background: indigo;
@@ -63,6 +161,28 @@
             border: none;
             border-radius: 10px;
             cursor: pointer;
+            font-size: 15px;
+            font-weight: bold;
+            margin-top: 10px;
+            transition: background 0.2s;
+        }
+
+            .action-btn:hover {
+                background: darkviolet;
+            }
+
+        .error-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: gray;
+            font-size: 16px;
+        }
+
+        .loader {
+            text-align: center;
+            padding: 60px;
+            color: indigo;
+            font-size: 18px;
         }
     </style>
 </head>
@@ -70,73 +190,140 @@
 <body>
 
     <header>
-        <div class="logo-area">
-            <button class="menu-btn"
-                    onclick="toggleMenu()">
-                ☰
-            </button>
-            <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
-
-            <div class="brand">
-                <h2>Qeja Connect</h2>
-                <p>Quality accommodation providence</p>
-            </div>
-
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
+        <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
+        <div class="brand">
+            <h2>Qeja Connect</h2>
+            <p>Quality accommodation providence</p>
         </div>
     </header>
 
-    <div id="profile"></div>
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="side-menu" id="sideMenu">
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
+        <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+    </div>
+
+    <div id="profile">
+        <div class="loader">Loading profile...</div>
+    </div>
 
     <script>
-        async function loadProfile() {
 
+        async function loadProfile() {
+        const profileDiv = document.getElementById("profile");
         const id = new URLSearchParams(window.location.search).get("id");
-        const profile = document.getElementById("profile");
+
+        if (!id) {
+        profileDiv.innerHTML = `<div class="error-state">No landlord ID provided.</div>`;
+        return;
+        }
 
         try {
-        const res = await fetch(`https://qeja-backend-azkf.onrender.com/landlords/${id}`);
+        // FIX: calls /landlords/:id — this route now exists in server.js
+        const res  = await fetch(
+        `https://qeja-backend-azkf.onrender.com/landlords/${id}`
+        );
         const data = await res.json();
 
-        if (!data.success) {
-        profile.innerHTML = `<h2 style="text-align:center;">Landlord not found</h2>`;
+        if (!data.success || !data.landlord) {
+        profileDiv.innerHTML = `<div class="error-state">Landlord not found.</div>`;
         return;
         }
 
         const l = data.landlord;
 
-        // FIX IMAGE FALLBACK PROPERLY
         const img = l.profile_pic
         ? l.profile_pic
         : "https://eliyasande65-lang.github.io/QejaConnect/default-user.png";
 
-        profile.innerHTML = `
+        profileDiv.innerHTML = `
         <div class="container">
 
-        <div class="top">
-        <img src="${img}">
+        <div class="top-banner">
+        <img src="${img}" alt="${l.fullname}">
         <h2>${l.fullname}</h2>
         <p>✔ Verified Host</p>
         </div>
 
         <div class="content">
 
-        <div class="card"><b>Email:</b> ${l.email}</div>
-        <div class="card"><b>Phone:</b> ${l.phone}</div>
-        <div class="card"><b>Location:</b> ${l.town}, ${l.county}</div>
-        <div class="card"><b>Property:</b> ${l.property_name}</div>
+        <div class="info-card"><b>Email:</b> ${l.email}</div>
+        <div class="info-card"><b>Phone:</b> ${l.phone || "Not provided"}</div>
+        <div class="info-card"><b>Location:</b> ${l.town || "—"}, ${l.county || "—"}</div>
+        <div class="info-card"><b>Property:</b> ${l.property_name || "Not listed"}</div>
+        <div class="info-card"><b>Type:</b> ${l.property_type || "—"}</div>
+        <div class="info-card"><b>Units:</b> ${l.units || "—"}</div>
+        ${l.description ? `<div class="info-card"><b>About:</b> ${l.description}</div>` : ""}
 
-        <button onclick="alert('Contact feature coming soon')">
-        Contact Host
+        <button class="action-btn" onclick="startChat(${l.id})">
+        💬 Message This Landlord
         </button>
 
         </div>
-
         </div>
         `;
 
         } catch (err) {
-        profile.innerHTML = `<h2 style="text-align:center;">Failed to load profile</h2>`;
+        profileDiv.innerHTML = `<div class="error-state">Failed to load profile. Please try again.</div>`;
         }
+        }
+
+        // ── Start chat from profile page ───────────────────
+        async function startChat(landlord_id) {
+        const token      = localStorage.getItem("token");
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+
+        if (!token || !loggedUser) {
+        alert("Please log in to start a conversation.");
+        location.href = "https://eliyasande65-lang.github.io/QejaConnect/welcome.html";
+        return;
+        }
+
+        try {
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/interested",
+        {
+        method:  "POST",
+        headers: {
+        "Content-Type":  "application/json",
+        "Authorization": "Bearer " + token
+        },
+        body: JSON.stringify({
+        landlord_id,
+        tenant_id: loggedUser.id,
+        message:   "Hi, I am interested in your property"
+        })
+        }
+        );
+
+        const data = await res.json();
+
+        if (data.success) {
+        localStorage.setItem("conversation_id", data.conversation_id);
+        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        } else {
+        alert(data.message || "Could not start chat");
+        }
+
+        } catch (err) {
+        alert("Network error. Please try again.");
+        }
+        }
+
+        // ── Menu ───────────────────────────────────────────
+        function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+        }
+
+        function closeMenu() {
+        document.getElementById("sideMenu").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
         }
 
         loadProfile();

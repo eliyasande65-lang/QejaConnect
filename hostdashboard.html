@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Landlord Dashboard</title>
+    <title>Landlord Dashboard | Qeja Connect</title>
 
     <style>
         body {
@@ -12,7 +12,6 @@
             background: #f4f4f4;
         }
 
-        
         .logo-area {
             display: flex;
             align-items: center;
@@ -25,7 +24,7 @@
         #logo {
             width: 60px;
             height: 60px;
-            margin-left:60px;
+            margin-left: 60px;
             border-radius: 12px;
             object-fit: cover;
         }
@@ -44,9 +43,6 @@
                 opacity: 0.9;
             }
 
-        #chatList{
-            margin:20px;
-        }
         .menu-btn {
             position: fixed;
             top: 15px;
@@ -55,14 +51,13 @@
             height: 50px;
             border: none;
             border-radius: 12px;
-            background:none;
+            background: none;
             color: white;
             font-size: 24px;
             cursor: pointer;
             z-index: 10001;
         }
 
-        /* SIDE MENU (FIXED) */
         .side-menu {
             position: fixed;
             top: 0;
@@ -93,7 +88,6 @@
                     background: indigo;
                 }
 
-        /* OVERLAY FIX */
         .overlay {
             position: fixed;
             inset: 0;
@@ -106,7 +100,6 @@
                 display: block;
             }
 
-        /* DASHBOARD */
         .dashboard {
             max-width: 1000px;
             margin: auto;
@@ -119,19 +112,57 @@
             margin-bottom: 15px;
             border-radius: 12px;
             box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            cursor: pointer;
+            transition: transform 0.15s;
         }
+
+            .card:hover {
+                transform: translateY(-2px);
+            }
 
             .card h3 {
                 color: indigo;
+                margin: 0 0 6px;
             }
+
+            .card p {
+                margin: 4px 0;
+                color: #555;
+                font-size: 14px;
+            }
+
+            .card .last-msg {
+                margin-top: 8px;
+                font-size: 13px;
+                color: #888;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .card .open-btn {
+                margin-top: 12px;
+                padding: 10px 16px;
+                border: none;
+                background: indigo;
+                color: white;
+                border-radius: 10px;
+                cursor: pointer;
+                font-weight: bold;
+                font-size: 14px;
+            }
+
+                .card .open-btn:hover {
+                    background: darkviolet;
+                }
 
         .empty {
             text-align: center;
-            margin-top: 50px;
+            margin-top: 40px;
             color: gray;
+            font-size: 15px;
         }
 
-        /* ADD BUTTON */
         button.add {
             display: block;
             margin: 20px auto;
@@ -141,42 +172,51 @@
             background: indigo;
             color: white;
             cursor: pointer;
-        }
-        .chat-section {
-            margin-top: 30px;
-        }
-
-        .chat-card {
-            background: white;
-            padding: 18px;
-            border-radius: 14px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }
-
-            .chat-card h3 {
-                margin: 0 0 10px;
-                color: indigo;
-            }
-
-            .chat-card p {
-                margin: 5px 0;
-                color: #555;
-            }
-
-        .open-chat-btn {
-            margin-top: 12px;
-            padding: 12px 18px;
-            border: none;
-            background: indigo;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
+            font-size: 15px;
             font-weight: bold;
         }
 
-            .open-chat-btn:hover {
+            button.add:hover {
                 background: darkviolet;
+            }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: bold;
+            color: indigo;
+            margin: 30px 20px 10px;
+        }
+
+        .tab-bar {
+            display: flex;
+            gap: 10px;
+            margin: 20px 20px 0;
+            border-bottom: 2px solid #ddd;
+        }
+
+            .tab-bar button {
+                padding: 10px 20px;
+                border: none;
+                background: none;
+                font-size: 15px;
+                color: #555;
+                cursor: pointer;
+                border-bottom: 3px solid transparent;
+                margin-bottom: -2px;
+                font-weight: bold;
+            }
+
+                .tab-bar button.active {
+                    color: indigo;
+                    border-bottom-color: indigo;
+                }
+
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
             }
     </style>
 </head>
@@ -185,20 +225,15 @@
 
     <!-- HEADER -->
     <div class="logo-area">
-
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
-
-        <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo">
-
+        <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
         <div class="brand">
             <h2>Qeja Connect</h2>
             <p>Quality accommodation providence</p>
         </div>
     </div>
 
-
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
-
 
     <div class="side-menu" id="sideMenu">
         <a href="home.html">Home</a>
@@ -206,44 +241,57 @@
         <a href="contact.html">Contact</a>
         <a href="hostdashboard.html">Dashboard</a>
         <a href="welcome.html">Log out</a>
-
-        <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
+        <button onclick="toggleTheme()"
+                style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
             🌙 Theme
         </button>
     </div>
 
+    <!-- ADD PROPERTY -->
+    <button class="add" onclick="location.href='addproperty.html'">+ Add Property</button>
 
-    <button class="add" onclick="location.href='addproperty.html'">
-        + Add Property
-    </button>
-
-
+    <!-- BOOKING REQUESTS -->
+    <div class="section-title">Booking Requests</div>
     <div class="dashboard" id="dashboard"></div>
-    <div class="chat-section">
 
-        <h2>Your Chats</h2>
+    <!-- CHAT TABS -->
+    <div class="section-title">Your Chats</div>
 
-        <div id="tenantChats"></div>
-
+    <div class="tab-bar">
+        <button class="active" onclick="switchTab('landlordChats', this)">Tenant Inquiries</button>
+        <button onclick="switchTab('tenantChats', this)">My Conversations</button>
     </div>
-    <div id="chatList"></div>
+
+    <!-- Tab: landlord sees which tenants messaged them -->
+    <div class="dashboard tab-content active" id="landlordChats"></div>
+
+    <!-- Tab: tenant conversations (when landlord logs in as tenant also) -->
+    <div class="dashboard tab-content" id="tenantChats"></div>
 
     <script>
-        async function loadRequests() {
-
-        const dashboard = document.getElementById("dashboard");
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const token      = localStorage.getItem("token");
 
+        // ── Tab switching ──────────────────────────────────
+        function switchTab(tabId, btn) {
+        document.querySelectorAll(".tab-content").forEach(el => el.classList.remove("active"));
+        document.querySelectorAll(".tab-bar button").forEach(el => el.classList.remove("active"));
+        document.getElementById(tabId).classList.add("active");
+        btn.classList.add("active");
+        }
+
+        // ── Booking requests ───────────────────────────────
+        async function loadRequests() {
+        const dashboard = document.getElementById("dashboard");
         if (!loggedUser) {
         dashboard.innerHTML = `<div class="empty">Please login first</div>`;
         return;
         }
 
         try {
-        const res = await fetch(
+        const res  = await fetch(
         `https://qeja-backend-azkf.onrender.com/landlord/interests/${loggedUser.id}`
         );
-
         const data = await res.json();
 
         if (!data.success || data.data.length === 0) {
@@ -251,10 +299,7 @@
         return;
         }
 
-        dashboard.innerHTML = "";
-
-        data.data.forEach(r => {
-        dashboard.innerHTML += `
+        dashboard.innerHTML = data.data.map(r => `
         <div class="card">
         <h3>${r.title}</h3>
         <p><b>Tenant:</b> ${r.fullname}</p>
@@ -262,17 +307,109 @@
         <p><b>Message:</b> ${r.message}</p>
         <p><b>Date:</b> ${new Date(r.created_at).toLocaleString()}</p>
         </div>
-        `;
-        });
+        `).join("");
 
         } catch (err) {
         dashboard.innerHTML = `<div class="empty">Failed to load requests</div>`;
         }
         }
 
-        loadRequests();
+        // ── Landlord chats (tenants who messaged THIS landlord) ─
+        async function loadLandlordChats() {
+        const container = document.getElementById("landlordChats");
+        if (!loggedUser || !token) {
+        container.innerHTML = `<div class="empty">Please login first</div>`;
+        return;
+        }
 
-        /* MENU FIX */
+        try {
+        const res  = await fetch(
+        `https://qeja-backend-azkf.onrender.com/landlord-chats/${loggedUser.id}`,
+        { headers: { "Authorization": "Bearer " + token } }
+        );
+        const data = await res.json();
+
+        if (!data.success) {
+        container.innerHTML = `<div class="empty">Could not load chats. Please log in again.</div>`;
+        return;
+        }
+
+        if (!data.chats || data.chats.length === 0) {
+        container.innerHTML = `<div class="empty">No tenant inquiries yet</div>`;
+        return;
+        }
+
+        container.innerHTML = data.chats.map(chat => `
+        <div class="card" onclick="openChat(${chat.conversation_id})">
+        <h3>${chat.fullname}</h3>
+        <p>${chat.email}</p>
+        ${chat.last_message
+        ? `<div class="last-msg">💬 ${escapeHtml(chat.last_message)}</div>`
+        : ""}
+        <button class="open-btn">Open Chat →</button>
+        </div>
+        `).join("");
+
+        } catch (err) {
+        container.innerHTML = `<div class="empty">Failed to load chats</div>`;
+        }
+        }
+
+        // ── Tenant chats (conversations this user started as tenant) ─
+        // FIX: was if(length===0) rendering forEach — completely inverted
+        async function loadTenantChats() {
+        const container = document.getElementById("tenantChats");
+        if (!loggedUser || !token) {
+        container.innerHTML = `<div class="empty">Please login first</div>`;
+        return;
+        }
+
+        try {
+        const res  = await fetch(
+        `https://qeja-backend-azkf.onrender.com/tenant-chats/${loggedUser.id}`,
+        { headers: { "Authorization": "Bearer " + token } }
+        );
+        const data = await res.json();
+
+        if (!data.success) {
+        container.innerHTML = `<div class="empty">Could not load chats. Please log in again.</div>`;
+        return;
+        }
+
+        // FIX: check length === 0 to show empty, otherwise render
+        if (!data.chats || data.chats.length === 0) {
+        container.innerHTML = `<div class="empty">No conversations started yet</div>`;
+        return;
+        }
+
+        container.innerHTML = data.chats.map(chat => `
+        <div class="card" onclick="openTenantChat(${chat.conversation_id})">
+        <h3>${chat.fullname}</h3>
+        <p>${chat.email}</p>
+        ${chat.last_message
+        ? `<div class="last-msg">💬 ${escapeHtml(chat.last_message)}</div>`
+        : ""}
+        <button class="open-btn">Open Chat →</button>
+        </div>
+        `).join("");
+
+        } catch (err) {
+        container.innerHTML = `<div class="empty">Failed to load chats</div>`;
+        }
+        }
+
+        // ── Navigation ─────────────────────────────────────
+        function openChat(conversation_id) {
+        localStorage.setItem("conversation_id", conversation_id);
+        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
+        }
+
+        function openTenantChat(conversation_id) {
+        localStorage.setItem("conversation_id", conversation_id);
+        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        }
+
+        // ── Menu ───────────────────────────────────────────
         function toggleMenu() {
         document.getElementById("sideMenu").classList.toggle("active");
         document.getElementById("overlay").classList.toggle("active");
@@ -283,7 +420,7 @@
         document.getElementById("overlay").classList.remove("active");
         }
 
-        /* THEME */
+        // ── Theme ──────────────────────────────────────────
         function toggleTheme() {
         document.body.classList.toggle("dark");
         localStorage.setItem("theme",
@@ -291,130 +428,25 @@
         );
         }
 
+        // ── XSS protection ─────────────────────────────────
+        function escapeHtml(str) {
+        return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+        }
+
+        // ── Init ───────────────────────────────────────────
         window.onload = function () {
         const saved = localStorage.getItem("theme");
         if (saved === "dark") document.body.classList.add("dark");
+
+        loadRequests();
+        loadLandlordChats();
+        loadTenantChats();
         };
     </script>
-    <script>
 
-        async function loadChats() {
-
-        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-
-        const token = localStorage.getItem("token");
-
-        const res = await fetch(
-        `https://qeja-backend-azkf.onrender.com/landlord-chats/${loggedUser.id}`,
-        {
-        headers: {
-        "Authorization": "Bearer " + token
-        }
-        }
-        );
-
-        const data = await res.json();
-
-        const chatList = document.getElementById("chatList");
-
-        chatList.innerHTML = "";
-
-        data.chats.forEach(chat => {
-
-        chatList.innerHTML += `
-        <div class="card"
-        onclick="openChat(${chat.conversation_id})"
-        style="cursor:pointer;">
-
-        <h3>${chat.fullname}</h3>
-
-        <p>${chat.email}</p>
-
-        </div>
-        `;
-        });
-        }
-
-        function openChat(conversation_id) {
-
-        localStorage.setItem(
-        "conversation_id",
-        conversation_id
-        );
-
-        location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
-        }
-
-    </script>
-    <script>
-
-        async function loadTenantChats() {
-
-        const token =
-        localStorage.getItem("token");
-
-        const loggedUser =
-        JSON.parse(localStorage.getItem("loggedUser"));
-
-        if (!loggedUser) return;
-
-        const res = await fetch(
-        `https://qeja-backend-azkf.onrender.com/tenant-chats/${loggedUser.id}`,
-        {
-        headers: {
-        "Authorization": "Bearer " + token
-        }
-        }
-        );
-
-        const data = await res.json();
-
-        const container =
-        document.getElementById("tenantChats");
-
-        container.innerHTML = "";
-
-        if (data.chats.length === 0) {
-
-        container.innerHTML += `
-        <div class="chat-card">
-
-        <h3>${chat.fullname}</h3>
-
-        <p>${chat.email}</p>
-
-        <button
-        class="open-chat-btn"
-        onclick="openTenantChat(${chat.conversation_id})">
-
-        Open Chat
-
-        </button>
-
-        </div>
-        `;
-        });
-        }
-
-        function openTenantChat(conversation_id) {
-
-        localStorage.setItem(
-        "conversation_id",
-        conversation_id
-        );
-
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
-        }
-
-    </script>
-    <script>
-
-        loadChats();
-
-        loadTenantChats();
-
-    </script>
 </body>
 </html>
