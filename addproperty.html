@@ -132,7 +132,7 @@
             <input type="text" id="price" placeholder="Price e.g Ksh 7000/month" required>
 
             <input type="text" id="location" placeholder="Location" required>
-
+            <input type="url" id="maps_url" placeholder="📍 Google Maps URL (optional)">
             <select id="type">
                 <option>Apartment</option>
                 <option>Bedsitter</option>
@@ -181,7 +181,7 @@
         status.innerHTML = `<div class="loader"></div><p>Uploading...</p>`;
 
         const formData = new FormData();
-
+        formData.append("maps_url", document.getElementById("maps_url").value);
         formData.append("landlord_id", loggedUser.id);
         formData.append("title", document.getElementById("title").value);
         formData.append("price", document.getElementById("price").value);
