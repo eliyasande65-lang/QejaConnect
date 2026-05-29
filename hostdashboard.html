@@ -337,13 +337,13 @@
 
         function openChat(conversation_id) {
 
-            localStorage.setItem(
-                "conversation_id",
-                conversation_id
-            );
+        localStorage.setItem(
+        "conversation_id",
+        conversation_id
+        );
 
-            location.href =
-            "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
+        location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/chat.html";
         }
 
     </script>
@@ -377,14 +377,6 @@
 
         if (data.chats.length === 0) {
 
-        container.innerHTML =
-        "<p>No chats yet</p>";
-
-        return;
-        }
-
-        data.chats.forEach(chat => {
-
         container.innerHTML += `
         <div class="chat-card">
 
@@ -394,7 +386,7 @@
 
         <button
         class="open-chat-btn"
-        onclick="openTenantChat(${chat.conversation_id})"
+        onclick="openTenantChat(${chat.conversation_id})">
 
         Open Chat
 
@@ -407,14 +399,21 @@
 
         function openTenantChat(conversation_id) {
 
-            localStorage.setItem(
-                "conversation_id",
-                conversation_id
-            );
+        localStorage.setItem(
+        "conversation_id",
+        conversation_id
+        );
 
-            window.location.href =
-            "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
         }
+
+    </script>
+    <script>
+
+        loadChats();
+
+        loadTenantChats();
 
     </script>
 </body>

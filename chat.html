@@ -173,6 +173,7 @@
 
     </div>
 
+   
     <script>
 
         const token =
@@ -181,22 +182,18 @@
         const loggedUser =
         JSON.parse(localStorage.getItem("loggedUser"));
 
-        const tenant_id =
-        localStorage.getItem("chatTenant");
-
-        const landlord_id =
-        loggedUser.id;
+        const conversation_id =
+        localStorage.getItem("conversation_id");
 
         async function loadMessages() {
 
         const res = await fetch(
-        `https://qeja-backend-azkf.onrender.com/chat/${landlord_id}/${tenant_id}`,
+        `https://qeja-backend-azkf.onrender.com/messages/${conversation_id}`,
         {
         headers: {
         "Authorization": "Bearer " + token
         }
-        }
-        );
+        });
 
         const data = await res.json();
 
@@ -205,11 +202,19 @@
 
         messages.innerHTML = "";
 
-        data.chats.forEach(chat => {
+        if (!data.messages) return;
+
+        data.messages.forEach(chat => {
 
         messages.innerHTML += `
-        <div class="msg ${chat.sender_role === 'landlord' ? 'mine' : 'other'}">
+        <div class="msg ${
+        chat.sender_role === 'landlord'
+        ? 'mine'
+        : 'other'
+        }">
+
         ${chat.message}
+
         </div>
         `;
         });
@@ -225,8 +230,10 @@
 
         if (!message) return;
 
+        const landlord_id = loggedUser.id;
+
         await fetch(
-        "https://qeja-backend-azkf.onrender.com/send-chat",
+        "https://qeja-backend-azkf.onrender.com/send-message",
         {
         method: "POST",
 
@@ -236,13 +243,18 @@
         },
 
         body: JSON.stringify({
+
+        conversation_id,
+
         landlord_id,
-        tenant_id,
+
+        tenant_id: null,
+
         sender_role: "landlord",
+
         message
         })
-        }
-        );
+        });
 
         document.getElementById("message").value = "";
 
@@ -254,6 +266,7 @@
         setInterval(loadMessages, 2000);
 
     </script>
+ 
 
 </body>
 </html>
