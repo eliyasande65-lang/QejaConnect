@@ -226,45 +226,56 @@
 
         async function sendMessage() {
 
-        const message =
-        document.getElementById("message").value;
+            const message =
+            document.getElementById("message").value;
 
-        if (!message) return;
+            if (!message) return;
 
-        const tenant_id = loggedUser.id;
+            const res1 = await fetch(
+            `https://qeja-backend-azkf.onrender.com/messages/${conversation_id}`,
+            {
+                headers: {
+                    "Authorization": "Bearer " + token
+                }
+            });
 
-        await fetch(
-        "https://qeja-backend-azkf.onrender.com/send-message",
-        {
-        method: "POST",
+            const data1 = await res1.json();
 
-        headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-        },
+            if (!data1.messages || data1.messages.length === 0) {
+                return alert("Conversation not found");
+            }
 
-        body: JSON.stringify({
+            const firstChat = data1.messages[0];
 
-        conversation_id,
+            await fetch(
+            "https://qeja-backend-azkf.onrender.com/send-message",
+            {
+                method: "POST",
 
-        landlord_id: null,
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": "Bearer " + token
+                },
 
-        tenant_id,
+                body: JSON.stringify({
 
-        sender_role: "tenant",
+                    conversation_id,
 
-        message
-        })
-        });
+                    landlord_id: firstChat.landlord_id,
 
-        document.getElementById("message").value = "";
+                    tenant_id: firstChat.tenant_id,
 
-        loadMessages();
+                    sender_role: "tenant",
+
+                    message
+                })
+            });
+
+            document.getElementById("message").value = "";
+
+            loadMessages();
         }
 
-        loadMessages();
-
-        setInterval(loadMessages, 2000);
 
     </script>
   
