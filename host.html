@@ -21,6 +21,7 @@
             min-height: 100vh;
             padding: 20px;
         }
+
         .foot {
             margin-top: 30px;
             text-align: center;
@@ -28,12 +29,14 @@
             font-size: 14px;
             line-height: 1.7;
         }
+
         .page {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         .container {
             width: 100%;
             max-width: 650px;
@@ -81,6 +84,49 @@
             button:hover {
                 background: darkviolet;
             }
+
+        /* ── Profile picture upload label ── */
+        .upload-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 15px;
+            padding: 14px;
+            border-radius: 10px;
+            background: indigo;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            font-size: 15px;
+            color: #333;
+            transition: background 0.2s;
+        }
+
+            .upload-label:hover {
+                background: #f0e6ff;
+                border-color: indigo;
+            }
+
+            .upload-label .icon {
+                font-size: 22px;
+            }
+
+            .upload-label .label-text {
+                flex: 1;
+            }
+
+            .upload-label .file-name {
+                font-size: 13px;
+                color: #888;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 180px;
+            }
+
+        /* Hidden real file input */
+        #profile_pic {
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -90,7 +136,7 @@
 
             <h1>Host / Landlord Sign Up</h1>
 
-            <form>
+            <form id="signupForm">
 
                 <input type="text" placeholder="Full Name" required>
 
@@ -122,7 +168,13 @@
 
                 <textarea placeholder="Describe your property"></textarea>
 
-                <input type="file" required>
+                <!-- Styled upload label — replaces plain file input -->
+                <label for="profile_pic" class="upload-label">
+                    <span class="icon">📷</span>
+                    <span class="label-text">Upload Profile Picture</span>
+                    <span class="file-name" id="fileNameDisplay">No file chosen</span>
+                </label>
+                <input type="file" id="profile_pic" accept="image/*" required>
 
                 <input type="password" placeholder="Password" required>
 
@@ -142,53 +194,64 @@
             <p><em>Regulated by Communication Authority of Kenya</em></p>
         </div>
     </div>
-    
+
     <script>
-        document.querySelector("form").addEventListener("submit", async function (e) {
+
+        // Show selected filename on the label
+        document.getElementById("profile_pic").addEventListener("change", function () {
+        const display = document.getElementById("fileNameDisplay");
+        if (this.files && this.files[0]) {
+        display.textContent = this.files[0].name;
+        display.style.color = "indigo";
+        } else {
+        display.textContent = "No file chosen";
+        display.style.color = "#888";
+        }
+        });
+
+        document.getElementById("signupForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
-        const password = this.querySelectorAll('input[type="password"]')[0].value;
+        const password        = this.querySelectorAll('input[type="password"]')[0].value;
         const confirmPassword = this.querySelectorAll('input[type="password"]')[1].value;
 
-        // 🔴 password check
         if (password !== confirmPassword) {
         alert("Passwords do not match");
         return;
         }
 
-        const fileInput = this.querySelector('input[type="file"]');
-        const file = fileInput.files[0];
+        const fileInput = document.getElementById("profile_pic");
+        const file      = fileInput.files[0];
 
         if (!file) {
         alert("Please upload a profile picture");
         return;
         }
 
-        // ✅ Use FormData (required for multer)
         const formData = new FormData();
-
-        formData.append("fullname", this.querySelector('input[placeholder="Full Name"]').value);
-        formData.append("email", this.querySelector('input[type="email"]').value);
-        formData.append("phone", this.querySelector('input[type="tel"]').value);
-        formData.append("id", this.querySelector('input[placeholder="National ID Number"]').value);
-        formData.append("kra", this.querySelector('input[placeholder="KRA PIN"]').value);
-        formData.append("county", this.querySelector('input[placeholder="County"]').value);
-        formData.append("town", this.querySelector('input[placeholder="Town / Estate"]').value);
-        formData.append("property", this.querySelector('input[placeholder="Property Name"]').value);
-        formData.append("type", this.querySelector("select").value);
-        formData.append("units", this.querySelector('input[type="number"]').value);
+        formData.append("fullname",    this.querySelector('input[placeholder="Full Name"]').value);
+        formData.append("email",       this.querySelector('input[type="email"]').value);
+        formData.append("phone",       this.querySelector('input[type="tel"]').value);
+        formData.append("id",          this.querySelector('input[placeholder="National ID Number"]').value);
+        formData.append("kra",         this.querySelector('input[placeholder="KRA PIN"]').value);
+        formData.append("county",      this.querySelector('input[placeholder="County"]').value);
+        formData.append("town",        this.querySelector('input[placeholder="Town / Estate"]').value);
+        formData.append("property",    this.querySelector('input[placeholder="Property Name"]').value);
+        formData.append("type",        this.querySelector("select").value);
+        formData.append("units",       this.querySelector('input[type="number"]').value);
         formData.append("description", this.querySelector("textarea").value);
-        formData.append("password", password);
-
-        // 👇 profile picture
+        formData.append("password",    password);
         formData.append("profile_pic", file);
 
-        try {
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
-        method: "POST",
-        body: formData // ❗ DO NOT set headers when using FormData
-        });
+        const btn = document.getElementById("createaccount");
+        btn.disabled    = true;
+        btn.textContent = "Creating account...";
 
+        try {
+        const res  = await fetch("https://qeja-backend-azkf.onrender.com/register-landlord", {
+        method: "POST",
+        body:   formData
+        });
         const data = await res.json();
 
         if (data.success) {
@@ -202,7 +265,11 @@
         console.error(err);
         alert("Network error. Try again later.");
         }
+
+        btn.disabled    = false;
+        btn.textContent = "Create Host Account";
         });
+
     </script>
 </body>
 </html>
