@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qeja Connect | Home</title>
 
@@ -17,6 +18,7 @@
             background: #f4f4f4;
             color: #222;
         }
+
         .menu-btn {
             position: fixed;
             top: 20px;
@@ -136,8 +138,8 @@
         .logo-area {
             display: flex;
             align-items: center;
-            margin-left:40px;
-            position:relative;
+            margin-left: 40px;
+            position: relative;
             gap: 15px;
         }
 
@@ -162,7 +164,7 @@
                 opacity: 0.9;
             }
 
-             
+
 
         .hero {
             background: linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop');
@@ -176,6 +178,7 @@
             color: white;
             padding: 20px;
         }
+
         .side-menu a {
             display: block;
             color: white;
@@ -193,6 +196,7 @@
         .side-menu.active {
             left: 0;
         }
+
         .hero-content {
             max-width: 800px;
         }
@@ -206,7 +210,7 @@
             font-size: 1.2rem;
             line-height: 1.7;
         }
-       
+
 
         body.dark {
             background: #121212;
@@ -246,7 +250,7 @@
             body.dark nav a:hover {
                 background: rgba(255,255,255,0.1);
             }
-        
+
 
         .search-section {
             width: 100%;
@@ -279,7 +283,7 @@
                 border: none;
                 border-radius: 10px;
                 background: indigo;
-                height:45px;
+                height: 45px;
                 color: white;
                 font-weight: bold;
                 cursor: pointer;
@@ -290,7 +294,7 @@
                     background: darkviolet;
                 }
 
-        
+
 
         .properties {
             padding: 20px;
@@ -381,7 +385,7 @@
                 background: darkviolet;
             }
 
-        
+
 
         footer {
             margin-top: 50px;
@@ -389,6 +393,7 @@
             color: white;
             padding: 40px 20px;
         }
+
         .overlay {
             position: fixed;
             inset: 0;
@@ -400,6 +405,7 @@
             .overlay.active {
                 display: block;
             }
+
         .view-btn {
             width: 100%;
             padding: 12px;
@@ -416,6 +422,7 @@
             .view-btn:hover {
                 background: darkviolet;
             }
+
         .footer-content {
             max-width: 1200px;
             margin: auto;
@@ -432,10 +439,12 @@
             line-height: 1.8;
             color: #ccc;
         }
+
         body.dark .popup-content {
             background: #1e1e1e;
             color: white;
         }
+
         .side-menu {
             position: fixed;
             top: 0;
@@ -448,6 +457,7 @@
             padding-top: 80px;
             box-shadow: 0 0 10px rgba(0,0,0,0.4);
         }
+
         body.dark .popup-location {
             color: #ccc;
         }
@@ -456,6 +466,7 @@
             background: #333;
             color: white;
         }
+
         #interest-btn {
             width: calc(100% - 30px);
             margin: 0 15px 20px;
@@ -475,6 +486,7 @@
                 opacity: 0.95;
                 box-shadow: 0 4px 12px rgba(75,0,130,0.4);
             }
+
         .copyright {
             text-align: center;
             margin-top: 30px;
@@ -483,7 +495,7 @@
             padding-top: 20px;
         }
 
-        
+
 
         @media(max-width:768px) {
 
@@ -521,7 +533,7 @@
             </div>
 
         </div>
-        
+
         <div class="overlay"
              id="overlay"
              onclick="closeMenu()"></div>
@@ -531,7 +543,7 @@
              id="sideMenu">
             <nav>
                 <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
-               
+
                 <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
                 <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
                 <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
@@ -675,11 +687,11 @@
 
             <p id="popup-description"></p>
 
-            
+
 
             <div class="popup-features" id="popup-features"></div>
 
-            
+
             <a id="map-btn" href="#" target="_blank" style="display:none; width:calc(100% - 30px); margin:0 15px 10px; padding:14px; border-radius:12px; background:#1a73e8; color:white; font-size:15px; font-weight:bold; text-align:center; text-decoration:none;">
                 🗺️ Open on Google Maps
             </a>
@@ -688,7 +700,7 @@
                 Interested
             </button>
 
-            
+
 
         </div>
 
@@ -723,38 +735,38 @@
         }
 
         function handleInterestedClick() {
-            if (!currentProperty) {
-                alert("No property selected");
-                return;
-            }
+        if (!currentProperty) {
+        alert("No property selected");
+        return;
+        }
 
-            interested(currentProperty.landlord_id);
+        interested(currentProperty.landlord_id);
         }
 
     </script>
     <script>
-        
+
         let currentProperty = null;
 
         function openPopup(property) {
-            currentProperty = property;
+        currentProperty = property;
 
-            document.getElementById("popup-image").src = property.image_url;
-            document.getElementById("popup-title").innerText = property.title || "No title";
-            document.getElementById("popup-price").innerText = property.price || "No price";
-            document.getElementById("popup-location").innerText = property.location || "No location";
-            document.getElementById("popup-description").innerText = property.description || "No description";
+        document.getElementById("popup-image").src = property.image_url;
+        document.getElementById("popup-title").innerText = property.title || "No title";
+        document.getElementById("popup-price").innerText = property.price || "No price";
+        document.getElementById("popup-location").innerText = property.location || "No location";
+        document.getElementById("popup-description").innerText = property.description || "No description";
 
-            // Show or hide the map button
-            const mapBtn = document.getElementById("map-btn");
-            if (property.maps_url) {
-                mapBtn.href = property.maps_url;
-                mapBtn.style.display = "block";
-            } else {
-                mapBtn.style.display = "none";
-            }
+        // Show or hide the map button
+        const mapBtn = document.getElementById("map-btn");
+        if (property.maps_url) {
+        mapBtn.href = property.maps_url;
+        mapBtn.style.display = "block";
+        } else {
+        mapBtn.style.display = "none";
+        }
 
-            document.getElementById("popup").style.display = "flex";
+        document.getElementById("popup").style.display = "flex";
         }
 
         function closePopup() {
@@ -764,134 +776,134 @@
         //
         async function interested(landlord_id) {
 
-            console.log("🔥 Interested clicked");
+        console.log("🔥 Interested clicked");
 
-            const btn = document.getElementById("interest-btn");
+        const btn = document.getElementById("interest-btn");
 
-            btn.disabled = true;
-            btn.innerText = "Sending...";
+        btn.disabled = true;
+        btn.innerText = "Sending...";
 
-            const token = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
 
-            const loggedUser =
-            JSON.parse(localStorage.getItem("loggedUser"));
+        const loggedUser =
+        JSON.parse(localStorage.getItem("loggedUser"));
 
-            if (!loggedUser || !token) {
+        if (!loggedUser || !token) {
 
-                alert("Please login first");
+        alert("Please login first");
 
-                btn.disabled = false;
-                btn.innerText = "Interested";
+        btn.disabled = false;
+        btn.innerText = "Interested";
 
-                return;
-            }
+        return;
+        }
 
-            try {
+        try {
 
-                const res = await fetch(
-                "https://qeja-backend-azkf.onrender.com/interested",
-                {
-                    method: "POST",
+        const res = await fetch(
+        "https://qeja-backend-azkf.onrender.com/interested",
+        {
+        method: "POST",
 
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": "Bearer " + token
-                    },
+        headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + token
+        },
 
-                    body: JSON.stringify({
-                        landlord_id,
-                        tenant_id: loggedUser.id,
-                        message: "Hi, I am interested in this property"
-                    })
-                });
+        body: JSON.stringify({
+        landlord_id,
+        tenant_id: loggedUser.id,
+        message: "Hi, I am interested in this property"
+        })
+        });
 
-                const data = await res.json();
+        const data = await res.json();
 
-                if (data.success) {
+        if (data.success) {
 
-                    alert("Chat started successfully ✅");
+        alert("Chat started successfully ✅");
 
-                    // OPTIONAL REDIRECT
-                    localStorage.setItem(
-                        "chatLandlord",
-                        landlord_id
-                    );
+        // OPTIONAL REDIRECT
+        localStorage.setItem(
+        "chatLandlord",
+        landlord_id
+        );
 
-                    window.location.href =
-                    "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        window.location.href =
+        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
 
-                } else {
+        } else {
 
-                    alert(data.message || "Failed");
+        alert(data.message || "Failed");
 
-                }
+        }
 
-            } catch (err) {
+        } catch (err) {
 
-                console.error(err);
+        console.error(err);
 
-                alert("Network error");
+        alert("Network error");
 
-            }
+        }
 
-            btn.disabled = false;
-            btn.innerText = "Interested";
+        btn.disabled = false;
+        btn.innerText = "Interested";
         }
     </script>
-        
-    
+
+
     <script>
         async function loadProperties() {
 
-            try {
-                const res = await fetch("https://qeja-backend-azkf.onrender.com/properties");
-                const data = await res.json();
+        try {
+        const res = await fetch("https://qeja-backend-azkf.onrender.com/properties");
+        const data = await res.json();
 
-                const grid = document.getElementById("propertyGrid");
+        const grid = document.getElementById("propertyGrid");
 
-                grid.innerHTML = "";
+        grid.innerHTML = "";
 
-                data.properties.forEach(property => {
+        data.properties.forEach(property => {
 
-                    grid.innerHTML += `
-                        <div class="property-card">
+        grid.innerHTML += `
+        <div class="property-card">
 
-                            <img src="${property.image_url}" />
+        <img src="${property.image_url}" />
 
-                            <div class="property-info">
+        <div class="property-info">
 
-                                <h3>${property.title}</h3>
+        <h3>${property.title}</h3>
 
-                                <div class="price">
-                                    Ksh ${property.price}
-                                </div>
+        <div class="price">
+        Ksh ${property.price}
+        </div>
 
-                                <div class="location">
-                                    ${property.location}
-                                </div>
+        <div class="location">
+        ${property.location}
+        </div>
 
-                                <p>
-                                    ${property.description}
-                                </p>
+        <p>
+        ${property.description}
+        </p>
 
-                                <small>
-                                    Posted by: ${property.landlord_name || "Unknown"}
-                                </small>
+        <small>
+        Posted by: ${property.landlord_name || "Unknown"}
+        </small>
 
-                                <button class="view-btn"
-                                onclick='openPopup(${JSON.stringify(property)})'>
-                                    View Details
-                                </button>
+        <button class="view-btn"
+        onclick='openPopup(${JSON.stringify(property)})'>
+        View Details
+        </button>
 
-                            </div>
-                        </div>
-                    `;
-                });
+        </div>
+        </div>
+        `;
+        });
 
-            } catch (err) {
-                console.error(err);
-                alert("Failed to load properties");
-            }
+        } catch (err) {
+        console.error(err);
+        alert("Failed to load properties");
+        }
         }
 
         loadProperties();
@@ -936,6 +948,13 @@
         document.getElementById(
         "overlay").classList.remove("active");
 
+        }
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
         }
     </script>
 </body>

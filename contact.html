@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact | Qeja Connect</title>
 
@@ -71,7 +73,6 @@
             color: indigo;
         }
 
-        input,
         textarea {
             width: 100%;
             padding: 14px;
@@ -79,10 +80,6 @@
             border-radius: 10px;
             border: 1px solid #ccc;
             font-size: 15px;
-            box-sizing: border-box;
-        }
-
-        textarea {
             resize: none;
             height: 120px;
         }
@@ -97,18 +94,7 @@
             color: white;
             font-weight: bold;
             cursor: pointer;
-            font-size: 15px;
-            transition: background 0.2s;
         }
-
-            button:hover:not(:disabled) {
-                background: darkviolet;
-            }
-
-            button:disabled {
-                opacity: 0.6;
-                cursor: not-allowed;
-            }
 
         .alert {
             margin-top: 15px;
@@ -132,15 +118,11 @@
                 display: block;
             }
 
-        /* Login notice — shown when user is not logged in */
         .login-notice {
             background: #fff8e1;
             border: 1px solid #ffe082;
             border-radius: 10px;
-            padding: 14px 16px;
-            font-size: 14px;
-            color: #7a5c00;
-            margin-top: 15px;
+            padding: 14px;
             display: none;
         }
 
@@ -149,10 +131,10 @@
             color: white;
             text-align: center;
             padding: 30px;
-            margin-top: 40px;
         }
     </style>
 </head>
+
 <body>
 
     <header>
@@ -160,11 +142,12 @@
             <img src="logo.jpg" id="logo" alt="logo">
             <h2>Qeja Connect</h2>
         </div>
+
         <nav>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+            <a href="home.html">Home</a>
+            <a href="properties.html">Properties</a>
+            <a href="landlords.html">Landlords</a>
+            <a href="contact.html">Contact</a>
         </nav>
     </header>
 
@@ -176,24 +159,18 @@
             <p>Phone: +254714104737</p>
             <p>Alternative: +25471203443</p>
             <p>Nairobi, Kenya</p>
-            <p>
-                Reach out to Qeja Connect support for complaints,
-                inquiries, partnership requests or technical support.
-            </p>
         </div>
 
         <div class="form-box">
             <h1>Send Message</h1>
 
-            <!-- Shown when not logged in -->
             <div class="login-notice" id="loginNotice">
                 You need to be logged in to send a message.
-                <a href="welcome.html" style="color:indigo;font-weight:bold;">Login here →</a>
+                <a href="welcome.html" style="color:indigo;font-weight:bold;">Login →</a>
             </div>
 
-            <!-- Message form — only usable when logged in -->
             <div id="formArea">
-                <textarea id="messageBox" placeholder="Type your message here..." required></textarea>
+                <textarea id="messageBox" placeholder="Type your message here..."></textarea>
                 <button id="sendBtn" onclick="sendMessage()">Send Message</button>
                 <div class="alert" id="alertBox"></div>
             </div>
@@ -207,53 +184,38 @@
 
     <script>
 
-        // ── Check login state on load ───────────────────────
-        const token      = localStorage.getItem("token");
+        const token = localStorage.getItem("token");
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
         window.onload = function () {
         if (!token || !loggedUser) {
         document.getElementById("loginNotice").style.display = "block";
-        document.getElementById("formArea").style.display    = "none";
+        document.getElementById("formArea").style.display = "none";
         }
         };
 
-        // ── Show alert helper ──────────────────────────────
         function showAlert(type, msg) {
         const box = document.getElementById("alertBox");
         box.className = "alert " + type;
         box.textContent = msg;
         }
 
-        // =========================
-        // SEND SUPPORT MESSAGE
-        // Uses the /contact endpoint — no conversation_id needed.
-        // The server stores it in the contact_messages table.
-        // =========================
         async function sendMessage() {
         const message = document.getElementById("messageBox").value.trim();
 
-        if (!message) {
-        showAlert("error", "Please type a message before sending.");
-        return;
-        }
-
-        if (!token) {
-        showAlert("error", "Please log in first.");
-        return;
-        }
+        if (!message) return showAlert("error", "Type a message first");
 
         const btn = document.getElementById("sendBtn");
-        btn.disabled    = true;
+        btn.disabled = true;
         btn.textContent = "Sending...";
 
         try {
         const res = await fetch(
         "https://qeja-backend-azkf.onrender.com/contact",
         {
-        method:  "POST",
+        method: "POST",
         headers: {
-        "Content-Type":  "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer " + token
         },
         body: JSON.stringify({ message })
@@ -263,20 +225,29 @@
         const data = await res.json();
 
         if (data.success) {
-        showAlert("success", "✅ Message sent to Qeja Connect support!");
+        showAlert("success", "Message sent successfully");
         document.getElementById("messageBox").value = "";
         } else {
-        showAlert("error", data.message || "Failed to send message.");
+        showAlert("error", data.message || "Failed");
         }
 
-        } catch (err) {
-        showAlert("error", "Network error. Please try again.");
+        } catch {
+        showAlert("error", "Network error");
         }
 
-        btn.disabled    = false;
+        btn.disabled = false;
         btn.textContent = "Send Message";
         }
 
+    </script>
+
+    <!-- FIXED SERVICE WORKER -->
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/QejaConnect/sw.js")
+        .then(() => console.log("SW registered"))
+        .catch(err => console.log("SW error:", err));
+        }
     </script>
 
 </body>

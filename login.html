@@ -2,8 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenant Sign Up</title>
+
+    <title>Tenant Login</title>
 
     <style>
         * {
@@ -42,7 +45,7 @@
 
         h1 {
             text-align: center;
-            color: purple;
+            color: white;
         }
 
         form {
@@ -61,7 +64,7 @@
         .foot {
             margin-top: 30px;
             text-align: center;
-            color: #555;
+            color: #ddd;
             font-size: 14px;
             line-height: 1.7;
         }
@@ -83,38 +86,42 @@
             }
     </style>
 </head>
+
 <body>
 
     <div class="page">
+
         <div class="container">
 
             <h1>Login to continue</h1>
 
             <form id="loginForm">
 
-                
-
                 <input type="email" name="email" placeholder="Email" required>
-
                 <input type="password" name="password" placeholder="Password" required>
 
                 <button type="submit">Login</button>
-                <p>No account? <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Sign up</a></p>
+
+                <p style="color:white;">
+                    No account?
+                    <a href="welcome.html" style="color:yellow;">Sign up</a>
+                </p>
 
             </form>
 
-
-
         </div>
+
         <div class="foot">
-            <h3>Qeja Connect Credits</h3><br />
-            <p>Developed by QejaConnect_Kenya ltd.</p><br />
-            <p>Company Email address: qejaconnect@outlook.com</p>
-            <p>Customer hotline: +254714 104 737</p>
-            <p>Customer Hotline2: +25471 203 443</p>
+            <h3>Qeja Connect Credits</h3>
+            <p>Developed by QejaConnect_Kenya ltd.</p>
+            <p>Company Email: qejaconnect@outlook.com</p>
+            <p>Hotline: +254714 104 737</p>
+            <p>Hotline 2: +25471 203 443</p>
             <p><em>Regulated by Communication Authority of Kenya</em></p>
         </div>
+
     </div>
+
     <script>
 
         document.getElementById("loginForm")
@@ -123,98 +130,60 @@
         e.preventDefault();
 
         const formData = {
-
         email: this.email.value,
-
         password: this.password.value
-
         };
-
 
         try {
 
         const response = await fetch(
         "https://qeja-backend-azkf.onrender.com/login",
         {
-
         method: "POST",
-
         headers: {
         "Content-Type": "application/json"
         },
-
         body: JSON.stringify(formData)
-
         });
 
-
         const data = await response.json();
-
-
-        // LOGIN SUCCESS
 
         if(response.ok){
 
         alert("Login successful");
 
-        // optional local storage
-        
-
-       localStorage.setItem("token", data.token);
+        localStorage.setItem("token", data.token);
         localStorage.setItem("role", data.role);
-        localStorage.setItem(
-        "loggedUser",
-        JSON.stringify(data.user)
-        );
+        localStorage.setItem("loggedUser", JSON.stringify(data.user));
+
         if(data.role === "landlord"){
-
         window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-
-        }else{
-
+        "hostdashboard.html";
+        } else {
         window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/home.html";
-
+        "home.html";
         }
 
-        }
-
-        // WRONG PASSWORD / EMAIL
-
-        else{
-
+        } else {
         alert(data.message || "Invalid email or password");
-
         }
 
-        }
-
-        catch(error){
-
+        } catch(error){
         console.log(error);
-
         alert("Server error. Please try again later.");
-
         }
 
         });
 
+    </script>
 
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-
-        if(data.role === "landlord"){
-
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
-
-        }else{
-
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/home.html";
-
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
         }
     </script>
+
 </body>
 </html>

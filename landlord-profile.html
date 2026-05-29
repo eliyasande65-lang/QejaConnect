@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Profile | Qeja Connect</title>
 
@@ -16,7 +18,6 @@
             background: #f4f4f4;
         }
 
-        /* ── Header (matching home.html) ── */
         header {
             background: linear-gradient(45deg, indigo, darkviolet);
             padding: 10px 15px;
@@ -60,7 +61,6 @@
                 opacity: 0.9;
             }
 
-        /* ── Side menu ── */
         .side-menu {
             position: fixed;
             top: 0;
@@ -103,7 +103,6 @@
                 display: block;
             }
 
-        /* ── Profile card ── */
         .container {
             max-width: 900px;
             margin: 30px auto;
@@ -126,15 +125,6 @@
                 border-radius: 50%;
                 object-fit: cover;
                 border: 4px solid white;
-            }
-
-            .top-banner h2 {
-                margin: 12px 0 4px;
-            }
-
-            .top-banner p {
-                margin: 0;
-                opacity: 0.9;
             }
 
         .content {
@@ -164,25 +154,12 @@
             font-size: 15px;
             font-weight: bold;
             margin-top: 10px;
-            transition: background 0.2s;
         }
 
-            .action-btn:hover {
-                background: darkviolet;
-            }
-
-        .error-state {
+        .error-state, .loader {
             text-align: center;
             padding: 60px 20px;
             color: gray;
-            font-size: 16px;
-        }
-
-        .loader {
-            text-align: center;
-            padding: 60px;
-            color: indigo;
-            font-size: 18px;
         }
     </style>
 </head>
@@ -191,7 +168,7 @@
 
     <header>
         <button class="menu-btn" onclick="toggleMenu()">☰</button>
-        <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
+        <img src="logo.jpg" id="logo">
         <div class="brand">
             <h2>Qeja Connect</h2>
             <p>Quality accommodation providence</p>
@@ -201,11 +178,11 @@
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
     <div class="side-menu" id="sideMenu">
-        <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
-        <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
-        <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
-        <a href="https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html">Dashboard</a>
-        <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
+        <a href="home.html">Home</a>
+        <a href="landlords.html">Landlords</a>
+        <a href="contact.html">Contact</a>
+        <a href="hostdashboard.html">Dashboard</a>
+        <a href="welcome.html">Log out</a>
     </div>
 
     <div id="profile">
@@ -215,6 +192,7 @@
     <script>
 
         async function loadProfile() {
+
         const profileDiv = document.getElementById("profile");
         const id = new URLSearchParams(window.location.search).get("id");
 
@@ -224,10 +202,11 @@
         }
 
         try {
-        // FIX: calls /landlords/:id — this route now exists in server.js
-        const res  = await fetch(
+
+        const res = await fetch(
         `https://qeja-backend-azkf.onrender.com/landlords/${id}`
         );
+
         const data = await res.json();
 
         if (!data.success || !data.landlord) {
@@ -239,13 +218,13 @@
 
         const img = l.profile_pic
         ? l.profile_pic
-        : "https://eliyasande65-lang.github.io/QejaConnect/default-user.png";
+        : "default-user.png";
 
         profileDiv.innerHTML = `
         <div class="container">
 
         <div class="top-banner">
-        <img src="${img}" alt="${l.fullname}">
+        <img src="${img}">
         <h2>${l.fullname}</h2>
         <p>✔ Verified Host</p>
         </div>
@@ -258,6 +237,7 @@
         <div class="info-card"><b>Property:</b> ${l.property_name || "Not listed"}</div>
         <div class="info-card"><b>Type:</b> ${l.property_type || "—"}</div>
         <div class="info-card"><b>Units:</b> ${l.units || "—"}</div>
+
         ${l.description ? `<div class="info-card"><b>About:</b> ${l.description}</div>` : ""}
 
         <button class="action-btn" onclick="startChat(${l.id})">
@@ -269,34 +249,35 @@
         `;
 
         } catch (err) {
-        profileDiv.innerHTML = `<div class="error-state">Failed to load profile. Please try again.</div>`;
+        profileDiv.innerHTML = `<div class="error-state">Failed to load profile.</div>`;
         }
         }
 
-        // ── Start chat from profile page ───────────────────
         async function startChat(landlord_id) {
-        const token      = localStorage.getItem("token");
+
+        const token = localStorage.getItem("token");
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
         if (!token || !loggedUser) {
         alert("Please log in to start a conversation.");
-        location.href = "https://eliyasande65-lang.github.io/QejaConnect/welcome.html";
+        location.href = "welcome.html";
         return;
         }
 
         try {
+
         const res = await fetch(
         "https://qeja-backend-azkf.onrender.com/interested",
         {
-        method:  "POST",
+        method: "POST",
         headers: {
-        "Content-Type":  "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
         landlord_id,
         tenant_id: loggedUser.id,
-        message:   "Hi, I am interested in your property"
+        message: "Hi, I am interested in your property"
         })
         }
         );
@@ -305,7 +286,7 @@
 
         if (data.success) {
         localStorage.setItem("conversation_id", data.conversation_id);
-        location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
+        location.href = "chat-tenant.html";
         } else {
         alert(data.message || "Could not start chat");
         }
@@ -315,7 +296,6 @@
         }
         }
 
-        // ── Menu ───────────────────────────────────────────
         function toggleMenu() {
         document.getElementById("sideMenu").classList.toggle("active");
         document.getElementById("overlay").classList.toggle("active");
@@ -327,6 +307,16 @@
         }
 
         loadProfile();
+
+    </script>
+
+    <script>
+        // FIXED: GitHub Pages safe
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
+        }
     </script>
 
 </body>

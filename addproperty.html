@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Property</title>
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         * {
@@ -679,6 +680,12 @@
         el.innerHTML = `<p class="${type === "error" ? "error-text" : "success-text"}">${msg}</p>`;
         }
     </script>
-
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
+        }
+    </script>
 </body>
 </html>

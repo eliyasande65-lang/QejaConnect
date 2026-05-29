@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Sign Up</title>
 
@@ -32,12 +33,14 @@
             padding: 30px;
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
+
         .page {
             width: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
+
         h1 {
             text-align: center;
             color: purple;
@@ -55,6 +58,7 @@
             border: 1px solid #ccc;
             font-size: 16px;
         }
+
         .foot {
             margin-top: 30px;
             text-align: center;
@@ -62,6 +66,7 @@
             font-size: 14px;
             line-height: 1.7;
         }
+
         button {
             margin-top: 20px;
             padding: 14px;
@@ -98,7 +103,7 @@
 
             </form>
 
-            
+
 
         </div>
         <div class="foot">
@@ -139,6 +144,13 @@
         window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/login.html";
         }
         });
+    </script>
+    <script>
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
+        }
     </script>
 </body>
 </html>

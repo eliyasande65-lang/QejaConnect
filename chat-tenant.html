@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Chat | Qeja Connect</title>
 
+    <!-- FIX: GitHub Pages safe asset paths -->
+    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <style>
         * {
             box-sizing: border-box;
@@ -77,7 +80,6 @@
             line-height: 1.5;
         }
 
-        /* Tenant messages appear on the RIGHT */
         .mine {
             background: indigo;
             color: white;
@@ -85,7 +87,6 @@
             border-bottom-right-radius: 4px;
         }
 
-        /* Landlord messages appear on the LEFT */
         .other {
             background: white;
             color: black;
@@ -227,7 +228,6 @@
 
     <script>
 
-        // ── State ──────────────────────────────────────────
         const token      = localStorage.getItem("token");
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         const convId     = localStorage.getItem("conversation_id");
@@ -237,15 +237,14 @@
         let pollingTimer     = null;
         let lastMessageCount = -1;
 
-        // ── Boot ───────────────────────────────────────────
         if (!token || !loggedUser || !convId) {
-        document.getElementById("emptyState").textContent = "Session expired. Please log in again.";
+        document.getElementById("emptyState").textContent =
+        "Session expired. Please log in again.";
         } else {
         loadMessages();
         pollingTimer = setInterval(loadMessages, 4000);
         }
 
-        // ── Load messages ──────────────────────────────────
         async function loadMessages() {
         try {
         const res = await fetch(
@@ -253,26 +252,14 @@
         { headers: { "Authorization": "Bearer " + token } }
         );
 
-        if (!res.ok) {
-        document.getElementById("chatStatus").textContent = "Error loading chat";
-        return;
-        }
-
         const data = await res.json();
 
-        if (!data.success) {
-        document.getElementById("chatStatus").textContent = "Error loading chat";
-        return;
-        }
-
-        // Cache IDs for sendMessage — never re-fetched
         cachedLandlordId = data.landlord_id;
         cachedTenantId   = data.tenant_id;
 
-        const msgs      = data.messages || [];
+        const msgs = data.messages || [];
         const container = document.getElementById("messages");
 
-        // Always re-render — no diff check that could suppress updates
         const atBottom =
         container.scrollHeight - container.scrollTop - container.clientHeight < 80;
 
@@ -289,10 +276,10 @@
         }).join("");
         }
 
-        // Scroll to bottom on new messages or first load
         if (atBottom || msgs.length !== lastMessageCount) {
         container.scrollTop = container.scrollHeight;
         }
+
         lastMessageCount = msgs.length;
 
         document.getElementById("chatStatus").textContent = "Active conversation";
@@ -302,85 +289,54 @@
         }
         }
 
-        // ── Send message ───────────────────────────────────
         async function sendMessage() {
-        const input   = document.getElementById("messageInput");
+        const input = document.getElementById("messageInput");
         const message = input.value.trim();
         if (!message) return;
 
-        if (!cachedLandlordId || !cachedTenantId) {
-        alert("Conversation not ready yet — please wait a moment.");
-        return;
-        }
-
         const btn = document.getElementById("sendBtn");
         btn.disabled = true;
-        input.value  = "";
+        input.value = "";
 
         try {
-        const res = await fetch(
+        await fetch(
         "https://qeja-backend-azkf.onrender.com/send-message",
         {
         method: "POST",
         headers: {
-        "Content-Type":  "application/json",
+        "Content-Type": "application/json",
         "Authorization": "Bearer " + token
         },
         body: JSON.stringify({
         conversation_id: convId,
-        landlord_id:     cachedLandlordId,
-        tenant_id:       cachedTenantId,
-        sender_role:     "tenant",
+        landlord_id: cachedLandlordId,
+        tenant_id: cachedTenantId,
+        sender_role: "tenant",
         message
         })
         }
         );
 
-        const data = await res.json();
-
-        if (data.success) {
-        // Wait for DB write to complete before fetching
         await new Promise(r => setTimeout(r, 300));
-        await loadMessages();
-        } else {
-        alert(data.message || "Failed to send");
-        input.value = message;
-        }
+        loadMessages();
+
         } catch (err) {
-        alert("Network error. Please try again.");
-        input.value = message;
+        alert("Network error");
         }
 
         btn.disabled = false;
-        input.focus();
         }
 
-        // ── Enter key to send ──────────────────────────────
         function handleKey(e) {
-        if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-        }
+        if (e.key === "Enter") sendMessage();
         }
 
-        // ── XSS protection ─────────────────────────────────
         function escapeHtml(str) {
         return String(str)
         .replace(/&/g, "&amp;")
         .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;");
+        .replace(/>/g, "&gt;");
         }
-
-        // ── Pause polling when tab not visible ─────────────
-        document.addEventListener("visibilitychange", () => {
-        if (document.hidden) {
-        clearInterval(pollingTimer);
-        } else {
-        loadMessages();
-        pollingTimer = setInterval(loadMessages, 5000);
-        }
-        });
 
     </script>
 

@@ -2,6 +2,8 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
+    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlords | Qeja Connect</title>
 
@@ -109,20 +111,21 @@
         }
     </style>
 </head>
+
 <body>
 
     <header>
 
         <div class="logo-area">
-            <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo">
+            <img src="logo.jpg" id="logo">
             <h2>Qeja Connect</h2>
         </div>
 
         <nav>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/home.html">Home</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/properties.html">Properties</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/landlords.html">Landlords</a>
-            <a href="https://eliyasande65-lang.github.io/QejaConnect/contact.html">Contact</a>
+            <a href="home.html">Home</a>
+            <a href="properties.html">Properties</a>
+            <a href="landlords.html">Landlords</a>
+            <a href="contact.html">Contact</a>
         </nav>
 
     </header>
@@ -132,15 +135,14 @@
         <p>Meet trusted property owners and accommodation providers.</p>
     </section>
 
-    <section class="landlord-grid" id="landlordGrid">
-
-
-    </section>
+    <section class="landlord-grid" id="landlordGrid"></section>
 
     <footer>
         <p>© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
     </footer>
+
     <script>
+
         async function loadLandlords() {
 
         try {
@@ -150,14 +152,17 @@
         const grid = document.getElementById("landlordGrid");
         grid.innerHTML = "";
 
-        data.landlords.forEach(landlord => {
+        // SAFE GUARD
+        (data.landlords || []).forEach(landlord => {
 
         grid.innerHTML += `
         <div class="profile">
 
-        <img src="${landlord.profile_pic
+        <img src="${
+        landlord.profile_pic
         ? landlord.profile_pic
-        : 'https://eliyasande65-lang.github.io/QejaConnect/default-user.png'}">
+        : 'default-user.png'
+        }">
 
         <h3>${landlord.fullname}</h3>
 
@@ -186,6 +191,17 @@
         }
 
         loadLandlords();
+
     </script>
+
+    <script>
+        // FIXED: GitHub Pages safe path
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("sw.js")
+        .then(() => console.log("Service Worker registered"))
+        .catch(err => console.log("SW error:", err));
+        }
+    </script>
+
 </body>
 </html>
