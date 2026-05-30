@@ -3,35 +3,40 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- ============================================================
-     QejaConnect PWA — paste this block inside <head> on EVERY page
-     ============================================================ -->
+    
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/QejaConnect/manifest.json">
+    <link rel="manifest" href="manifest.json">
 
-    <!-- Theme colour (browser chrome / Android status bar) -->
+    <!-- Theme colour -->
     <meta name="theme-color" content="#4f46e5">
 
     <!-- iOS home-screen support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
-    <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+    <link rel="apple-touch-icon" href="logo.jpg">
 
-    <!-- Register Service Worker -->
+    <!-- Register Service Worker + Request Notification Permission -->
     <script>
         if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/QejaConnect/sw.js')
-        .then(reg => console.log('SW registered:', reg.scope))
-        .catch(err => console.error('SW error:', err));
+        window.addEventListener('load', async () => {
+        // Register SW
+        const reg = await navigator.serviceWorker.register('/QejaConnect/sw.js');
+        console.log('SW registered:', reg.scope);
+
+        // Ask for notification permission after a short delay
+        // (feels less intrusive than asking immediately on load)
+        setTimeout(async () => {
+        if ('Notification' in window && Notification.permission === 'default') {
+        const permission = await Notification.requestPermission();
+        console.log('Notification permission:', permission);
+        }
+        }, 4000); // ask after 4 seconds
         });
         }
     </script>
 
-    <!-- ============================================================
-         END QejaConnect PWA block
-         ============================================================ -->
+    
 
     <meta name="theme-color" content="#4b0082">
     <meta charset="utf-8" />
