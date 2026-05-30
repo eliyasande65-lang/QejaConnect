@@ -106,7 +106,7 @@
             font-size: 13px;
         }
 
-        /* ── Toast notification ── */
+        /* ── Toast ── */
         #toast {
             position: fixed;
             bottom: 30px;
@@ -223,7 +223,6 @@
                 background: #581c87;
             }
 
-        /* ── Loading spinner on button ── */
         .btn-loading {
             opacity: 0.7;
             pointer-events: none;
@@ -315,14 +314,14 @@
         }
         });
 
-        // ── Helper: redirect based on role ────────────────────────
+        // ── Helper: redirect based on role ─────────────────────────
         function redirectUser(role) {
         window.location.href = role === 'landlord'
         ? 'hostdashboard.html'
         : 'home.html';
         }
 
-        // ── Normal login ───────────────────────────────────────────
+        // ── Normal login ────────────────────────────────────────────
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
@@ -376,7 +375,7 @@
         }
         });
 
-        // ── Modal: Yes ─────────────────────────────────────────────
+        // ── Modal: Yes ──────────────────────────────────────────────
         document.getElementById('fp-yes-btn').addEventListener('click', async () => {
         const user = window._pendingUser;
         document.getElementById('fp-modal-overlay').classList.remove('active');
@@ -397,20 +396,99 @@
         }
         });
 
-        // ── Modal: No ──────────────────────────────────────────────
+        // ── Modal: No ───────────────────────────────────────────────
         document.getElementById('fp-no-btn').addEventListener('click', () => {
         localStorage.setItem('webauthn_user_id', 'declined');
         document.getElementById('fp-modal-overlay').classList.remove('active');
         redirectUser(window._pendingUser.role);
         });
 
-        // ── Register fingerprint ───────────────────────────────────
+        // ── Register fingerprint (returns true/false) ───────────────
         async function registerFingerprint(userId, userName, userEmail) {
         try {
         const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: J
+        body: JSON.stringify({ userId, userName, userEmail })
+        });
+
+        if (!optRes.ok) {
+        const err = await optRes.json();
+        showToast('Server: ' + (err.message || JSON.stringify(err)), 'error', 10000);
+        console.error('Register start failed:', err);
+        return false;
+        }
+
+        const options = await optRes.json();
+        console.log('WebAuthn options received:', options);
+
+        const credential = await SimpleWebAuthnBrowser.startRegistration(options);
+        console.log('Credential created:', credential);
+
+        const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, credential })
+        });
+
+        const result = await verifyRes.json();
+        console.log('Verify result:', result);
+
+        if (result.success) {
+        localStorage.setItem('webauthn_user_id', String(userId));
+        return true;
+        }
+
+        showToast('Server rejected credential: ' + (result.message || 'unknown error'), 'error', 10000);
+        return false;
+
+        } catch (err) {
+        showToast(err.name + ': ' + err.message, 'error', 10000);
+        console.error('Fingerprint registration error:', err.name, err.message);
+        return false;
+        }
+        }
+
+        // ── Fingerprint login ───────────────────────────────────────
+        document.getElementById('fingerprint-btn').addEventListener('click', async () => {
+        const userId = localStorage.getItem('webauthn_user_id');
+        if (!userId || userId === 'declined') return;
+
+        showToast('Scanning fingerprint...', 'info', 8000);
+
+        try {
+        const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+        });
+        const options = await optRes.json();
+
+        const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
+
+        const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, credential })
+        });
+
+        const data = await verifyRes.json();
+
+        if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('loggedUser', JSON.stringify(data.user));
+        showToast('Fingerprint verified! 👆', 'success');
+        setTimeout(() => redirectUser(data.role), 1200);
+        } else {
+        showToast(data.message || 'Fingerprint login failed', 'error');
+        }
+
+        } catch (err) {
+        console.error('Fingerprint login error:', err);
+        showToast('Fingerprint failed. Try your password.', 'error');
+        }
+        });
     </script>
 </body>
 </html>
