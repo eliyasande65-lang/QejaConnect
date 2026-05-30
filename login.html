@@ -414,46 +414,47 @@
 
         // ── Register fingerprint (returns true/false) ──────────────
         async function registerFingerprint(userId, userName, userEmail) {
-        try {
-        const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, userName, userEmail })
-        });
+            try {
+                const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, userName, userEmail })
+                });
 
-        if (!optRes.ok) {
-        const err = await optRes.json();
-        console.error('Register start failed:', err);
-        return false;
-        }
+                if (!optRes.ok) {
+                    const err = await optRes.json();
+                    showToast('Server: ' + (err.message || JSON.stringify(err)), 'error', 10000);
+                    console.error('Register start failed:', err);
+                    return false;
+                }
 
-        const options = await optRes.json();
-        console.log('WebAuthn options received:', options);
+                const options = await optRes.json();
+                console.log('WebAuthn options received:', options);
 
-        const credential = await SimpleWebAuthnBrowser.startRegistration(options);
-        console.log('Credential created:', credential);
+                const credential = await SimpleWebAuthnBrowser.startRegistration(options);
+                console.log('Credential created:', credential);
 
-        const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, credential })
-        });
+                const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ userId, credential })
+                });
 
-        const result = await verifyRes.json();
-        console.log('Verify result:', result);
+                const result = await verifyRes.json();
+                console.log('Verify result:', result);
 
-        if (result.success) {
-        localStorage.setItem('webauthn_user_id', String(userId));
-        return true;
-        }
+                if (result.success) {
+                    localStorage.setItem('webauthn_user_id', String(userId));
+                    return true;
+                }
 
-        return false;
+                return false;
 
-        } } catch (err) {
-            showToast(err.name + ': ' + err.message, 'error', 10000);
-            console.error('Fingerprint registration error:', err.name, err.message);
-            return false;
-        }
+            } catch (err) {
+                showToast(err.name + ': ' + err.message, 'error', 10000);
+                console.error('Fingerprint registration error:', err.name, err.message);
+                return false;
+            }
         }
 
         // ── Fingerprint login ──────────────────────────────────────
