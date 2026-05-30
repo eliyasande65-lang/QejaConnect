@@ -371,6 +371,15 @@
         .privacy {
             color: white;
         }
+        #install-btn {
+            background: #4f46e5;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
     </style>
 </head>
 
@@ -400,7 +409,9 @@
                 <li>Hosts should check regularly</li>
             </ul>
         </div>
-
+        <button id="install-btn" style="display:none;">
+            Install QejaConnect
+        </button>
         <div class="description">
             <div class="overview">
                 <h3 class="misc1"><em>What is Qeja Connect</em></h3>
@@ -460,6 +471,31 @@
         document.getElementById('login').onclick = () =>
         window.location.href = "login.html";
     </script>
+    <!-- Install prompt logic -->
+    <script>
+        let deferredPrompt;
 
+        window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'block';
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+        document.getElementById('install-btn').style.display = 'none';
+        }
+        deferredPrompt = null;
+        });
+
+        // Hide the button if already installed
+        window.addEventListener('appinstalled', () => {
+        document.getElementById('install-btn').style.display = 'none';
+        deferredPrompt = null;
+        });
+    </script>
 </body>
 </html>
