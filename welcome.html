@@ -3,7 +3,7 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
 
@@ -20,23 +20,17 @@
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', async () => {
-        // Register SW
         const reg = await navigator.serviceWorker.register('/QejaConnect/sw.js');
         console.log('SW registered:', reg.scope);
-
-        // Ask for notification permission after a short delay
-        // (feels less intrusive than asking immediately on load)
         setTimeout(async () => {
         if ('Notification' in window && Notification.permission === 'default') {
         const permission = await Notification.requestPermission();
         console.log('Notification permission:', permission);
         }
-        }, 4000); // ask after 4 seconds
+        }, 4000);
         });
         }
     </script>
-
-    
 
     <meta name="theme-color" content="#4b0082">
     <meta charset="utf-8" />
@@ -201,25 +195,153 @@
                 cursor: pointer;
             }
 
+        /* ── NEW POWERED BY BANNER ── */
         .bar-fill {
             margin-top: 40px;
             width: 100%;
-            text-align: center;
-            padding: 20px;
-            background: linear-gradient(45deg, violet, darkviolet);
-            background-image: repeating-linear-gradient( 45deg, transparent, transparent 5px, rgba(255, 255, 255, 0.2) 10px, rgba(255, 255, 255, 0.2) 20px );
-            animation: move-stripes 1s linear infinite;
+            position: relative;
+            overflow: hidden;
+            padding: 28px 20px;
+            background: linear-gradient(135deg, #1e1b4b 0%, #3b0764 50%, #1e1b4b 100%);
+            border-top: 1px solid rgba(167,139,250,0.3);
+            border-bottom: 1px solid rgba(167,139,250,0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
         }
 
-        @keyframes move-stripes {
+            /* Sweeping shimmer overlay */
+            .bar-fill::before {
+                content: '';
+                position: absolute;
+                inset: 0;
+                background: linear-gradient( 105deg, transparent 30%, rgba(167,139,250,0.15) 50%, transparent 70% );
+                animation: shimmer 2.8s ease-in-out infinite;
+                pointer-events: none;
+            }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Pulsing glow orbs left & right */
+        .bar-fill::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(139,92,246,0.35) 0%, transparent 70%);
+            border-radius: 50%;
+            left: -60px;
+            top: 50%;
+            transform: translateY(-50%);
+            animation: pulse-orb 3s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        @keyframes pulse-orb {
             from {
-                background-position: 0 0;
+                opacity: 0.4;
+                transform: translateY(-50%) scale(1);
             }
 
             to {
-                background-position: 10px 0;
+                opacity: 0.8;
+                transform: translateY(-50%) scale(1.2);
             }
         }
+
+        .bar-dots {
+            display: flex;
+            gap: 6px;
+            position: relative;
+            z-index: 1;
+        }
+
+            .bar-dots span {
+                width: 6px;
+                height: 6px;
+                border-radius: 50%;
+                background: rgba(196,181,253,0.7);
+                animation: dot-bounce 1.4s ease-in-out infinite;
+            }
+
+                .bar-dots span:nth-child(2) {
+                    animation-delay: 0.2s;
+                }
+
+                .bar-dots span:nth-child(3) {
+                    animation-delay: 0.4s;
+                }
+
+        @keyframes dot-bounce {
+            0%, 100% {
+                transform: translateY(0);
+                opacity: 0.5;
+            }
+
+            50% {
+                transform: translateY(-6px);
+                opacity: 1;
+            }
+        }
+
+        .bar-text {
+            position: relative;
+            z-index: 1;
+            font-size: 0.8rem;
+            font-weight: 700;
+            letter-spacing: 0.18em;
+            text-transform: uppercase;
+            color: transparent;
+            background: linear-gradient(90deg, #c4b5fd, #ffffff, #a78bfa, #ffffff, #c4b5fd);
+            background-size: 300% auto;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: text-shine 3s linear infinite;
+        }
+
+        @keyframes text-shine {
+            0% {
+                background-position: 0% center;
+            }
+
+            100% {
+                background-position: 300% center;
+            }
+        }
+
+        .bar-badge {
+            position: relative;
+            z-index: 1;
+            background: rgba(139,92,246,0.25);
+            border: 1px solid rgba(167,139,250,0.4);
+            border-radius: 20px;
+            padding: 4px 14px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            letter-spacing: 0.12em;
+            color: #ddd6fe;
+            animation: badge-glow 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes badge-glow {
+            from {
+                box-shadow: 0 0 6px rgba(139,92,246,0.3);
+            }
+
+            to {
+                box-shadow: 0 0 18px rgba(139,92,246,0.7);
+            }
+        }
+        /* ── END BANNER ── */
 
         .foot {
             text-align: center;
@@ -300,7 +422,17 @@
         <button onclick="closePopup()" class="crimson">Close</button>
     </div>
 
-    <div class="bar-fill"><h1>poweredby cynet</h1></div>
+    <!-- NEW BANNER -->
+    <div class="bar-fill">
+        <div class="bar-dots">
+            <span></span><span></span><span></span>
+        </div>
+        <span class="bar-text">Powered by</span>
+        <span class="bar-badge">QC</span>
+        <div class="bar-dots">
+            <span></span><span></span><span></span>
+        </div>
+    </div>
 
     <div class="foot">
         <h3>Qeja Connect Credits</h3>
@@ -327,8 +459,6 @@
 
         document.getElementById('login').onclick = () =>
         window.location.href = "login.html";
-
-        
     </script>
 
 </body>
