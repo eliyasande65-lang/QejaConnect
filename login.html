@@ -449,9 +449,10 @@
 
         return false;
 
-        } catch (err) {
-        console.error('Fingerprint registration error:', err.name, err.message);
-        return false;
+        } } catch (err) {
+            showToast(err.name + ': ' + err.message, 'error', 10000);
+            console.error('Fingerprint registration error:', err.name, err.message);
+            return false;
         }
         }
 
