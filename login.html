@@ -2,22 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- ============================================================
-     QejaConnect PWA — paste this block inside <head> on EVERY page
-     ============================================================ -->
-    <!-- PWA Manifest -->
     <link rel="manifest" href="/QejaConnect/manifest.json">
-
-    <!-- Theme colour (browser chrome / Android status bar) -->
     <meta name="theme-color" content="#4f46e5">
-
-    <!-- iOS home-screen support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
-
-    <!-- Register Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -27,13 +17,11 @@
         });
         }
     </script>
-
-    <!-- ============================================================
-         END QejaConnect PWA block
-         ============================================================ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Tenant Login</title>
+
+    <!-- SimpleWebAuthn browser library -->
+    <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 
     <style>
         * {
@@ -42,16 +30,21 @@
 
         body {
             margin: 0;
-            margin-top: 100px;
             font-family: Arial, sans-serif;
             background: linear-gradient(45deg, indigo, darkviolet);
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 40px;
-            padding-bottom: 40px;
             min-height: 100vh;
             padding: 20px;
+            padding-top: 60px;
+        }
+
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container {
@@ -61,13 +54,6 @@
             border-radius: 15px;
             padding: 30px;
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
-        }
-
-        .page {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
         }
 
         h1 {
@@ -80,20 +66,12 @@
             flex-direction: column;
         }
 
-        input, select {
+        input {
             padding: 14px;
             margin-top: 15px;
             border-radius: 10px;
             border: 1px solid #ccc;
             font-size: 16px;
-        }
-
-        .foot {
-            margin-top: 30px;
-            text-align: center;
-            color: #ddd;
-            font-size: 14px;
-            line-height: 1.7;
         }
 
         button {
@@ -111,31 +89,55 @@
             button:hover {
                 background: darkviolet;
             }
+
+        /* Fingerprint button */
+        #fingerprint-btn {
+            display: none;
+            margin-top: 12px;
+            background: #312e81;
+            border: 2px solid #818cf8;
+        }
+
+            #fingerprint-btn:hover {
+                background: #3730a3;
+            }
+
+        .divider {
+            text-align: center;
+            color: #a5b4fc;
+            margin-top: 16px;
+            font-size: 13px;
+        }
+
+        .foot {
+            margin-top: 30px;
+            text-align: center;
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.7;
+        }
     </style>
 </head>
 
 <body>
-
     <div class="page">
-
         <div class="container">
-
             <h1>Login to continue</h1>
 
             <form id="loginForm">
-
                 <input type="email" name="email" placeholder="Email" required>
                 <input type="password" name="password" placeholder="Password" required>
-
                 <button type="submit">Login</button>
-
-                <p style="color:white;">
-                    No account?
-                    <a href="welcome.html" style="color:yellow;">Sign up</a>
-                </p>
-
             </form>
 
+            <!-- Fingerprint button — only visible if user has registered biometrics -->
+            <div class="divider">or</div>
+            <button id="fingerprint-btn">👆 Sign in with Fingerprint</button>
+
+            <p style="color:white; text-align:center;">
+                No account?
+                <a href="welcome.html" style="color:yellow;">Sign up</a>
+            </p>
         </div>
 
         <div class="foot">
@@ -146,14 +148,21 @@
             <p>Hotline 2: +25471 203 443</p>
             <p><em>Regulated by Communication Authority of Kenya</em></p>
         </div>
-
     </div>
 
     <script>
+        const API = 'https://qeja-backend-azkf.onrender.com';
 
-        document.getElementById("loginForm")
-        .addEventListener("submit", async function(e) {
+        // ── Show fingerprint button if user has registered before ──
+        window.addEventListener('DOMContentLoaded', () => {
+        const userId = localStorage.getItem('webauthn_user_id');
+        if (userId) {
+        document.getElementById('fingerprint-btn').style.display = 'block';
+        }
+        });
 
+        // ── Normal login ───────────────────────────────────────────
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
         e.preventDefault();
 
         const formData = {
@@ -162,66 +171,123 @@
         };
 
         try {
-
-        const response = await fetch(
-        "https://qeja-backend-azkf.onrender.com/login",
-        {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
+        const response = await fetch(`${API}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
         });
 
         const data = await response.json();
 
-        if(response.ok){
+        if (response.ok) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-        alert("Login successful");
-
-        localStorage.setItem("token", data.token);
-        localStorage.setItem("role", data.role);
-        localStorage.setItem("loggedUser", JSON.stringify(data.user));
-
-        if(data.role === "landlord"){
-        window.location.href =
-        "hostdashboard.html";
-        } else {
-        window.location.href =
-        "home.html";
-        }
-
-        } else {
-        alert(data.message || "Invalid email or password");
-        }
-
-        } catch(error){
-        console.log(error);
-        alert("Server error. Please try again later.");
-        }
-
-        });
-
-    </script>
-    <script>
-        // login.html — show fingerprint button if user registered it before
-        window.addEventListener('DOMContentLoaded', () => {
-          const userId = localStorage.getItem('webauthn_user_id');
-          if (userId) {
-            document.getElementById('fingerprint-btn').style.display = 'block';
-          }
-        });
-    </script>
-    <script>
-        // After normal login succeeds
+        // ── Offer fingerprint registration if not yet set up ──
         const alreadyRegistered = localStorage.getItem('webauthn_user_id');
-        if (!alreadyRegistered) {
-          const enable = confirm('Enable fingerprint login next time?');
-          if (enable) {
-            await registerFingerprint(userId, userName, userEmail);
-          }
+        if (!alreadyRegistered && window.PublicKeyCredential) {
+        const enable = confirm('Enable fingerprint login next time?');
+        if (enable) {
+        await registerFingerprint(data.user.id, data.user.fullname, data.user.email);
         }
-    </script>
+        }
 
+        // ── Redirect based on role ──
+        if (data.role === 'landlord') {
+        window.location.href = 'hostdashboard.html';
+        } else {
+        window.location.href = 'home.html';
+        }
+
+        } else {
+        alert(data.message || 'Invalid email or password');
+        }
+
+        } catch (error) {
+        console.error(error);
+        alert('Server error. Please try again later.');
+        }
+        });
+
+        // ── Register fingerprint ───────────────────────────────────
+        async function registerFingerprint(userId, userName, userEmail) {
+        try {
+        // Get options from server
+        const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, userName, userEmail })
+        });
+        const options = await optRes.json();
+
+        // Trigger device biometric prompt
+        const credential = await SimpleWebAuthnBrowser.startRegistration(options);
+
+        // Send result to server
+        const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, credential })
+        });
+
+        const result = await verifyRes.json();
+        if (result.success) {
+        localStorage.setItem('webauthn_user_id', userId);
+        alert('Fingerprint login enabled! ✅');
+        }
+
+        } catch (err) {
+        console.error('Fingerprint registration failed:', err);
+        // Don't block login if fingerprint setup fails
+        }
+        }
+
+        // ── Fingerprint login ──────────────────────────────────────
+        document.getElementById('fingerprint-btn').addEventListener('click', async () => {
+        const userId = localStorage.getItem('webauthn_user_id');
+        if (!userId) return;
+
+        try {
+        // Get options from server
+        const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId })
+        });
+        const options = await optRes.json();
+
+        // Trigger fingerprint scan
+        const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
+
+        // Verify with server
+        const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ userId, credential })
+        });
+
+        const data = await verifyRes.json();
+
+        if (data.success) {
+        localStorage.setItem('token', data.token);
+        localStorage.setItem('role', data.role);
+        localStorage.setItem('loggedUser', JSON.stringify(data.user));
+
+        if (data.role === 'landlord') {
+        window.location.href = 'hostdashboard.html';
+        } else {
+        window.location.href = 'home.html';
+        }
+        } else {
+        alert(data.message || 'Fingerprint login failed');
+        }
+
+        } catch (err) {
+        console.error('Fingerprint login error:', err);
+        alert('Fingerprint login failed. Try your password instead.');
+        }
+        });
+    </script>
 </body>
 </html>
