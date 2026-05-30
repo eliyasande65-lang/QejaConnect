@@ -203,8 +203,25 @@
         });
 
     </script>
-
-    
+    <script>
+        // login.html — show fingerprint button if user registered it before
+        window.addEventListener('DOMContentLoaded', () => {
+          const userId = localStorage.getItem('webauthn_user_id');
+          if (userId) {
+            document.getElementById('fingerprint-btn').style.display = 'block';
+          }
+        });
+    </script>
+    <script>
+        // After normal login succeeds
+        const alreadyRegistered = localStorage.getItem('webauthn_user_id');
+        if (!alreadyRegistered) {
+          const enable = confirm('Enable fingerprint login next time?');
+          if (enable) {
+            await registerFingerprint(userId, userName, userEmail);
+          }
+        }
+    </script>
 
 </body>
 </html>
