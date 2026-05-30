@@ -491,7 +491,7 @@
         showToast(data.message || 'Fingerprint login failed', 'error');
         }
 
-        } catch (err) {
+        catch (err) {
         console.error('Fingerprint login error:', err);
         showToast('Fingerprint failed. Try your password.', 'error');
         }
