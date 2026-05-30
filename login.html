@@ -296,18 +296,13 @@
         const toast = document.getElementById('toast');
         const icon  = document.getElementById('toast-icon');
         const msg   = document.getElementById('toast-msg');
-
         const icons = { success: '✅', error: '❌', info: 'ℹ️' };
-
-        toast.className = '';           // reset classes
+        toast.className = '';
         toast.classList.add(type);
         icon.textContent = icons[type] || 'ℹ️';
         msg.textContent  = message;
-
-        // Force reflow so transition re-triggers if called back-to-back
         void toast.offsetWidth;
         toast.classList.add('show');
-
         clearTimeout(toastTimer);
         toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
         }
@@ -359,7 +354,6 @@
         const alreadyRegistered = localStorage.getItem('webauthn_user_id');
 
         if (!alreadyRegistered && window.PublicKeyCredential) {
-        // Wait for toast to show, then show modal
         setTimeout(() => {
         window._pendingUser = data;
         document.getElementById('fp-modal-overlay').classList.add('active');
@@ -382,11 +376,10 @@
         }
         });
 
-        // ── Modal: Yes — register fingerprint then redirect ────────
+        // ── Modal: Yes ─────────────────────────────────────────────
         document.getElementById('fp-yes-btn').addEventListener('click', async () => {
         const user = window._pendingUser;
         document.getElementById('fp-modal-overlay').classList.remove('active');
-
         showToast('Setting up fingerprint...', 'info', 10000);
 
         const success = await registerFingerprint(
@@ -399,104 +392,24 @@
         showToast('Fingerprint enabled! ✅', 'success');
         setTimeout(() => redirectUser(user.role), 1500);
         } else {
-        // Registration failed — ask if they want to skip or retry
         showToast('Fingerprint setup failed. Redirecting...', 'error');
         setTimeout(() => redirectUser(user.role), 2500);
         }
         });
 
-        // ── Modal: No — remember and redirect ─────────────────────
+        // ── Modal: No ──────────────────────────────────────────────
         document.getElementById('fp-no-btn').addEventListener('click', () => {
         localStorage.setItem('webauthn_user_id', 'declined');
         document.getElementById('fp-modal-overlay').classList.remove('active');
         redirectUser(window._pendingUser.role);
         });
 
-        // ── Register fingerprint (returns true/false) ──────────────
+        // ── Register fingerprint ───────────────────────────────────
         async function registerFingerprint(userId, userName, userEmail) {
-            try {
-                const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, userName, userEmail })
-                });
-
-                if (!optRes.ok) {
-                    const err = await optRes.json();
-                    showToast('Server: ' + (err.message || JSON.stringify(err)), 'error', 10000);
-                    console.error('Register start failed:', err);
-                    return false;
-                }
-
-                const options = await optRes.json();
-                console.log('WebAuthn options received:', options);
-
-                const credential = await SimpleWebAuthnBrowser.startRegistration(options);
-                console.log('Credential created:', credential);
-
-                const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ userId, credential })
-                });
-
-                const result = await verifyRes.json();
-                console.log('Verify result:', result);
-
-                if (result.success) {
-                    localStorage.setItem('webauthn_user_id', String(userId));
-                    return true;
-                }
-
-                return false;
-
-            } catch (err) {
-                showToast(err.name + ': ' + err.message, 'error', 10000);
-                console.error('Fingerprint registration error:', err.name, err.message);
-                return false;
-            }
-        }
-
-        // ── Fingerprint login ──────────────────────────────────────
-        document.getElementById('fingerprint-btn').addEventListener('click', async () => {
-        const userId = localStorage.getItem('webauthn_user_id');
-        if (!userId || userId === 'declined') return;
-
-        showToast('Scanning fingerprint...', 'info', 8000);
-
         try {
-        const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
+        const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId })
-        });
-        const options = await optRes.json();
-
-        const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
-
-        const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, credential })
-        });
-
-        const data = await verifyRes.json();
-
-        if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('loggedUser', JSON.stringify(data.user));
-        showToast('Fingerprint verified! 👆', 'success');
-        setTimeout(() => redirectUser(data.role), 1200);
-        } else {
-        showToast(data.message || 'Fingerprint login failed', 'error');
-        }
-
-        catch (err) {
-        console.error('Fingerprint login error:', err);
-        showToast('Fingerprint failed. Try your password.', 'error');
-        }
-        });
-    </script>
-</body>
-</html>
+        body: J
+        </body>
+        </html>
