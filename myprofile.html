@@ -500,31 +500,35 @@
         const endpoint = role === 'landlord' ? '/upload-profile-pic' : '/upload-tenant-pic';
 
         try {
-        const res  = await fetch(`${API}${endpoint}`, {
-        method: 'POST',
-        headers: { Authorization: `Bearer ${token}` },
-        body: formData
-        });
-        const data = await res.json();
+            const res  = await fetch(`${API}${endpoint}`, {
+                method: 'POST',
+                headers: { Authorization: `Bearer ${token}` },
+                body: formData
+            });
 
-        if (data.success) {
-        document.getElementById('avatarImg').src = data.image;
+            // ADD THIS — catch non-200 responses properly
+            if (!res.ok) {
+                const err = await res.json().catch(() => ({}));
+                showToast(err.message || `Server error (${res.status})`, 'error');
+                return;
+            }
 
-        // Update localStorage
-        const updated = { ...user, profile_pic: data.image };
-        localStorage.setItem('loggedUser', JSON.stringify(updated));
+            const data = await res.json();
 
-        showToast('Profile photo updated! ✅', 'success');
-        } else {
-        showToast(data.message || 'Upload failed.', 'error');
-        }
+            if (data.success) {
+                document.getElementById('avatarImg').src = data.image;
+                const updated = { ...user, profile_pic: data.image };
+                localStorage.setItem('loggedUser', JSON.stringify(updated));
+                showToast('Profile photo updated! ✅', 'success');
+            } else {
+                showToast(data.message || 'Upload failed.', 'error');
+            }
         } catch (err) {
-        console.error(err);
-        showToast('Network error. Try again.', 'error');
+            console.error('Upload error:', err);
+            showToast(`Error: ${err.message}`, 'error');  // ← shows real error now
         } finally {
-        overlay.classList.remove('active');
+            overlay.classList.remove('active');
         }
-        });
 
         // ── Save changes ───────────────────────────────────────────
         document.getElementById('saveBtn').addEventListener('click', async function () {
