@@ -19,8 +19,6 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Login</title>
-
-    <!-- SimpleWebAuthn browser library -->
     <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 
     <style>
@@ -90,7 +88,6 @@
                 background: darkviolet;
             }
 
-        /* Fingerprint button */
         #fingerprint-btn {
             display: none;
             margin-top: 12px;
@@ -108,6 +105,73 @@
             margin-top: 16px;
             font-size: 13px;
         }
+
+        /* ── Fingerprint modal ── */
+        #fp-modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.6);
+            z-index: 100;
+            justify-content: center;
+            align-items: center;
+        }
+
+            #fp-modal-overlay.active {
+                display: flex;
+            }
+
+        #fp-modal {
+            background: #312e81;
+            border: 2px solid #818cf8;
+            border-radius: 16px;
+            padding: 28px 24px;
+            max-width: 340px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+
+            #fp-modal p {
+                color: white;
+                font-size: 16px;
+                margin: 0 0 8px;
+                line-height: 1.5;
+            }
+
+            #fp-modal small {
+                color: #a5b4fc;
+                font-size: 13px;
+            }
+
+        .fp-modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+            .fp-modal-buttons button {
+                flex: 1;
+                margin-top: 0;
+                padding: 12px;
+                font-size: 15px;
+            }
+
+        #fp-yes-btn {
+            background: #4f46e5;
+        }
+
+            #fp-yes-btn:hover {
+                background: #4338ca;
+            }
+
+        #fp-no-btn {
+            background: #6b21a8;
+        }
+
+            #fp-no-btn:hover {
+                background: #581c87;
+            }
 
         .foot {
             margin-top: 30px;
@@ -130,7 +194,6 @@
                 <button type="submit">Login</button>
             </form>
 
-            <!-- Fingerprint button — only visible if user has registered biometrics -->
             <div class="divider">or</div>
             <button id="fingerprint-btn">👆 Sign in with Fingerprint</button>
 
@@ -150,16 +213,35 @@
         </div>
     </div>
 
+    <!-- Fingerprint registration modal -->
+    <div id="fp-modal-overlay">
+        <div id="fp-modal">
+            <p>🔐 Enable fingerprint login?</p>
+            <small>Next time you can sign in with just your fingerprint — no password needed.</small>
+            <div class="fp-modal-buttons">
+                <button id="fp-yes-btn">Yes, enable</button>
+                <button id="fp-no-btn">Not now</button>
+            </div>
+        </div>
+    </div>
+
     <script>
         const API = 'https://qeja-backend-azkf.onrender.com';
 
-        // ── Show fingerprint button if user has registered before ──
+        // ── Show fingerprint button if registered and not declined ──
         window.addEventListener('DOMContentLoaded', () => {
         const userId = localStorage.getItem('webauthn_user_id');
-        if (userId) {
+        if (userId && userId !== 'declined') {
         document.getElementById('fingerprint-btn').style.display = 'block';
         }
         });
+
+        // ── Helper: redirect based on role ────────────────────────
+        function redirectUser(role) {
+        window.location.href = role === 'landlord'
+        ? 'hostdashboard.html'
+        : 'home.html';
+        }
 
         // ── Normal login ───────────────────────────────────────────
         document.getElementById('loginForm').addEventListener('submit', async function(e) {
@@ -184,20 +266,15 @@
         localStorage.setItem('role', data.role);
         localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-        // ── Offer fingerprint registration if not yet set up ──
+        // Check if fingerprint was already set up or declined
         const alreadyRegistered = localStorage.getItem('webauthn_user_id');
-        if (!alreadyRegistered && window.PublicKeyCredential) {
-        const enable = confirm('Enable fingerprint login next time?');
-        if (enable) {
-        await registerFingerprint(data.user.id, data.user.fullname, data.user.email);
-        }
-        }
 
-        // ── Redirect based on role ──
-        if (data.role === 'landlord') {
-        window.location.href = 'hostdashboard.html';
+        if (!alreadyRegistered && window.PublicKeyCredential) {
+        // Show modal — store pending user for modal buttons to use
+        window._pendingUser = data;
+        document.getElementById('fp-modal-overlay').classList.add('active');
         } else {
-        window.location.href = 'home.html';
+        redirectUser(data.role);
         }
 
         } else {
@@ -210,10 +287,24 @@
         }
         });
 
+        // ── Modal: Yes — register fingerprint then redirect ────────
+        document.getElementById('fp-yes-btn').addEventListener('click', async () => {
+        const user = window._pendingUser;
+        document.getElementById('fp-modal-overlay').classList.remove('active');
+        await registerFingerprint(user.user.id, user.user.fullname, user.user.email);
+        redirectUser(user.role);
+        });
+
+        // ── Modal: No — remember choice and redirect ───────────────
+        document.getElementById('fp-no-btn').addEventListener('click', () => {
+        localStorage.setItem('webauthn_user_id', 'declined');
+        document.getElementById('fp-modal-overlay').classList.remove('active');
+        redirectUser(window._pendingUser.role);
+        });
+
         // ── Register fingerprint ───────────────────────────────────
         async function registerFingerprint(userId, userName, userEmail) {
         try {
-        // Get options from server
         const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -221,10 +312,8 @@
         });
         const options = await optRes.json();
 
-        // Trigger device biometric prompt
         const credential = await SimpleWebAuthnBrowser.startRegistration(options);
 
-        // Send result to server
         const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -233,23 +322,21 @@
 
         const result = await verifyRes.json();
         if (result.success) {
-        localStorage.setItem('webauthn_user_id', userId);
-        alert('Fingerprint login enabled! ✅');
+        localStorage.setItem('webauthn_user_id', String(userId));
         }
 
         } catch (err) {
         console.error('Fingerprint registration failed:', err);
-        // Don't block login if fingerprint setup fails
+        // Silently fail — user still gets redirected
         }
         }
 
         // ── Fingerprint login ──────────────────────────────────────
         document.getElementById('fingerprint-btn').addEventListener('click', async () => {
         const userId = localStorage.getItem('webauthn_user_id');
-        if (!userId) return;
+        if (!userId || userId === 'declined') return;
 
         try {
-        // Get options from server
         const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -257,10 +344,8 @@
         });
         const options = await optRes.json();
 
-        // Trigger fingerprint scan
         const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
 
-        // Verify with server
         const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -273,12 +358,7 @@
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
         localStorage.setItem('loggedUser', JSON.stringify(data.user));
-
-        if (data.role === 'landlord') {
-        window.location.href = 'hostdashboard.html';
-        } else {
-        window.location.href = 'home.html';
-        }
+        redirectUser(data.role);
         } else {
         alert(data.message || 'Fingerprint login failed');
         }
