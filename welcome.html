@@ -3,9 +3,36 @@
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="manifest" href="https://eliyasande65-lang.github.io/QejaConnect/manifest.json">
-    <link rel="icon" href="https://eliyasande65-lang.github.io/QejaConnect/favicon.ico">
-    
+    <!-- ============================================================
+     QejaConnect PWA — paste this block inside <head> on EVERY page
+     ============================================================ -->
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/QejaConnect/manifest.json">
+
+    <!-- Theme colour (browser chrome / Android status bar) -->
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- iOS home-screen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="QejaConnect">
+    <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/QejaConnect/sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW error:', err));
+        });
+        }
+    </script>
+
+    <!-- ============================================================
+         END QejaConnect PWA block
+         ============================================================ -->
+
     <meta name="theme-color" content="#4b0082">
     <meta charset="utf-8" />
     <title>welcome</title>
@@ -296,24 +323,7 @@
         document.getElementById('login').onclick = () =>
         window.location.href = "login.html";
 
-        // ✅ FIX FOR GITHUB 404 MANIFEST ISSUE
-        window.addEventListener("load", () => {
-        fetch("manifest.json")
-        .then(res => {
-        if (!res.ok) {
-        console.warn("Manifest not found — PWA disabled safely.");
-        }
-        })
-        .catch(() => {
-        console.warn("Manifest missing — no crash.");
-        });
-        });
-
-        if ("serviceWorker" in navigator) {
-        navigator.serviceWorker.register("/sw.js")
-        .then(() => console.log("Service Worker registered"))
-        .catch(err => console.log("SW error:", err));
-        }
+        
     </script>
 
 </body>
