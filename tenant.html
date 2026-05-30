@@ -2,22 +2,12 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- ============================================================
-     QejaConnect PWA — paste this block inside <head> on EVERY page
-     ============================================================ -->
-    <!-- PWA Manifest -->
     <link rel="manifest" href="/QejaConnect/manifest.json">
-
-    <!-- Theme colour (browser chrome / Android status bar) -->
     <meta name="theme-color" content="#4f46e5">
-
-    <!-- iOS home-screen support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
-
-    <!-- Register Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -27,10 +17,6 @@
         });
         }
     </script>
-
-    <!-- ============================================================
-         END QejaConnect PWA block
-         ============================================================ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tenant Sign Up</title>
 
@@ -41,16 +27,20 @@
 
         body {
             margin: 0;
-            margin-top: 100px;
             font-family: Arial, sans-serif;
             background: linear-gradient(45deg, indigo, darkviolet);
             display: flex;
             justify-content: center;
             align-items: flex-start;
-            padding-top: 40px;
-            padding-bottom: 40px;
             min-height: 100vh;
-            padding: 20px;
+            padding: 80px 20px 40px;
+        }
+
+        .page {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         .container {
@@ -62,16 +52,10 @@
             box-shadow: 0 0 10px rgba(0,0,0,0.3);
         }
 
-        .page {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
         h1 {
             text-align: center;
-            color: purple;
+            color: white;
+            margin-top: 0;
         }
 
         form {
@@ -79,23 +63,126 @@
             flex-direction: column;
         }
 
-        input, select {
+        input {
             padding: 14px;
             margin-top: 15px;
             border-radius: 10px;
-            border: 1px solid #ccc;
+            border: 2px solid transparent;
             font-size: 16px;
+            transition: border-color 0.2s;
+            outline: none;
         }
 
-        .foot {
-            margin-top: 30px;
-            text-align: center;
+            input:focus {
+                border-color: #818cf8;
+            }
+
+            input.invalid {
+                border-color: #f87171;
+            }
+
+            input.valid {
+                border-color: #34d399;
+            }
+
+        /* Password wrapper */
+        .pw-wrap {
+            position: relative;
+            margin-top: 15px;
+        }
+
+            .pw-wrap input {
+                margin-top: 0;
+                width: 100%;
+                padding-right: 48px;
+            }
+
+        .toggle-pw {
+            position: absolute;
+            right: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+            font-size: 20px;
             color: #555;
-            font-size: 14px;
-            line-height: 1.7;
+            line-height: 1;
         }
 
-        button {
+        /* Strength bar */
+        .strength-bar-wrap {
+            margin-top: 8px;
+            display: none;
+        }
+
+            .strength-bar-wrap.visible {
+                display: block;
+            }
+
+        .strength-track {
+            height: 5px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .strength-fill {
+            height: 100%;
+            width: 0%;
+            border-radius: 10px;
+            transition: width 0.3s, background 0.3s;
+        }
+
+        .strength-label {
+            font-size: 12px;
+            margin-top: 4px;
+            color: #c4b5fd;
+        }
+
+        /* Requirements checklist */
+        .req-list {
+            list-style: none;
+            padding: 0;
+            margin: 8px 0 0;
+            display: none;
+        }
+
+            .req-list.visible {
+                display: block;
+            }
+
+            .req-list li {
+                font-size: 12px;
+                color: rgba(255,255,255,0.6);
+                margin-top: 4px;
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                transition: color 0.2s;
+            }
+
+                .req-list li.met {
+                    color: #34d399;
+                }
+
+                .req-list li.unmet {
+                    color: rgba(255,255,255,0.45);
+                }
+
+                .req-list li::before {
+                    content: '○';
+                    font-size: 11px;
+                    flex-shrink: 0;
+                }
+
+                .req-list li.met::before {
+                    content: '✓';
+                }
+
+        button[type="submit"] {
             margin-top: 20px;
             padding: 14px;
             border: none;
@@ -105,74 +192,312 @@
             font-size: 16px;
             cursor: pointer;
             font-weight: bold;
+            transition: background 0.2s, opacity 0.2s;
         }
 
-            button:hover {
+            button[type="submit"]:hover {
                 background: darkviolet;
+            }
+
+            button[type="submit"].btn-loading {
+                opacity: 0.7;
+                pointer-events: none;
+            }
+
+        /* ── Toast ── */
+        #toast {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%) translateY(80px);
+            background: #1e1b4b;
+            color: white;
+            padding: 14px 22px;
+            border-radius: 12px;
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 24px rgba(0,0,0,0.4);
+            border-left: 4px solid #818cf8;
+            z-index: 999;
+            max-width: 320px;
+            width: 90%;
+            transition: transform 0.35s cubic-bezier(0.34,1.56,0.64,1), opacity 0.35s ease;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+            #toast.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+
+            #toast.success {
+                border-left-color: #34d399;
+            }
+
+            #toast.error {
+                border-left-color: #f87171;
+            }
+
+            #toast.info {
+                border-left-color: #818cf8;
+            }
+
+            #toast.warning {
+                border-left-color: #fbbf24;
+            }
+
+        #toast-icon {
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        #toast-msg {
+            line-height: 1.4;
+        }
+
+        .foot {
+            margin-top: 30px;
+            text-align: center;
+            color: #ddd;
+            font-size: 14px;
+            line-height: 1.7;
+        }
+
+        p.login-link {
+            color: white;
+            text-align: center;
+            margin-top: 16px;
+        }
+
+            p.login-link a {
+                color: yellow;
             }
     </style>
 </head>
-<body>
 
+<body>
     <div class="page">
         <div class="container">
-
             <h1>Tenant Sign Up</h1>
 
-            <form id="signupForm">
+            <form id="signupForm" onsubmit="return false">
+                <input type="text" name="fullname" id="fullname" placeholder="Full Name" required>
+                <input type="email" name="email" id="email" placeholder="Email" required>
 
-                <input type="text" name="fullname" placeholder="Full Name" required>
+                <div class="pw-wrap">
+                    <input type="password" name="password" id="password" placeholder="Password" required>
+                    <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁️</button>
+                </div>
 
-                <input type="email" name="email" placeholder="Email" required>
+                <div class="strength-bar-wrap" id="strengthWrap">
+                    <div class="strength-track">
+                        <div class="strength-fill" id="strengthFill"></div>
+                    </div>
+                    <div class="strength-label" id="strengthLabel"></div>
+                </div>
 
-                <input type="password" name="password" placeholder="Password" required>
+                <ul class="req-list" id="reqList">
+                    <li id="req-len">At least 8 characters</li>
+                    <li id="req-upper">One uppercase letter</li>
+                    <li id="req-lower">One lowercase letter</li>
+                    <li id="req-num">One number</li>
+                    <li id="req-sym">One special character (!@#$%^&*…)</li>
+                </ul>
 
-                <button type="submit">Sign Up</button>
+                <div class="pw-wrap" style="margin-top:15px;">
+                    <input type="password" name="confirm" id="confirm" placeholder="Confirm Password" required>
+                    <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password">👁️</button>
+                </div>
 
+                <button type="submit" id="signup-btn">Sign Up</button>
             </form>
 
-
-
+            <p class="login-link">
+                Already have an account? <a href="login.html">Login</a>
+            </p>
         </div>
+
         <div class="foot">
-            <h3>Qeja Connect Credits</h3><br />
-            <p>Developed by QejaConnect_Kenya ltd.</p><br />
-            <p>Company Email address: qejaconnect@outlook.com</p>
-            <p>Customer hotline: +254714 104 737</p>
-            <p>Customer Hotline2: +25471 203 443</p>
+            <h3>Qeja Connect Credits</h3>
+            <p>Developed by QejaConnect_Kenya ltd.</p>
+            <p>Company Email: qejaconnect@outlook.com</p>
+            <p>Hotline: +254714 104 737</p>
+            <p>Hotline 2: +25471 203 443</p>
             <p><em>Regulated by Communication Authority of Kenya</em></p>
         </div>
     </div>
+
+    <!-- Toast -->
+    <div id="toast">
+        <span id="toast-icon"></span>
+        <span id="toast-msg"></span>
+    </div>
+
     <script>
-        document.getElementById("signupForm")
-        .addEventListener("submit", async function(e) {
+        const API = 'https://qeja-backend-azkf.onrender.com';
 
-        e.preventDefault();
+        // ── Toast ──────────────────────────────────────────────────
+        let toastTimer;
+        function showToast(message, type = 'info', duration = 3500) {
+        const toast = document.getElementById('toast');
+        const icon  = document.getElementById('toast-icon');
+        const msg   = document.getElementById('toast-msg');
+        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+        toast.className = '';
+        toast.classList.add(type);
+        icon.textContent = icons[type] || 'ℹ️';
+        msg.textContent  = message;
+        void toast.offsetWidth;
+        toast.classList.add('show');
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+        }
 
-        const formData = {
-        fullname: this.fullname.value,
-        email: this.email.value,
-        password: this.password.value
+        // ── Password toggle ────────────────────────────────────────
+        document.getElementById('togglePw').addEventListener('click', function () {
+        const pw = document.getElementById('password');
+        const showing = pw.type === 'text';
+        pw.type = showing ? 'password' : 'text';
+        this.textContent = showing ? '👁️' : '🙈';
+        });
+
+        document.getElementById('toggleConfirm').addEventListener('click', function () {
+        const cf = document.getElementById('confirm');
+        const showing = cf.type === 'text';
+        cf.type = showing ? 'password' : 'text';
+        this.textContent = showing ? '👁️' : '🙈';
+        });
+
+        // ── Password strength ──────────────────────────────────────
+        const rules = {
+        len:   v => v.length >= 8,
+        upper: v => /[A-Z]/.test(v),
+        lower: v => /[a-z]/.test(v),
+        num:   v => /[0-9]/.test(v),
+        sym:   v => /[^A-Za-z0-9]/.test(v),
         };
 
-        const response = await fetch("https://qeja-backend-azkf.onrender.com/signup", {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json"
-        },
-        body: JSON.stringify(formData)
+        const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
+        const strengthColors = ['', '#f87171', '#fbbf24', '#a78bfa', '#34d399', '#10b981'];
+
+        function checkStrength(val) {
+        return Object.values(rules).filter(fn => fn(val)).length;
+        }
+
+        document.getElementById('password').addEventListener('input', function () {
+        const val = this.value;
+        const wrap = document.getElementById('strengthWrap');
+        const fill = document.getElementById('strengthFill');
+        const label = document.getElementById('strengthLabel');
+        const list = document.getElementById('reqList');
+
+        if (val.length === 0) {
+        wrap.classList.remove('visible');
+        list.classList.remove('visible');
+        this.classList.remove('valid', 'invalid');
+        return;
+        }
+
+        wrap.classList.add('visible');
+        list.classList.add('visible');
+
+        const score = checkStrength(val);
+        fill.style.width = (score / 5 * 100) + '%';
+        fill.style.background = strengthColors[score];
+        label.textContent = strengthLabels[score];
+        label.style.color = strengthColors[score];
+
+        // Update each requirement
+        Object.entries(rules).forEach(([key, fn]) => {
+        const li = document.getElementById('req-' + key);
+        if (fn(val)) {
+        li.classList.add('met');
+        li.classList.remove('unmet');
+        } else {
+        li.classList.add('unmet');
+        li.classList.remove('met');
+        }
+        });
+
+        this.classList.toggle('valid',   score === 5);
+        this.classList.toggle('invalid', score < 5 && val.length > 0);
+        });
+
+        // ── Confirm match ──────────────────────────────────────────
+        document.getElementById('confirm').addEventListener('input', function () {
+        const pw = document.getElementById('password').value;
+        this.classList.toggle('valid',   this.value === pw && this.value.length > 0);
+        this.classList.toggle('invalid', this.value !== pw && this.value.length > 0);
+        });
+
+        // ── Submit ─────────────────────────────────────────────────
+        document.getElementById('signupForm').addEventListener('submit', async function (e) {
+        e.preventDefault();
+
+        const fullname = document.getElementById('fullname').value.trim();
+        const email    = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value;
+        const confirm  = document.getElementById('confirm').value;
+
+        // Validation
+        if (!fullname) {
+        showToast('Please enter your full name.', 'warning');
+        return;
+        }
+
+        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        showToast('Please enter a valid email address.', 'warning');
+        return;
+        }
+
+        const score = checkStrength(password);
+        if (score < 4) {
+        showToast('Password is too weak. Please meet all requirements.', 'warning', 4500);
+        document.getElementById('reqList').classList.add('visible');
+        document.getElementById('strengthWrap').classList.add('visible');
+        return;
+        }
+
+        if (password !== confirm) {
+        showToast('Passwords do not match.', 'error');
+        document.getElementById('confirm').classList.add('invalid');
+        return;
+        }
+
+        const btn = document.getElementById('signup-btn');
+        btn.textContent = 'Creating account...';
+        btn.classList.add('btn-loading');
+
+        try {
+        const response = await fetch(`${API}/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ fullname, email, password })
         });
 
         const data = await response.json();
 
-        alert(data.message);
-
-        // ✅ redirect to home after successful signup
         if (response.ok) {
-        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/login.html";
+        showToast('Account created! Redirecting to login... 🎉', 'success', 3000);
+        setTimeout(() => {
+        window.location.href = 'https://eliyasande65-lang.github.io/QejaConnect/login.html';
+        }, 2500);
+        } else {
+        showToast(data.message || 'Sign up failed. Please try again.', 'error');
+        btn.textContent = 'Sign Up';
+        btn.classList.remove('btn-loading');
+        }
+
+        } catch (err) {
+        console.error(err);
+        showToast('Server error. Please try again later.', 'error');
+        btn.textContent = 'Sign Up';
+        btn.classList.remove('btn-loading');
         }
         });
     </script>
-    
 </body>
 </html>
