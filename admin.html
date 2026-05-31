@@ -1,0 +1,990 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QejaConnect — Admin Verification</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@600;700;800&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --bg: #070a12;
+            --surface: #0d1320;
+            --card: #111827;
+            --border: rgba(255,255,255,0.07);
+            --border-hi: rgba(139,92,246,0.4);
+            --accent: #7c3aed;
+            --accent2: #06b6d4;
+            --ok: #10b981;
+            --warn: #f59e0b;
+            --danger: #ef4444;
+            --text: #e2e8f0;
+            --muted: #64748b;
+            --mono: 'DM Mono', monospace;
+            --head: 'Syne', sans-serif;
+            --body: 'DM Sans', sans-serif;
+        }
+
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: var(--body);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+            /* ── noise overlay ── */
+            body::before {
+                content: '';
+                position: fixed;
+                inset: 0;
+                background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+                background-size: 180px;
+                pointer-events: none;
+                z-index: 0;
+            }
+
+        /* ── login gate ── */
+        #loginGate {
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg);
+        }
+
+        .login-box {
+            background: var(--surface);
+            border: 1px solid var(--border-hi);
+            border-radius: 16px;
+            padding: 48px 40px;
+            width: 360px;
+            text-align: center;
+            box-shadow: 0 0 80px rgba(124,58,237,0.15);
+        }
+
+            .login-box .badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: rgba(124,58,237,0.15);
+                border: 1px solid var(--border-hi);
+                border-radius: 999px;
+                padding: 6px 16px;
+                font-size: 11px;
+                font-family: var(--mono);
+                letter-spacing: 0.12em;
+                color: #a78bfa;
+                text-transform: uppercase;
+                margin-bottom: 24px;
+            }
+
+            .login-box h1 {
+                font-family: var(--head);
+                font-size: 26px;
+                font-weight: 800;
+                margin-bottom: 8px;
+            }
+
+            .login-box p {
+                font-size: 13px;
+                color: var(--muted);
+                margin-bottom: 32px;
+            }
+
+            .login-box input {
+                width: 100%;
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 10px;
+                padding: 14px 16px;
+                font-size: 15px;
+                font-family: var(--mono);
+                color: var(--text);
+                outline: none;
+                transition: border-color 0.2s;
+                margin-bottom: 14px;
+                letter-spacing: 0.1em;
+            }
+
+                .login-box input:focus {
+                    border-color: var(--accent);
+                }
+
+        .btn-primary {
+            width: 100%;
+            padding: 14px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: #fff;
+            font-family: var(--head);
+            font-size: 15px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+        }
+
+            .btn-primary:hover {
+                background: #6d28d9;
+            }
+
+            .btn-primary:active {
+                transform: scale(0.98);
+            }
+
+        .login-err {
+            margin-top: 12px;
+            font-size: 13px;
+            color: var(--danger);
+            display: none;
+        }
+
+        /* ── app shell ── */
+        #app {
+            display: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            height: 60px;
+            background: rgba(7,10,18,0.85);
+            backdrop-filter: blur(14px);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .logo {
+            font-family: var(--head);
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.01em;
+        }
+
+            .logo span {
+                color: var(--accent);
+            }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .stat-pill {
+            font-family: var(--mono);
+            font-size: 12px;
+            padding: 5px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--border);
+            color: var(--muted);
+        }
+
+            .stat-pill b {
+                color: var(--text);
+            }
+
+        .btn-logout {
+            font-family: var(--mono);
+            font-size: 12px;
+            padding: 6px 14px;
+            border-radius: 8px;
+            background: rgba(239,68,68,0.1);
+            border: 1px solid rgba(239,68,68,0.3);
+            color: #fca5a5;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+            .btn-logout:hover {
+                background: rgba(239,68,68,0.2);
+            }
+
+        main {
+            padding: 32px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* ── filters bar ── */
+        .filters {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+            .filters h2 {
+                font-family: var(--head);
+                font-size: 22px;
+                font-weight: 800;
+                margin-right: auto;
+            }
+
+        .filter-tab {
+            padding: 7px 16px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .filter-tab.active,
+            .filter-tab:hover {
+                background: var(--accent);
+                border-color: var(--accent);
+                color: #fff;
+            }
+
+        .search-wrap {
+            position: relative;
+        }
+
+            .search-wrap input {
+                background: var(--surface);
+                border: 1px solid var(--border);
+                border-radius: 8px;
+                padding: 8px 12px 8px 34px;
+                font-size: 13px;
+                font-family: var(--body);
+                color: var(--text);
+                outline: none;
+                width: 220px;
+                transition: border-color 0.2s;
+            }
+
+                .search-wrap input:focus {
+                    border-color: var(--accent);
+                }
+
+            .search-wrap .ico {
+                position: absolute;
+                left: 10px;
+                top: 50%;
+                transform: translateY(-50%);
+                font-size: 14px;
+                color: var(--muted);
+            }
+
+        /* ── grid ── */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        /* ── card ── */
+        .card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            overflow: hidden;
+            transition: border-color 0.2s, transform 0.2s;
+            animation: fadeUp 0.4s both;
+        }
+
+            .card:hover {
+                border-color: var(--border-hi);
+                transform: translateY(-2px);
+            }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 18px 20px 14px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            object-fit: cover;
+            border: 2px solid var(--border-hi);
+            cursor: pointer;
+            transition: transform 0.2s;
+            flex-shrink: 0;
+        }
+
+            .avatar:hover {
+                transform: scale(1.05);
+            }
+
+        .card-title {
+            flex: 1;
+            min-width: 0;
+        }
+
+            .card-title h3 {
+                font-family: var(--head);
+                font-size: 15px;
+                font-weight: 700;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+
+            .card-title small {
+                font-family: var(--mono);
+                font-size: 11px;
+                color: var(--muted);
+            }
+
+        .status-badge {
+            font-family: var(--mono);
+            font-size: 10px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+            .status-badge.pending {
+                background: rgba(245,158,11,0.15);
+                color: #fbbf24;
+                border: 1px solid rgba(245,158,11,0.3);
+            }
+
+            .status-badge.approved {
+                background: rgba(16,185,129,0.15);
+                color: #34d399;
+                border: 1px solid rgba(16,185,129,0.3);
+            }
+
+            .status-badge.rejected {
+                background: rgba(239,68,68,0.12);
+                color: #f87171;
+                border: 1px solid rgba(239,68,68,0.3);
+            }
+
+        /* ── id image ── */
+        .id-wrap {
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .id-label {
+            font-family: var(--mono);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin-bottom: 8px;
+        }
+
+        .id-img {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+            .id-img:hover {
+                opacity: 0.9;
+            }
+
+        .id-missing {
+            width: 100%;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--surface);
+            border-radius: 8px;
+            border: 1px dashed var(--border);
+            color: var(--muted);
+            font-size: 13px;
+            font-family: var(--mono);
+        }
+
+        /* ── details ── */
+        .details {
+            padding: 14px 20px;
+        }
+
+        .detail-row {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            padding: 4px 0;
+            font-size: 13px;
+        }
+
+        .detail-key {
+            font-family: var(--mono);
+            font-size: 10px;
+            color: var(--muted);
+            min-width: 86px;
+            flex-shrink: 0;
+        }
+
+        .detail-val {
+            color: var(--text);
+            word-break: break-all;
+        }
+
+        /* ── actions ── */
+        .actions {
+            display: flex;
+            gap: 10px;
+            padding: 14px 20px;
+            border-top: 1px solid var(--border);
+        }
+
+        .btn-approve, .btn-reject {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            border-radius: 8px;
+            font-family: var(--head);
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-approve {
+            background: rgba(16,185,129,0.15);
+            color: #34d399;
+            border: 1px solid rgba(16,185,129,0.3);
+        }
+
+            .btn-approve:hover {
+                background: rgba(16,185,129,0.3);
+            }
+
+        .btn-reject {
+            background: rgba(239,68,68,0.1);
+            color: #f87171;
+            border: 1px solid rgba(239,68,68,0.25);
+        }
+
+            .btn-reject:hover {
+                background: rgba(239,68,68,0.2);
+            }
+
+            .btn-approve:disabled,
+            .btn-reject:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+            }
+
+        /* ── pagination ── */
+        .pagination {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 36px;
+        }
+
+        .page-btn {
+            padding: 8px 18px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: var(--surface);
+            color: var(--text);
+            font-family: var(--mono);
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .page-btn:hover:not(:disabled) {
+                border-color: var(--accent);
+                color: #a78bfa;
+            }
+
+            .page-btn:disabled {
+                opacity: 0.3;
+                cursor: default;
+            }
+
+        .page-info {
+            font-family: var(--mono);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ── loading / empty ── */
+        .state-msg {
+            grid-column: 1/-1;
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--muted);
+            font-family: var(--mono);
+            font-size: 14px;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 32px;
+            height: 32px;
+            border: 3px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            margin-bottom: 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        /* ── lightbox ── */
+        #lightbox {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 200;
+            background: rgba(0,0,0,0.85);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+        }
+
+            #lightbox.open {
+                display: flex;
+            }
+
+            #lightbox img {
+                max-width: 90vw;
+                max-height: 88vh;
+                border-radius: 10px;
+                box-shadow: 0 0 80px rgba(0,0,0,0.6);
+            }
+
+            #lightbox .close-lb {
+                position: absolute;
+                top: 24px;
+                right: 28px;
+                font-size: 28px;
+                color: #fff;
+                cursor: pointer;
+                line-height: 1;
+                background: none;
+                border: none;
+            }
+
+        /* ── toast ── */
+        #toast {
+            position: fixed;
+            bottom: 28px;
+            left: 50%;
+            transform: translateX(-50%) translateY(60px);
+            background: var(--surface);
+            color: var(--text);
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid var(--accent);
+            box-shadow: 0 4px 30px rgba(0,0,0,0.5);
+            z-index: 300;
+            opacity: 0;
+            transition: transform 0.35s cubic-bezier(.34,1.56,.64,1), opacity 0.35s;
+            pointer-events: none;
+            max-width: 320px;
+        }
+
+            #toast.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+
+            #toast.ok {
+                border-left-color: var(--ok);
+            }
+
+            #toast.err {
+                border-left-color: var(--danger);
+            }
+    </style>
+</head>
+<body>
+
+    <!-- ── Login Gate ─────────────────────────────── -->
+    <div id="loginGate">
+        <div class="login-box">
+            <div class="badge">🔐 &nbsp;Restricted Access</div>
+            <h1>Admin Panel</h1>
+            <p>QejaConnect — Landlord Verification</p>
+            <input type="password" id="secretInput" placeholder="Enter admin secret…" autocomplete="off">
+            <button class="btn-primary" onclick="doLogin()">Authenticate</button>
+            <div class="login-err" id="loginErr">Incorrect secret. Try again.</div>
+        </div>
+    </div>
+
+    <!-- ── App Shell ──────────────────────────────── -->
+    <div id="app">
+        <header>
+            <div class="logo">Qeja<span>Admin</span></div>
+            <div class="header-right">
+                <div class="stat-pill">Total: <b id="hTotal">—</b></div>
+                <div class="stat-pill" style="color:#fbbf24">Pending: <b id="hPending" style="color:#fbbf24">—</b></div>
+                <button class="btn-logout" onclick="doLogout()">Sign out</button>
+            </div>
+        </header>
+
+        <main>
+            <div class="filters">
+                <h2>Landlord Verification</h2>
+
+                <div class="search-wrap">
+                    <span class="ico">🔍</span>
+                    <input type="text" id="searchInput" placeholder="Search name / email…" oninput="onSearch()">
+                </div>
+
+                <button class="filter-tab active" data-filter="all" onclick="setFilter('all',this)">All</button>
+                <button class="filter-tab" data-filter="0" onclick="setFilter('0',this)">Pending</button>
+                <button class="filter-tab" data-filter="1" onclick="setFilter('1',this)">Approved</button>
+                <button class="filter-tab" data-filter="-1" onclick="setFilter('-1',this)">Rejected</button>
+            </div>
+
+            <div class="grid" id="grid"></div>
+
+            <div class="pagination" id="pagination"></div>
+        </main>
+    </div>
+
+    <!-- ── Lightbox ───────────────────────────────── -->
+    <div id="lightbox">
+        <button class="close-lb" onclick="closeLightbox()">✕</button>
+        <img id="lbImg" src="" alt="ID Photo">
+    </div>
+
+    <!-- ── Toast ─────────────────────────────────── -->
+    <div id="toast"></div>
+
+    <script>
+        // ── Config ──────────────────────────────────────────────
+        const API = 'https://qeja-backend-azkf.onrender.com';
+
+        let adminSecret = '';
+        let currentFilter = 'all';
+        let currentPage   = 1;
+        let totalPages    = 1;
+        let searchQ       = '';
+        let allData       = [];   // full page data for client-side search
+        let toastTimer;
+
+        // ── Login ────────────────────────────────────────────────
+        document.getElementById('secretInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') doLogin();
+        });
+
+        function doLogin() {
+        const val = document.getElementById('secretInput').value.trim();
+        if (!val) return;
+        adminSecret = val;
+        document.getElementById('loginGate').style.display = 'none';
+        document.getElementById('app').style.display = 'block';
+        loadLandlords();
+        }
+
+        function doLogout() {
+        adminSecret = '';
+        document.getElementById('app').style.display = 'none';
+        document.getElementById('loginGate').style.display = 'flex';
+        document.getElementById('secretInput').value = '';
+        }
+
+        // ── Filters ──────────────────────────────────────────────
+        function setFilter(f, el) {
+        currentFilter = f;
+        currentPage   = 1;
+        document.querySelectorAll('.filter-tab').forEach(b => b.classList.remove('active'));
+        el.classList.add('active');
+        loadLandlords();
+        }
+
+        let searchDebounce;
+        function onSearch() {
+        searchQ = document.getElementById('searchInput').value.toLowerCase();
+        clearTimeout(searchDebounce);
+        searchDebounce = setTimeout(renderCards, 200);
+        }
+
+        // ── Load data ────────────────────────────────────────────
+        async function loadLandlords() {
+        renderLoading();
+
+        const params = new URLSearchParams({ page: currentPage, limit: 20 });
+        if (currentFilter !== 'all') params.set('verified', currentFilter);
+
+        try {
+        const res  = await fetch(`${API}/admin/landlords?${params}`, {
+        headers: { 'x-admin-secret': adminSecret }
+        });
+
+        if (res.status === 403) {
+        document.getElementById('loginErr').style.display = 'block';
+        doLogout();
+        return;
+        }
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+
+        allData    = data.landlords;
+        totalPages = Math.ceil(data.total / data.limit) || 1;
+
+        // update header stats (only on "all" to keep accurate)
+        if (currentFilter === 'all') {
+        document.getElementById('hTotal').textContent = data.total;
+        }
+
+        // always fetch pending count for header
+        fetchPendingCount();
+
+        renderCards();
+        renderPagination(data.total, data.limit);
+
+        } catch (err) {
+        renderError(err.message);
+        }
+        }
+
+        async function fetchPendingCount() {
+        try {
+        const res  = await fetch(`${API}/admin/landlords?page=1&limit=1&verified=0`, {
+        headers: { 'x-admin-secret': adminSecret }
+        });
+        const data = await res.json();
+        if (data.success) document.getElementById('hPending').textContent = data.total;
+        } catch (_) {}
+        }
+
+        // ── Render ────────────────────────────────────────────────
+        function renderLoading() {
+        document.getElementById('grid').innerHTML = `
+        <div class="state-msg">
+        <div class="spinner"></div><br>Loading landlords…
+        </div>`;
+        document.getElementById('pagination').innerHTML = '';
+        }
+
+        function renderError(msg) {
+        document.getElementById('grid').innerHTML = `
+        <div class="state-msg">⚠️ ${msg}</div>`;
+        }
+
+        function renderCards() {
+        const filtered = allData.filter(l => {
+        if (!searchQ) return true;
+        return (l.fullname  || '').toLowerCase().includes(searchQ) ||
+        (l.email     || '').toLowerCase().includes(searchQ) ||
+        (l.phone     || '').toLowerCase().includes(searchQ) ||
+        (l.national_id || '').toLowerCase().includes(searchQ);
+        });
+
+        const grid = document.getElementById('grid');
+
+        if (filtered.length === 0) {
+        grid.innerHTML = `<div class="state-msg">No landlords found.</div>`;
+        return;
+        }
+
+        grid.innerHTML = filtered.map((l, i) => buildCard(l, i)).join('');
+        }
+
+        function statusBadge(v) {
+        if (v === 1  || v === '1')  return '<span class="status-badge approved">✓ Approved</span>';
+        if (v === -1 || v === '-1') return '<span class="status-badge rejected">✕ Rejected</span>';
+        return '<span class="status-badge pending">⏳ Pending</span>';
+        }
+
+        function fmtDate(dt) {
+        if (!dt) return '—';
+        return new Date(dt).toLocaleString('en-KE', {
+        day: '2-digit', month: 'short', year: 'numeric',
+        hour: '2-digit', minute: '2-digit'
+        });
+        }
+
+        function buildCard(l, i) {
+        const delay   = (i % 20) * 30;
+        const isFixed = l.verified === 1 || l.verified === -1;
+        const idSrc   = l.id_photo ? escH(l.id_photo) : null;
+        const profSrc = l.profile_pic ? escH(l.profile_pic) : 'https://ui-avatars.com/api/?name=' + encodeURIComponent(l.fullname || 'L') + '&background=7c3aed&color=fff';
+
+        return `
+        <div class="card" style="animation-delay:${delay}ms" id="card-${l.id}">
+        <div class="card-header">
+        <img class="avatar" src="${profSrc}" alt="Profile" onclick="openLightbox('${profSrc}')">
+        <div class="card-title">
+        <h3>${escH(l.fullname || '—')}</h3>
+        <small>#${l.id} · ${escH(l.email || '')}</small>
+        </div>
+        ${statusBadge(l.verified)}
+        </div>
+
+        <div class="id-wrap">
+        <div class="id-label">🪪 National ID Photo</div>
+        ${idSrc
+        ? `<img class="id-img" src="${idSrc}" alt="National ID" onclick="openLightbox('${idSrc}')">`
+        : `<div class="id-missing">No ID uploaded</div>`
+        }
+        </div>
+
+        <div class="details">
+        ${row('Phone',     l.phone)}
+        ${row('Nat. ID',   l.national_id)}
+        ${row('KRA PIN',   l.kra_pin)}
+        ${row('County',    l.county)}
+        ${row('Town',      l.town)}
+        ${row('Property',  l.property_name)}
+        ${row('Type',      l.property_type)}
+        ${row('Units',     l.units)}
+        ${row('Joined',    fmtDate(l.created_at))}
+        ${l.description ? row('Notes', l.description) : ''}
+        </div>
+
+        <div class="actions">
+        <button class="btn-approve" ${isFixed ? 'disabled' : ''} onclick="verifyLandlord(${l.id},'approve',this)">
+        ${l.verified === 1 ? '✓ Approved' : '✅ Approve'}
+        </button>
+        <button class="btn-reject"  ${isFixed ? 'disabled' : ''} onclick="verifyLandlord(${l.id},'reject',this)">
+        ${l.verified === -1 ? '✕ Rejected' : '❌ Reject'}
+        </button>
+        </div>
+        </div>`;
+        }
+
+        function row(k, v) {
+        if (!v && v !== 0) return '';
+        return `<div class="detail-row">
+        <span class="detail-key">${k}</span>
+        <span class="detail-val">${escH(String(v))}</span>
+        </div>`;
+        }
+
+        function escH(s) {
+        return String(s)
+        .replace(/&/g,'&amp;')
+        .replace(/</g,'&lt;')
+        .replace(/>/g,'&gt;')
+        .replace(/"/g,'&quot;');
+        }
+
+        // ── Pagination ───────────────────────────────────────────
+        function renderPagination(total, limit) {
+        totalPages = Math.ceil(total / limit) || 1;
+        const pg = document.getElementById('pagination');
+
+        if (totalPages <= 1) { pg.innerHTML = ''; return; }
+
+        pg.innerHTML = `
+        <button class="page-btn" ${currentPage <= 1 ? 'disabled' : ''} onclick="goPage(${currentPage-1})">← Prev</button>
+        <span class="page-info">Page ${currentPage} of ${totalPages}</span>
+        <button class="page-btn" ${currentPage >= totalPages ? 'disabled' : ''} onclick="goPage(${currentPage+1})">Next →</button>
+        `;
+        }
+
+        function goPage(n) {
+        currentPage = n;
+        loadLandlords();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // ── Verify action ─────────────────────────────────────────
+        async function verifyLandlord(id, action, btn) {
+        btn.disabled = true;
+        btn.textContent = 'Saving…';
+
+        try {
+        const res  = await fetch(`${API}/admin/landlords/${id}/verify`, {
+        method: 'PATCH',
+        headers: {
+        'Content-Type': 'application/json',
+        'x-admin-secret': adminSecret
+        },
+        body: JSON.stringify({ action })
+        });
+
+        const data = await res.json();
+        if (!data.success) throw new Error(data.message);
+
+        showToast(action === 'approve' ? '✅ Landlord approved' : '❌ Landlord rejected',
+        action === 'approve' ? 'ok' : 'err');
+
+        // re-fetch to refresh card state
+        setTimeout(loadLandlords, 600);
+
+        } catch (err) {
+        showToast('Error: ' + err.message, 'err');
+        btn.disabled = false;
+        btn.textContent = action === 'approve' ? '✅ Approve' : '❌ Reject';
+        }
+        }
+
+        // ── Lightbox ──────────────────────────────────────────────
+        function openLightbox(src) {
+        document.getElementById('lbImg').src = src;
+        document.getElementById('lightbox').classList.add('open');
+        }
+
+        function closeLightbox() {
+        document.getElementById('lightbox').classList.remove('open');
+        }
+
+        document.getElementById('lightbox').addEventListener('click', function(e) {
+        if (e.target === this) closeLightbox();
+        });
+
+        document.addEventListener('keydown', e => {
+        if (e.key === 'Escape') closeLightbox();
+        });
+
+        // ── Toast ─────────────────────────────────────────────────
+        function showToast(msg, type = '') {
+        const t = document.getElementById('toast');
+        t.textContent = msg;
+        t.className = 'show ' + type;
+        clearTimeout(toastTimer);
+        toastTimer = setTimeout(() => t.className = '', 3200);
+        }
+    </script>
+</body>
+</html>
