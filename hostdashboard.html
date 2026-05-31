@@ -234,6 +234,14 @@
         <a href="contact.html">Contact</a>
         <a href="hostdashboard.html">Dashboard</a>
         <a href="myprofile.html">Profile</a>
+        <a href="mymessages.html" style="display:flex;align-items:center;justify-content:space-between;">
+            Messages from QejaConnect
+            <span id="navNotifBadge"
+                  style="display:none;background:#e24b4a;color:white;border-radius:999px;
+                 font-size:11px;font-weight:bold;padding:2px 8px;min-width:20px;text-align:center;">
+                0
+            </span>
+        </a>
         <a href="welcome.html">Log out</a>
         <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
             🌙 Theme
@@ -295,7 +303,7 @@
         `).join("");
 
         } catch (err) {
-        dashboard.innerHTML = `<div class="empty">Failed to load requests</div>`;
+        dashboard.innerHTML = `<div class="empty">Forgetting password may require you contact us</div>`;
         }
         }
 
@@ -407,6 +415,31 @@
         loadTenantChats();
         };
     </script>
+    <script>
+        (async function checkUnreadReplies() {
+        const token = localStorage.getItem('token');
+        if (!token) return;
 
+        try {
+        const res = await fetch('https://qeja-backend-azkf.onrender.com/my-messages', {
+        headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        // Get IDs the user has already seen
+        let seen = [];
+        try { seen = JSON.parse(localStorage.getItem('seenReplies') || '[]'); } catch {}
+
+        const unread = data.messages.filter(m => m.reply && !seen.includes(m.id)).length;
+
+        const badge = document.getElementById('navNotifBadge');
+        if (badge && unread > 0) {
+        badge.textContent = unread;
+        badge.style.display = 'inline-block';
+        }
+        } catch {}
+        })();
+    </script>
 </body>
 </html>
