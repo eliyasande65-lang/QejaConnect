@@ -3,10 +3,20 @@
 const CACHE_NAME = 'qejaconnect-v2';
 
 const CORE_ASSETS = [
-  '/QejaConnect/welcome.html',
-  '/QejaConnect/offline.html',
-  '/QejaConnect/logo.jpg',
-  '/QejaConnect/manifest.json'
+  "/QejaConnect/welcome.html",
+  "/QejaConnect/offline.html",
+  "/QejaConnect/logo.jpg",
+  "/QejaConnect/manifest.json"
+  "/QejaConnect/login.html",
+  "/QejaConnect/tenant.html",
+  "/QejaConnect/host.html",
+  "/QejaConnect/landlords.html",
+  "/QejaConnect/hostdashboard.html",
+  "/QejaConnect/contact.html",
+  "/QejaConnect/logo.jpg",
+  "/QejaConnect/logo-192.png",
+  "/QejaConnect/logo-512.png",
+  "/QejaConnect/manifest.json"
 ];
 
 // Install: cache core assets including offline page
