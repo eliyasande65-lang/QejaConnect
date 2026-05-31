@@ -90,7 +90,6 @@
             height: 100px;
         }
 
-        /* Password wrapper */
         .pw-wrap {
             position: relative;
             margin-top: 15px;
@@ -111,13 +110,11 @@
             border: none;
             cursor: pointer;
             padding: 0;
-            margin: 0;
             font-size: 20px;
             color: #555;
             line-height: 1;
         }
 
-        /* Strength bar */
         .strength-bar-wrap {
             margin-top: 8px;
             display: none;
@@ -147,7 +144,6 @@
             color: #c4b5fd;
         }
 
-        /* Requirements */
         .req-list {
             list-style: none;
             padding: 0;
@@ -187,7 +183,7 @@
                     content: '✓';
                 }
 
-        /* Upload label */
+        /* Upload areas */
         .upload-label {
             display: flex;
             align-items: center;
@@ -234,11 +230,35 @@
                 color: #34d399;
             }
 
-        #profile_pic {
+        /* ID upload section */
+        .id-section {
+            margin-top: 20px;
+            border: 1px solid rgba(167,139,250,0.3);
+            border-radius: 12px;
+            padding: 16px;
+            background: rgba(255,255,255,0.04);
+        }
+
+        .id-section-title {
+            color: #c4b5fd;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+        }
+
+        .id-section-note {
+            color: rgba(255,255,255,0.5);
+            font-size: 12px;
+            margin-bottom: 8px;
+            line-height: 1.5;
+        }
+
+        #profile_pic, #id_photo {
             display: none;
         }
 
-        /* Buttons */
         button[type="submit"] {
             margin-top: 20px;
             padding: 14px;
@@ -261,7 +281,6 @@
                 pointer-events: none;
             }
 
-        /* ── Toast ── */
         #toast {
             position: fixed;
             bottom: 30px;
@@ -354,7 +373,7 @@
                 <input type="number" id="units" placeholder="Number of Units" required>
                 <textarea id="description" placeholder="Describe your property"></textarea>
 
-                <!-- Styled upload -->
+                
                 <label for="profile_pic" class="upload-label" id="uploadLabel">
                     <span class="icon">📷</span>
                     <span class="label-text">Upload Profile Picture</span>
@@ -362,7 +381,19 @@
                 </label>
                 <input type="file" id="profile_pic" accept="image/*" required>
 
-                <!-- Password -->
+                
+                <div class="id-section">
+                    <div class="id-section-title">🪪 Identity Verification</div>
+                    <div class="id-section-note">Upload a clear photo of your National ID (front side). This is used by our team to verify your details and is never shared publicly.</div>
+                    <label for="id_photo" class="upload-label" id="idUploadLabel" style="margin-top:0;">
+                        <span class="icon">🪪</span>
+                        <span class="label-text">Upload National ID Photo</span>
+                        <span class="file-name" id="idFileNameDisplay">No file chosen</span>
+                    </label>
+                    <input type="file" id="id_photo" accept="image/*" required>
+                </div>
+
+                
                 <div class="pw-wrap">
                     <input type="password" id="password" placeholder="Password" required>
                     <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁️</button>
@@ -402,7 +433,6 @@
         </div>
     </div>
 
-    <!-- Toast -->
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
@@ -428,10 +458,22 @@
         toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // ── File upload label ──────────────────────────────────────
+        // ── File upload labels ─────────────────────────────────────
         document.getElementById('profile_pic').addEventListener('change', function () {
         const display = document.getElementById('fileNameDisplay');
         const label   = document.getElementById('uploadLabel');
+        if (this.files && this.files[0]) {
+        display.textContent = this.files[0].name;
+        label.classList.add('has-file');
+        } else {
+        display.textContent = 'No file chosen';
+        label.classList.remove('has-file');
+        }
+        });
+
+        document.getElementById('id_photo').addEventListener('change', function () {
+        const display = document.getElementById('idFileNameDisplay');
+        const label   = document.getElementById('idUploadLabel');
         if (this.files && this.files[0]) {
         display.textContent = this.files[0].name;
         label.classList.add('has-file');
@@ -530,8 +572,8 @@
         const password    = document.getElementById('password').value;
         const confirm     = document.getElementById('confirm').value;
         const file        = document.getElementById('profile_pic').files[0];
+        const idFile      = document.getElementById('id_photo').files[0];
 
-        // Field checks
         if (!fullname) { showToast('Please enter your full name.', 'warning'); return; }
 
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -557,7 +599,8 @@
         showToast('Please enter a valid number of units.', 'warning'); return;
         }
 
-        if (!file) { showToast('Please upload a profile picture.', 'warning'); return; }
+        if (!file)   { showToast('Please upload a profile picture.', 'warning'); return; }
+        if (!idFile) { showToast('Please upload a photo of your National ID.', 'warning'); return; }
 
         const score = checkStrength(password);
         if (score < 4) {
@@ -573,7 +616,6 @@
         return;
         }
 
-        // Build FormData
         const formData = new FormData();
         formData.append('fullname',    fullname);
         formData.append('email',       email);
@@ -588,6 +630,7 @@
         formData.append('description', description);
         formData.append('password',    password);
         formData.append('profile_pic', file);
+        formData.append('id_photo',    idFile);   // ← new field
 
         const btn = document.getElementById('createaccount');
         btn.textContent = 'Creating account...';
@@ -600,7 +643,7 @@
         if (data.success) {
         showToast('Host account created successfully! 🎉', 'success', 3000);
         setTimeout(() => {
-        window.location.href = 'https://eliyasande65-lang.github.io/QejaConnect/login.html';
+        window.location.href = 'login.html';
         }, 2500);
         } else {
         showToast(data.message || 'Sign up failed. Please try again.', 'error');
