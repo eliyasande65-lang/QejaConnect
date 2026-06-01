@@ -396,7 +396,7 @@
     <script>
         const API = 'https://qeja-backend-azkf.onrender.com';
 
-        // ── Toast ──────────────────────────────────────────────────
+        
         let toastTimer;
         function showToast(message, type = 'info', duration = 3500) {
         const toast = document.getElementById('toast');
@@ -413,7 +413,7 @@
         toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
-        // ── Safe helpers ───────────────────────────────────────────
+        
         function setText(id, value) {
         const el = document.getElementById(id);
         if (el) el.textContent = (value && value !== 'null') ? value : '—';
@@ -422,7 +422,7 @@
         function show(id) { const el = document.getElementById(id); if (el) el.style.display = 'block'; }
         function hide(id) { const el = document.getElementById(id); if (el) el.style.display = 'none'; }
 
-        // ── Read localStorage safely ───────────────────────────────
+        
         const token   = localStorage.getItem('token');
         const role    = localStorage.getItem('role');
         const userRaw = localStorage.getItem('loggedUser');
@@ -440,7 +440,7 @@
         setTimeout(() => window.location.href = 'login.html', 3000);
         }
 
-        // ── Populate page ──────────────────────────────────────────
+        
         if (user) {
         // Log all keys so you can see exactly what came back from the server
         console.log('loggedUser keys:', Object.keys(user));
@@ -480,7 +480,7 @@
         }
         }
 
-        // ── Phone validation ───────────────────────────────────────
+        
         const phoneInput = document.getElementById('phoneInput');
         if (phoneInput) {
         phoneInput.addEventListener('input', function () {
@@ -491,7 +491,7 @@
         });
         }
 
-        // ── Photo upload ───────────────────────────────────────────
+        
         document.getElementById('pic-input').addEventListener('change', async function () {
         const file = this.files[0];
         if (!file) return;
@@ -544,7 +544,7 @@
         }
         });
 
-        // ── Save phone ─────────────────────────────────────────────
+        
         document.getElementById('saveBtn').addEventListener('click', async function () {
 
         if (role === 'tenant') {

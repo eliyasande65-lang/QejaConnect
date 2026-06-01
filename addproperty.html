@@ -393,7 +393,7 @@
         <div class="pay-notice">
             <span class="icon">💳</span>
             <div>
-                Listing fee: <strong>Ksh 3.00</strong> via M-Pesa. Your property stays live on the feed for <strong>30 days</strong>. Payment is collected before upload.
+                Listing fee: <strong>Ksh 195.00</strong> via M-Pesa. Your property stays live on the feed for <strong>30 days</strong>. Payment is collected before upload.
             </div>
         </div>
 
@@ -420,18 +420,18 @@
 
             <div id="uploadStatus"></div>
 
-            <button type="submit" id="submitBtn">💳 Pay Ksh 3.00 &amp; Upload</button>
+            <button type="submit" id="submitBtn">💳 Pay Ksh 195.00 &amp; Upload</button>
 
         </form>
     </div>
 
 
-    <!-- ───── M-PESA MODAL ───── -->
+    
     <div class="modal-overlay" id="mpesaModal">
         <div class="modal">
             <div class="mpesa-logo">📲</div>
             <h2>M-Pesa Payment</h2>
-            <div class="amount-badge">Ksh 3.00</div>
+            <div class="amount-badge">Ksh 195.00</div>
             <p class="sub">Enter your Safaricom number. An STK push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
 
             <div class="phone-wrapper">
@@ -442,7 +442,7 @@
             <div id="mpesaStatus"></div>
 
             <button class="mpesa-btn" id="payBtn" onclick="initiateMpesa()">
-                Send STK Push
+                Pay and publish
             </button>
             <button class="cancel-btn" onclick="closeModal()">Cancel</button>
 
@@ -459,10 +459,10 @@
 
 
     <script>
-        // ── Config ──────────────────────────────────────────────────────
+        
         const API_BASE = "https://qeja-backend-azkf.onrender.com";
 
-        // ── File label update ───────────────────────────────────────────
+        
         document.getElementById("image").addEventListener("change", function () {
         const label = document.getElementById("uploadLabel");
         if (this.files[0]) {
@@ -474,10 +474,10 @@
         }
         });
 
-        // ── Pending form data (saved before modal) ──────────────────────
+        
         let pendingFormData = null;
 
-        // ── Form submit → validate → open modal ────────────────────────
+        //  Form submit > validate > open modal
         document.getElementById("propertyForm").addEventListener("submit", function (e) {
         e.preventDefault();
 
@@ -685,7 +685,7 @@
 
         setTimeout(() => {
         window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/hostdashboard.html";
+        "hostdashboard.html";
         }, 1800);
         } else {
         status.innerHTML = `<p class="error-text">❌ ${data.message || "Upload failed."}</p>`;

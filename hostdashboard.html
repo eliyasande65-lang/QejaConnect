@@ -162,7 +162,117 @@
             margin-top: 40px;
             color: gray;
         }
+        .inactive-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #fee2e2;
+            color: #dc2626;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
 
+        .relist-btn {
+            display: inline-block;
+            margin-top: 12px;
+            padding: 9px 16px;
+            border: none;
+            border-radius: 8px;
+            background: indigo;
+            color: white;
+            font-size: 13px;
+            font-weight: 700;
+            cursor: pointer;
+            font-family: Arial;
+            text-decoration: none;
+        }
+
+            .relist-btn:hover {
+                opacity: 0.85;
+            }
+
+        .prop-card.inactive {
+            border-left-color: #dc2626;
+            opacity: 0.85;
+        }
+        .properties-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .prop-card {
+            background: white;
+            border-radius: 14px;
+            padding: 18px 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 4px solid indigo;
+            position: relative;
+        }
+
+        .pub-badge {
+            position: absolute;
+            top: 14px;
+            right: 14px;
+            background: #dcfce7;
+            color: #16a34a;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            padding: 3px 10px;
+            border-radius: 999px;
+            text-transform: uppercase;
+        }
+
+        .prop-card h3 {
+            color: indigo;
+            margin: 0 0 10px;
+            font-size: 15px;
+            padding-right: 80px;
+        }
+
+        .prop-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .prop-row {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .prop-price {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .prop-type {
+            display: inline-block;
+            background: #ede9fe;
+            color: indigo;
+            font-size: 11px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 999px;
+            margin-top: 8px;
+        }
+
+        .prop-expires {
+            margin-top: 10px;
+            font-size: 11px;
+            color: #94a3b8;
+            border-top: 1px solid #f1f5f9;
+            padding-top: 8px;
+        }
         button.add {
             display: block;
             margin: 20px auto;
@@ -249,8 +359,9 @@
     </div>
 
     <button class="add" onclick="location.href='addproperty.html'">+ Add Property</button>
-
-    <div class="section-title">Booking Requests</div>
+    <div class="section-title">Your Properties</div>
+    <div class="dashboard" id="myProperties"></div>
+    
     <div class="dashboard" id="dashboard"></div>
 
     <div class="section-title">Your Chats</div>
@@ -262,7 +373,66 @@
 
     <div class="dashboard tab-content active" id="landlordChats"></div>
     <div class="dashboard tab-content" id="tenantChats"></div>
+    <script>
+        async function loadMyProperties() {
+            const container = document.getElementById("myProperties");
+            if (!userId || !token) {
+                container.innerHTML = `<div class="empty">Please login first</div>`;
+                return;
+            }
+            try {
+                const res = await fetch(
+                    `https://qeja-backend-azkf.onrender.com/landlord-properties/${userId}`,
+                    { headers: { "Authorization": "Bearer " + token } }
+                );
+                const data = await res.json();
 
+                if (!data.success || !data.properties?.length) {
+                    container.innerHTML = `<div class="empty">No properties listed yet. Click "+ Add Property" to get started.</div>`;
+                    return;
+                }
+
+                const now = new Date();
+
+                container.innerHTML = `<div class="properties-grid">` +
+                    data.properties.map(p => {
+                        const expiry = p.listing_expires_at ? new Date(p.listing_expires_at) : null;
+                        const isExpired = expiry && now > expiry;
+
+                        const badge = isExpired
+                            ? `<span class="inactive-badge">⛔ Inactive</span>`
+                            : `<span class="pub-badge">✓ Published</span>`;
+
+                        const expiryLine = expiry
+                            ? isExpired
+                                ? `<div class="prop-expires">⛔ Expired: ${expiry.toLocaleDateString()}</div>`
+                                : `<div class="prop-expires">🗓 Expires: ${expiry.toLocaleDateString()}</div>`
+                            : "";
+
+                        const relistBtn = isExpired
+                            ? `<br><a class="relist-btn" href="addproperty.html">🔄 Upload Again</a>`
+                            : "";
+
+                        return `
+                        <div class="prop-card ${isExpired ? "inactive" : ""}">
+                            ${badge}
+                            <h3>${p.title}</h3>
+                            <div class="prop-meta">
+                                <div class="prop-row">💰 <strong class="prop-price">${p.price}</strong></div>
+                                <div class="prop-row">📍 ${p.location}</div>
+                            </div>
+                            <span class="prop-type">${p.type}</span>
+                            ${expiryLine}
+                            ${relistBtn}
+                        </div>`;
+                    }).join("") +
+                `</div>`;
+
+            } catch {
+                container.innerHTML = `<div class="empty">Failed to load properties.</div>`;
+            }
+        }
+    </script>
     <script>
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         const token      = localStorage.getItem("token");
@@ -410,9 +580,10 @@
         }
 
         window.onload = function () {
-        loadRequests();
-        loadLandlordChats();
-        loadTenantChats();
+            loadRequests();
+            loadLandlordChats();
+            loadTenantChats();
+            loadMyProperties();
         };
     </script>
     <script>
@@ -441,5 +612,6 @@
         } catch {}
         })();
     </script>
+    
 </body>
 </html>
