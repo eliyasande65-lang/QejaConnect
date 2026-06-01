@@ -1,23 +1,14 @@
-﻿<!DOCTYPE html>
+﻿
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <!-- ============================================================
-     QejaConnect PWA — paste this block inside <head> on EVERY page
-     ============================================================ -->
-    <!-- PWA Manifest -->
     <link rel="manifest" href="/QejaConnect/manifest.json">
-
-    <!-- Theme colour (browser chrome / Android status bar) -->
     <meta name="theme-color" content="#4f46e5">
-
-    <!-- iOS home-screen support -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
-
-    <!-- Register Service Worker -->
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -27,38 +18,46 @@
         });
         }
     </script>
-
-    <!-- ============================================================
-         END QejaConnect PWA block
-         ============================================================ -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qeja Connect | Home</title>
 
     <style>
-
         * {
             box-sizing: border-box;
         }
 
         body {
-            font-family: Arial;
+            font-family: Arial, sans-serif;
             margin: 0;
             background: #f4f4f4;
+            color: #222;
+        }
+
+        /* ── HEADER ── */
+        header {
+            width: 100%;
+            background: linear-gradient(45deg, indigo, darkviolet);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            background-color: indigo;
-            padding: 10px 15px;
+            margin-left: 40px;
             gap: 15px;
-            position: relative;
         }
 
         #logo {
             width: 60px;
             height: 60px;
-            margin-left: 60px;
             border-radius: 12px;
             object-fit: cover;
         }
@@ -67,10 +66,20 @@
             color: white;
         }
 
+            .brand h2 {
+                margin: 0;
+            }
+
+            .brand p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
         .menu-btn {
             position: fixed;
-            top: 15px;
-            left: 10px;
+            top: 20px;
+            left: 1px;
             width: 50px;
             height: 50px;
             border: none;
@@ -79,7 +88,7 @@
             color: white;
             font-size: 24px;
             cursor: pointer;
-            z-index: 10001;
+            z-index: 10000;
         }
 
         /* ── SIDE MENU ── */
@@ -111,31 +120,31 @@
                 border-bottom: 1px solid #2a2a2a;
                 font-size: 15px;
                 font-weight: 500;
-                transition: background 0.2s, border-left 0.2s, padding-left 0.2s;
+                transition: background 0.2s;
             }
 
                 .side-menu a:hover {
-                    background: rgba(99, 102, 241, 0.3);
+                    background: rgba(99,102,241,0.3);
                 }
 
                 .side-menu a.active-link {
-                    background: rgba(99, 102, 241, 0.22);
+                    background: rgba(99,102,241,0.22);
                     color: #a5b4fc;
                     border-left: 3px solid #a5b4fc;
                     padding-left: 19px;
                 }
 
-            .side-menu .menu-badge {
-                background: indigo;
-                color: white;
-                border-radius: 6px;
-                font-size: 11px;
-                font-weight: 700;
-                padding: 2px 8px;
-                min-width: 22px;
-                text-align: center;
-                flex-shrink: 0;
-            }
+        .menu-badge {
+            background: indigo;
+            color: white;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            min-width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
 
         /* ── OVERLAY ── */
         .overlay {
@@ -150,335 +159,420 @@
                 display: block;
             }
 
-        /* ── DASHBOARD CARDS ── */
-        .dashboard {
-            max-width: 1000px;
-            margin: auto;
-            padding: 20px;
-        }
-
-        .card {
-            background: white;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 12px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.08);
-            cursor: pointer;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-            .card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 4px 16px rgba(0,0,0,0.12);
-            }
-
-            .card h3 {
-                color: indigo;
-                margin: 0 0 6px;
-            }
-
-            .card p {
-                margin: 4px 0;
-                color: #555;
-                font-size: 14px;
-            }
-
-        .last-msg {
-            margin-top: 8px;
-            font-size: 13px;
-            color: #888;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .open-btn {
-            margin-top: 12px;
-            padding: 10px 16px;
-            border: none;
-            background: indigo;
-            color: white;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-            .open-btn:hover {
-                opacity: 0.85;
-            }
-
-        .empty {
-            text-align: center;
-            margin-top: 40px;
-            color: gray;
-            font-size: 14px;
-        }
-
-        /* ── ADD PROPERTY BUTTON ── */
-        button.add {
-            display: block;
-            margin: 20px auto;
-            padding: 15px 25px;
-            border: none;
-            border-radius: 10px;
-            background: indigo;
-            color: white;
-            cursor: pointer;
-            font-size: 15px;
-            font-weight: bold;
-            transition: opacity 0.2s, transform 0.1s;
-        }
-
-            button.add:hover {
-                opacity: 0.88;
-                transform: translateY(-1px);
-            }
-
-        /* ── SECTION TITLE ── */
-        .section-title {
-            font-size: 20px;
-            font-weight: bold;
-            color: indigo;
-            margin: 30px 20px 10px;
-        }
-
-        /* ── PROPERTY CARDS ── */
-        .properties-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 14px;
-        }
-
-        .prop-card {
-            background: white;
-            border-radius: 14px;
-            padding: 18px 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
-            border-left: 4px solid indigo;
-            position: relative;
-            transition: transform 0.15s, box-shadow 0.15s;
-        }
-
-            .prop-card:hover {
-                transform: translateY(-2px);
-                box-shadow: 0 6px 18px rgba(0,0,0,0.1);
-            }
-
-            .prop-card.inactive {
-                border-left-color: #dc2626;
-                opacity: 0.85;
-            }
-
-        .pub-badge {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            background: #dcfce7;
-            color: #16a34a;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            text-transform: uppercase;
-        }
-
-        .inactive-badge {
-            position: absolute;
-            top: 14px;
-            right: 14px;
-            background: #fee2e2;
-            color: #dc2626;
-            font-size: 11px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            padding: 3px 10px;
-            border-radius: 999px;
-            text-transform: uppercase;
-        }
-
-        .prop-card h3 {
-            color: indigo;
-            margin: 0 0 10px;
-            font-size: 15px;
-            padding-right: 90px;
-        }
-
-        .prop-meta {
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?q=80&w=1200&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
+            min-height: 350px;
             display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .prop-row {
-            display: flex;
+            justify-content: center;
             align-items: center;
-            gap: 7px;
-            font-size: 13px;
+            text-align: center;
+            color: white;
+            padding: 20px;
+        }
+
+        .hero-content {
+            max-width: 800px;
+        }
+
+        .hero h1 {
+            font-size: clamp(2rem,5vw,4rem);
+            margin-bottom: 10px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.7;
+        }
+
+        /* ── SEARCH ── */
+        .search-section {
+            width: 100%;
+            padding: 30px 20px;
+            display: flex;
+            justify-content: center;
+        }
+
+        .search-box {
+            width: 100%;
+            max-width: 1100px;
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px,1fr));
+            gap: 15px;
+        }
+
+            .search-box input,
+            .search-box select {
+                padding: 14px;
+                border-radius: 10px;
+                border: 1px solid #ccc;
+                font-size: 15px;
+            }
+
+            .search-box button {
+                border: none;
+                border-radius: 10px;
+                background: indigo;
+                height: 45px;
+                color: white;
+                font-weight: bold;
+                cursor: pointer;
+                font-size: 15px;
+            }
+
+                .search-box button:hover {
+                    background: darkviolet;
+                }
+
+        /* ── PROPERTIES ── */
+        .properties {
+            padding: 20px;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+            .section-title h2 {
+                color: indigo;
+                font-size: 2rem;
+            }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px,1fr));
+            gap: 25px;
+        }
+
+        .property-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+            .property-card:hover {
+                transform: translateY(-5px);
+            }
+
+            .property-card img {
+                width: 100%;
+                height: 230px;
+                object-fit: cover;
+            }
+
+        .property-info {
+            padding: 20px;
+        }
+
+            .property-info h3 {
+                margin-top: 0;
+                color: indigo;
+            }
+
+        .price {
+            color: darkviolet;
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+
+        .location {
+            color: #555;
+            margin-bottom: 10px;
+        }
+
+        .features {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 10px;
+        }
+
+            .features span {
+                background: #eee;
+                padding: 8px 12px;
+                border-radius: 20px;
+                font-size: 13px;
+            }
+
+        .view-btn {
+            width: 100%;
+            margin-top: 15px;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: indigo;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+            .view-btn:hover {
+                background: darkviolet;
+            }
+
+        /* ── POPUP ── */
+        .popup-container {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.75);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 5000;
+            padding: 20px;
+        }
+
+        .popup-content {
+            background: white;
+            width: 100%;
+            max-width: 430px;
+            border-radius: 18px;
+            overflow: hidden;
+            position: relative;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: popupShow 0.25s ease;
+        }
+
+            .popup-content img {
+                width: 100%;
+                height: 200px;
+                object-fit: cover;
+            }
+
+        .close-popup {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            font-weight: bold;
+            color: red;
+        }
+
+        .popup-content h2 {
+            padding: 15px;
+            margin: 0;
+            color: indigo;
+        }
+
+        .popup-price {
+            padding: 0 15px;
+            color: darkviolet;
+            font-weight: bold;
+        }
+
+        .popup-location {
+            padding: 5px 15px;
             color: #555;
         }
 
-        .prop-price {
-            font-size: 15px;
-            font-weight: 700;
-            color: #1e293b;
+        #popup-description {
+            padding: 10px 15px;
+            line-height: 1.6;
         }
 
-        .prop-type {
-            display: inline-block;
-            background: #ede9fe;
-            color: indigo;
-            font-size: 11px;
-            font-weight: 600;
-            padding: 3px 10px;
-            border-radius: 999px;
-            margin-top: 8px;
-        }
-
-        .prop-expires {
-            margin-top: 10px;
-            font-size: 11px;
-            color: #94a3b8;
-            border-top: 1px solid #f1f5f9;
-            padding-top: 8px;
-        }
-
-        .relist-btn {
-            display: inline-block;
-            margin-top: 12px;
-            padding: 9px 16px;
-            border: none;
-            border-radius: 8px;
-            background: indigo;
-            color: white;
-            font-size: 13px;
-            font-weight: 700;
-            cursor: pointer;
-            font-family: Arial;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-            .relist-btn:hover {
-                opacity: 0.85;
-            }
-
-        /* ── TABS ── */
-        .tab-bar {
+        .popup-features {
             display: flex;
-            gap: 10px;
-            margin: 20px 20px 0;
-            border-bottom: 2px solid #ddd;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 10px 15px 20px;
         }
 
-            .tab-bar button {
-                padding: 10px 20px;
-                border: none;
-                background: none;
-                font-size: 15px;
-                color: #555;
-                cursor: pointer;
-                border-bottom: 3px solid transparent;
-                font-weight: bold;
-                transition: color 0.2s, border-color 0.2s;
+            .popup-features span {
+                background: #eee;
+                padding: 6px 10px;
+                border-radius: 20px;
+                font-size: 12px;
             }
 
-                .tab-bar button.active {
-                    color: indigo;
-                    border-bottom-color: indigo;
-                }
+        @keyframes popupShow {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
 
-                .tab-bar button:hover:not(.active) {
-                    color: indigo;
-                }
-
-        .tab-content {
-            display: none;
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
         }
 
-            .tab-content.active {
-                display: block;
+        #interest-btn {
+            width: calc(100% - 30px);
+            margin: 0 15px 20px;
+            padding: 14px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(45deg, indigo, darkviolet);
+            color: white;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+            #interest-btn:hover {
+                transform: translateY(-2px);
+                opacity: 0.95;
+                box-shadow: 0 4px 12px rgba(75,0,130,0.4);
             }
+
+        /* ── FOOTER ── */
+        footer {
+            margin-top: 50px;
+            background: #1b1b1b;
+            color: white;
+            padding: 40px 20px;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px,1fr));
+            gap: 30px;
+        }
+
+        footer h3 {
+            color: violet;
+        }
+
+        footer p {
+            line-height: 1.8;
+            color: #ccc;
+        }
+
+        footer a {
+            color: #a78bfa;
+            text-decoration: none;
+            display: block;
+            line-height: 2;
+        }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+        .copyright {
+            text-align: center;
+            margin-top: 30px;
+            color: #aaa;
+            border-top: 1px solid #444;
+            padding-top: 20px;
+        }
+
+        /* ── DARK MODE ── */
+        body.dark {
+            background: #121212;
+            color: #eaeaea;
+        }
+
+            body.dark .property-card {
+                background: #1e1e1e;
+                color: #eaeaea;
+            }
+
+            body.dark .search-box {
+                background: #1e1e1e;
+            }
+
+            body.dark input,
+            body.dark select {
+                background: #2a2a2a;
+                color: white;
+                border: 1px solid #444;
+            }
+
+            body.dark .section-title h2 {
+                color: #c084fc;
+            }
+
+            body.dark footer {
+                background: #0d0d0d;
+            }
+
+            body.dark .popup-content {
+                background: #1e1e1e;
+                color: white;
+            }
+
+            body.dark .popup-location {
+                color: #ccc;
+            }
+
+            body.dark .popup-features span {
+                background: #333;
+                color: white;
+            }
+
+        @media (max-width: 768px) {
+            header {
+                justify-content: center;
+                gap: 10px;
+            }
+
+            .hero {
+                min-height: 280px;
+            }
+        }
     </style>
 </head>
 <body>
 
-
-
     <header>
-
         <div class="logo-area">
-            <button class="menu-btn"
-                    onclick="toggleMenu()">
-                ☰
-            </button>
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
             <img src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" id="logo" alt="logo">
-
             <div class="brand">
                 <h2>Qeja Connect</h2>
                 <p>Quality accommodation providence</p>
             </div>
-
         </div>
-
-        <div class="overlay"
-             id="overlay"
-             onclick="closeMenu()"></div>
-
-
-        <div class="side-menu"
-             id="sideMenu">
-            
-            <div class="side-menu" id="sideMenu">
-                <a href="home.html">🏠 Home</a>
-                <a href="landlords.html">🏘 Landlords</a>
-                <a href="contact.html">📞 Contact</a>
-                <a href="hostdashboard.html" id="menuDashboard" style="display:flex;align-items:center;justify-content:space-between;">
-                    📊 Dashboard
-                    <span id="menuDashboardBadge" style="display:none;background:indigo;color:white;border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;min-width:20px;text-align:center;"></span>
-                </a>
-                <a href="myprofile.html">👤 Profile</a>
-                <a href="mymessages.html" id="menuMessages" style="display:flex;align-items:center;justify-content:space-between;">
-                    💬 Messages from QejaConnect
-                    <span id="navNotifBadge" style="display:none;background:indigo;color:white;border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;min-width:20px;text-align:center;">0</span>
-                </a>
-                <a href="welcome.html">🚪 Log out</a>
-                <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
-                    🌙 Theme
-                </button>
-            </div>
-
-
-        </div>
-
-
     </header>
 
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="side-menu" id="sideMenu">
+        <a href="home.html">🏠 Home</a>
+        <a href="landlords.html">🏘 Landlords</a>
+        <a href="contact.html">📞 Contact</a>
+        <a href="hostdashboard.html" id="menuDashboard">
+            📊 Dashboard
+            <span id="menuDashboardBadge" class="menu-badge" style="display:none;"></span>
+        </a>
+        <a href="myprofile.html">👤 Profile</a>
+        <a href="mymessages.html" id="menuMessages">
+            💬 Messages from QejaConnect
+            <span id="navNotifBadge" class="menu-badge" style="display:none;">0</span>
+        </a>
+        <a href="welcome.html">🚪 Log out</a>
+        <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
+            🌙 Theme
+        </button>
+    </div>
 
     <section class="hero">
-
         <div class="hero-content">
-
             <h1>Find Trusted Housing Across Kenya</h1>
-
-            <p>
-                Discover verified rentals, hostels, apartments and affordable
-                accommodation posted directly by landlords and property owners.
-            </p>
-
+            <p>Discover verified rentals, hostels, apartments and affordable accommodation posted directly by landlords and property owners.</p>
         </div>
-
     </section>
 
-
-
     <section class="search-section">
-
         <div class="search-box">
-
             <input type="text" placeholder="Enter town or area">
-
             <select>
                 <option>Property Type</option>
                 <option>Apartment</option>
@@ -486,7 +580,6 @@
                 <option>Single Room</option>
                 <option>Hostel</option>
             </select>
-
             <select>
                 <option>Budget</option>
                 <option>Below Ksh 5,000</option>
@@ -494,165 +587,84 @@
                 <option>Ksh 10,000 - 20,000</option>
                 <option>Above Ksh 20,000</option>
             </select>
-
             <button onclick="searchProperty()">Search Property</button>
-
         </div>
-
     </section>
 
-
-
     <section class="properties">
-
         <div class="section-title">
             <h2>Available Properties</h2>
         </div>
-
         <div class="property-grid" id="propertyGrid"></div>
-
     </section>
 
-
-
     <footer>
-
         <div class="footer-content">
-
             <div>
-
                 <h3>Qeja Connect</h3>
-
-                <p>
-                    Kenya's modern housing connection platform helping tenants
-                    and landlords connect safely and efficiently.
-                </p>
-
+                <p>Kenya's modern housing connection platform helping tenants and landlords connect safely and efficiently.</p>
             </div>
-
             <div>
-
                 <h3>Contact</h3>
-
                 <p>Email: qejaconnect@outlook.com</p>
                 <p>Phone: +254714104737</p>
                 <p>Nairobi, Kenya</p>
-
             </div>
-
             <div>
-
                 <h3>Quick Links</h3>
-
-                <a href="https://eliyasande65-lang.github.io/QejaConnect/privacy_policy.html">Pivacy Policy</a>
+                <a href="https://eliyasande65-lang.github.io/QejaConnect/privacy_policy.html">Privacy Policy</a>
                 <p>About us</p>
                 <p>Terms and Conditions</p>
-
             </div>
-
         </div>
-
-        <div class="copyright">
-            © 2026 Qeja Connect Kenya Ltd. All Rights Reserved.
-        </div>
-
+        <div class="copyright">© 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</div>
     </footer>
 
+    <!-- POPUP -->
     <div id="popup" class="popup-container">
-
         <div class="popup-content">
-
             <span class="close-popup" onclick="closePopup()">&times;</span>
-
             <img id="popup-image">
-
             <h2 id="popup-title"></h2>
-
             <div class="popup-price" id="popup-price"></div>
-
             <div class="popup-location" id="popup-location"></div>
-
             <p id="popup-description"></p>
-
-
-
             <div class="popup-features" id="popup-features"></div>
-
-
-            <a id="map-btn" href="#" target="_blank" style="display:none; width:calc(100% - 30px); margin:0 15px 10px; padding:14px; border-radius:12px; background:#1a73e8; color:white; font-size:15px; font-weight:bold; text-align:center; text-decoration:none;">
+            <a id="map-btn" href="#" target="_blank"
+               style="display:none;width:calc(100% - 30px);margin:0 15px 10px;padding:14px;border-radius:12px;background:#1a73e8;color:white;font-size:15px;font-weight:bold;text-align:center;text-decoration:none;">
                 🗺️ Open on Google Maps
             </a>
-
-            <button id="interest-btn" onclick="handleInterestedClick()">
-                Interested
-            </button>
-
-
-
+            <button id="interest-btn" onclick="handleInterestedClick()">Interested</button>
         </div>
-
     </div>
+
     <script>
-
         function searchProperty() {
-
-        let location =
-        document.querySelector('input').value.toLowerCase();
-
-        let cards =
-        document.querySelectorAll('.property-card');
-
-        cards.forEach(card => {
-
-        let text =
-        card.innerText.toLowerCase();
-
-        if(text.includes(location)) {
-
-        card.style.display = "block";
-
-        } else {
-
-        card.style.display = "none";
-
-        }
-
+        const location = document.querySelector('input').value.toLowerCase();
+        document.querySelectorAll('.property-card').forEach(card => {
+        card.style.display = card.innerText.toLowerCase().includes(location) ? "block" : "none";
         });
-
         }
 
         function handleInterestedClick() {
-        if (!currentProperty) {
-        alert("No property selected");
-        return;
-        }
-
+        if (!currentProperty) { alert("No property selected"); return; }
         interested(currentProperty.landlord_id);
         }
-
     </script>
-    <script>
 
+    <script>
         let currentProperty = null;
 
         function openPopup(property) {
         currentProperty = property;
-
-        document.getElementById("popup-image").src = property.image_url;
-        document.getElementById("popup-title").innerText = property.title || "No title";
-        document.getElementById("popup-price").innerText = property.price || "No price";
-        document.getElementById("popup-location").innerText = property.location || "No location";
+        document.getElementById("popup-image").src        = property.image_url;
+        document.getElementById("popup-title").innerText  = property.title       || "No title";
+        document.getElementById("popup-price").innerText  = property.price       || "No price";
+        document.getElementById("popup-location").innerText = property.location  || "No location";
         document.getElementById("popup-description").innerText = property.description || "No description";
-
-        // Show or hide the map button
         const mapBtn = document.getElementById("map-btn");
-        if (property.maps_url) {
-        mapBtn.href = property.maps_url;
-        mapBtn.style.display = "block";
-        } else {
-        mapBtn.style.display = "none";
-        }
-
+        if (property.maps_url) { mapBtn.href = property.maps_url; mapBtn.style.display = "block"; }
+        else { mapBtn.style.display = "none"; }
         document.getElementById("popup").style.display = "flex";
         }
 
@@ -660,241 +672,133 @@
         document.getElementById("popup").style.display = "none";
         }
 
-        //
         async function interested(landlord_id) {
+        const btn        = document.getElementById("interest-btn");
+        const token      = localStorage.getItem("token");
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
 
-        console.log("🔥 Interested clicked");
+        if (!loggedUser || !token) { alert("Please login first"); return; }
 
-        const btn = document.getElementById("interest-btn");
-
-        btn.disabled = true;
+        btn.disabled  = true;
         btn.innerText = "Sending...";
 
-        const token = localStorage.getItem("token");
-
-        const loggedUser =
-        JSON.parse(localStorage.getItem("loggedUser"));
-
-        if (!loggedUser || !token) {
-
-        alert("Please login first");
-
-        btn.disabled = false;
-        btn.innerText = "Interested";
-
-        return;
-        }
-
         try {
-
-        const res = await fetch(
-        "https://qeja-backend-azkf.onrender.com/interested",
-        {
+        const res  = await fetch("https://qeja-backend-azkf.onrender.com/interested", {
         method: "POST",
-
-        headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer " + token
-        },
-
-        body: JSON.stringify({
-        landlord_id,
-        tenant_id: loggedUser.id,
-        message: "Hi, I am interested in this property"
-        })
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        body: JSON.stringify({ landlord_id, tenant_id: loggedUser.id, message: "Hi, I am interested in this property" })
         });
-
         const data = await res.json();
-
         if (data.success) {
-
         alert("Chat started successfully ✅");
-
-        // OPTIONAL REDIRECT
-        localStorage.setItem(
-        "chatLandlord",
-        landlord_id
-        );
-
-        window.location.href =
-        "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
-
+        localStorage.setItem("chatLandlord", landlord_id);
+        window.location.href = "https://eliyasande65-lang.github.io/QejaConnect/chat-tenant.html";
         } else {
-
         alert(data.message || "Failed");
-
         }
-
         } catch (err) {
-
         console.error(err);
-
         alert("Network error");
-
         }
 
-        btn.disabled = false;
+        btn.disabled  = false;
         btn.innerText = "Interested";
         }
     </script>
 
-
     <script>
         async function loadProperties() {
-
         try {
-        const res = await fetch("https://qeja-backend-azkf.onrender.com/properties");
+        const res  = await fetch("https://qeja-backend-azkf.onrender.com/properties");
         const data = await res.json();
-
         const grid = document.getElementById("propertyGrid");
-
         grid.innerHTML = "";
-
         data.properties.forEach(property => {
-
         grid.innerHTML += `
         <div class="property-card">
-
         <img src="${property.image_url}" />
-
         <div class="property-info">
-
         <h3>${property.title}</h3>
-
-        <div class="price">
-        Ksh ${property.price}
+        <div class="price">Ksh ${property.price}</div>
+        <div class="location">${property.location}</div>
+        <p>${property.description}</p>
+        <small>Posted by: ${property.landlord_name || "Unknown"}</small>
+        <button class="view-btn" onclick='openPopup(${JSON.stringify(property)})'>View Details</button>
         </div>
-
-        <div class="location">
-        ${property.location}
-        </div>
-
-        <p>
-        ${property.description}
-        </p>
-
-        <small>
-        Posted by: ${property.landlord_name || "Unknown"}
-        </small>
-
-        <button class="view-btn"
-        onclick='openPopup(${JSON.stringify(property)})'>
-        View Details
-        </button>
-
-        </div>
-        </div>
-        `;
+        </div>`;
         });
-
         } catch (err) {
         console.error(err);
         alert("Failed to load properties");
         }
         }
-
         loadProperties();
     </script>
+
     <script>
         function toggleTheme() {
         document.body.classList.toggle("dark");
-
-        // save preference
-        if (document.body.classList.contains("dark")) {
-        localStorage.setItem("theme", "dark");
-        } else {
-        localStorage.setItem("theme", "light");
-        }
+        localStorage.setItem("theme", document.body.classList.contains("dark") ? "dark" : "light");
         }
 
-        // load theme on page start
+        function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+        }
+
+        function closeMenu() {
+        document.getElementById("sideMenu").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+        }
+
         window.onload = function () {
-        const savedTheme = localStorage.getItem("theme");
-
-        if (savedTheme === "dark") {
-        document.body.classList.add("dark");
-        }
+        if (localStorage.getItem("theme") === "dark") document.body.classList.add("dark");
         };
     </script>
-    <script>
 
-        function toggleMenu(){
-
-        document.getElementById("sideMenu").classList.toggle("active");
-
-        document.getElementById("overlay").classList.toggle("active");
-
-        }
-
-
-        function closeMenu(){
-
-        document.getElementById(
-        "sideMenu").classList.remove("active");
-
-        document.getElementById(
-        "overlay").classList.remove("active");
-
-        }
-    </script>
     <script>
         (async function initMenuBadges() {
         const token = localStorage.getItem('token');
         if (!token) return;
 
-        // ── Highlight current page link ──
+        // Highlight current page
         const path = location.pathname.split('/').pop();
         document.querySelectorAll('.side-menu a').forEach(a => {
         const href = a.getAttribute('href');
-        if (href && path && href.includes(path)) {
-        a.classList.add('active-link');
-        }
+        if (href && path && href.includes(path)) a.classList.add('active-link');
         });
 
         try {
-        // ── Unread admin replies → Messages badge ──
+        // Messages badge
         const msgRes  = await fetch('https://qeja-backend-azkf.onrender.com/my-messages', {
         headers: { 'Authorization': 'Bearer ' + token }
         });
         const msgData = await msgRes.json();
-
-        let unreadMessages = 0;
         if (msgData.success) {
         let seen = [];
         try { seen = JSON.parse(localStorage.getItem('seenReplies') || '[]'); } catch {}
-        unreadMessages = msgData.messages.filter(m => m.reply && !seen.includes(m.id)).length;
-        }
-
+        const unread = msgData.messages.filter(m => m.reply && !seen.includes(m.id)).length;
         const msgBadge = document.getElementById('navNotifBadge');
-        if (msgBadge && unreadMessages > 0) {
-        msgBadge.textContent = unreadMessages;
-        msgBadge.style.display = 'inline-block';
+        if (msgBadge && unread > 0) { msgBadge.textContent = unread; msgBadge.style.display = 'inline-block'; }
         }
 
-        // ── New booking requests → Dashboard badge ──
+        // Dashboard badge
         const userId = JSON.parse(localStorage.getItem('loggedUser') || '{}')?.id;
         if (!userId) return;
-
         const reqRes  = await fetch(`https://qeja-backend-azkf.onrender.com/landlord/interests/${userId}`);
         const reqData = await reqRes.json();
-
-        let unseenRequests = 0;
         if (reqData.success && reqData.data?.length) {
         let seenReqs = [];
         try { seenReqs = JSON.parse(localStorage.getItem('seenRequests') || '[]'); } catch {}
-        unseenRequests = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
-        }
-
+        const unseen = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
         const dashBadge = document.getElementById('menuDashboardBadge');
-        if (dashBadge && unseenRequests > 0) {
-        dashBadge.textContent = unseenRequests;
-        dashBadge.style.display = 'inline-block';
+        if (dashBadge && unseen > 0) { dashBadge.textContent = unseen; dashBadge.style.display = 'inline-block'; }
         }
-
         } catch (err) {
         console.error('Menu badge error:', err);
         }
         })();
     </script>
+
 </body>
 </html>
