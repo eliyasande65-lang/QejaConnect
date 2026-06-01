@@ -8,6 +8,16 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+    <!--loginguru-->
+    <script>
+        (function() {
+        var token = localStorage.getItem('token');
+        var role  = localStorage.getItem('role');
+        if (token && role) {
+        window.location.replace(role === 'landlord' ? 'hostdashboard.html' : 'home.html');
+        }
+        })();
+    </script>
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
@@ -91,7 +101,7 @@
             z-index: 1;
         }
 
-        
+
         .header {
             text-align: center;
             margin-bottom: 36px;
@@ -125,7 +135,7 @@
             font-weight: 300;
         }
 
-        
+
         .card {
             background: var(--card);
             border: 1px solid var(--border);
@@ -195,7 +205,7 @@
                 box-shadow: 0 0 0 3px var(--accent-glow);
             }
 
-        
+
         .pw-wrap {
             position: relative;
         }
@@ -204,7 +214,7 @@
                 padding-right: 48px;
             }
 
-        
+
         .submit-btn {
             width: 100%;
             margin-top: 24px;
@@ -251,7 +261,7 @@
                 pointer-events: none;
             }
 
-       
+
         .divider {
             text-align: center;
             color: var(--muted);
@@ -277,7 +287,7 @@
                 right: 0;
             }
 
-       
+
         #fingerprint-btn {
             display: none;
             width: 100%;
@@ -311,7 +321,7 @@
             border-radius: 50%;
         }
 
-       
+
         .signup-link {
             text-align: center;
             margin-top: 20px;
@@ -329,7 +339,7 @@
                     color: #c4b5fd;
                 }
 
-        
+
         #fp-modal-overlay {
             display: none;
             position: fixed;

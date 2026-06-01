@@ -32,6 +32,16 @@
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="logo-192.png">
     <link rel="icon" href="favicon.ico">
+    <!--thebypass-->
+    <script>
+        (function() {
+        var token = localStorage.getItem('token');
+        var role  = localStorage.getItem('role');
+        if (token && role) {
+        window.location.replace(role === 'landlord' ? 'hostdashboard.html' : 'home.html');
+        }
+        })();
+    </script>
     <!-- Register Service Worker + Request Notification Permission -->
     <script>
         if ('serviceWorker' in navigator) {
