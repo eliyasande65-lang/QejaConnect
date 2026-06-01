@@ -540,6 +540,16 @@
                 min-height: 280px;
             }
         }
+        .side-menu a {
+            transition: background 0.2s, color 0.2s;
+        }
+
+            .side-menu a.active-link {
+                background: rgba(99, 102, 241, 0.25);
+                color: #a5b4fc;
+                border-left: 3px solid #a5b4fc;
+                padding-left: 22px;
+            }
     </style>
 </head>
 <body>
@@ -569,35 +579,25 @@
 
         <div class="side-menu"
              id="sideMenu">
-            <nav>
-                <a href="home.html">Home</a>
-
-                <a href="landlords.html">Landlords</a>
-                <a href="contact.html">Contact</a>
-                <a href="hostdashboard.html">Dashboard</a>
-                <a href="mymessages.html" style="display:flex;align-items:center;justify-content:space-between;">
-                    Messages from QejaConnect
-                    <span id="navNotifBadge"
-                          style="display:none;background:#e24b4a;color:white;border-radius:999px;
-                          font-size:11px;font-weight:bold;padding:2px 8px;min-width:20px;text-align:center;">
-                        0
-                    </span>
+            
+            <div class="side-menu" id="sideMenu">
+                <a href="home.html">🏠 Home</a>
+                <a href="landlords.html">🏘 Landlords</a>
+                <a href="contact.html">📞 Contact</a>
+                <a href="hostdashboard.html" id="menuDashboard" style="display:flex;align-items:center;justify-content:space-between;">
+                    📊 Dashboard
+                    <span id="menuDashboardBadge" style="display:none;background:indigo;color:white;border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;min-width:20px;text-align:center;"></span>
                 </a>
-                <a href="myprofile.html">Profile</a>
-                <a href="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">Log out</a>
-                <button onclick="toggleTheme()"
-                        style="
-                padding:10px 15px;
-                border:none;
-                color:white;
-                border-radius:8px;
-                background:none;
-                cursor:pointer;
-                font-weight:bold;
-            ">
+                <a href="myprofile.html">👤 Profile</a>
+                <a href="mymessages.html" id="menuMessages" style="display:flex;align-items:center;justify-content:space-between;">
+                    💬 Messages from QejaConnect
+                    <span id="navNotifBadge" style="display:none;background:indigo;color:white;border-radius:6px;font-size:11px;font-weight:700;padding:2px 8px;min-width:20px;text-align:center;">0</span>
+                </a>
+                <a href="welcome.html">🚪 Log out</a>
+                <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
                     🌙 Theme
                 </button>
-            </nav>
+            </div>
 
 
         </div>
