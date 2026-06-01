@@ -479,15 +479,23 @@
 
         //  Form submit > validate > open modal
         document.getElementById("propertyForm").addEventListener("submit", function (e) {
-        e.preventDefault();
+          e.preventDefault();
 
-        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-        const token = localStorage.getItem("token");
+          const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+          const token = localStorage.getItem("token");
 
-        if (!loggedUser || !token) {
-        alert("Please login first.");
-        return;
-        }
+          if (!loggedUser || !token) {
+            alert("Please login first.");
+            return;
+          }
+
+          // Block tenants
+          const role = localStorage.getItem("role") || loggedUser.role;
+          if (role !== "landlord") {
+            alert("Only landlords can list properties.");
+            window.location.href = "home.html";
+            return;
+          }
 
         const file = document.getElementById("image").files[0];
         if (!file) { alert("Please select a property image."); return; }
