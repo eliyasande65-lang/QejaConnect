@@ -569,7 +569,7 @@
         "Content-Type": "application/json",
         "Authorization": `Bearer ${token}`
         },
-        body: JSON.stringify({ phone, amount: 3, description: "Property listing fee" })
+        body: JSON.stringify({ phone, amount: 1, description: "Property listing fee" })
         });
 
         const stkData = await stkRes.json();
@@ -596,7 +596,7 @@
         }
         }
 
-        // ── Poll payment status ──────────────────────────────────────────
+        // ── Poll payment status 
         async function pollPayment(checkoutRequestId, token) {
         const MAX_TRIES = 20;       // 20 × 3s = 60s max wait
         const INTERVAL  = 3000;
@@ -690,13 +690,13 @@
         } else {
         status.innerHTML = `<p class="error-text">❌ ${data.message || "Upload failed."}</p>`;
         submitBtn.disabled = false;
-        submitBtn.textContent = "💳 Pay Ksh 500 & Upload";
+        submitBtn.textContent = "💳 Pay Ksh 195 & Upload";
         }
 
         } catch (err) {
         status.innerHTML = `<p class="error-text">❌ Server error. Contact support with your M-Pesa ref.</p>`;
         submitBtn.disabled = false;
-        submitBtn.textContent = "💳 Pay Ksh 500 & Upload";
+        submitBtn.textContent = "💳 Pay Ksh 195 & Upload";
         }
         }
 
