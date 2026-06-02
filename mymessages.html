@@ -33,7 +33,7 @@
         .logo-area {
             display: flex;
             align-items: center;
-            background: linear-gradient(45deg, indigo, darkviolet);
+            background: #1a1535;
             padding: 10px 15px;
             gap: 15px;
             position: relative;
@@ -176,7 +176,7 @@
             width: 36px;
             height: 36px;
             border-radius: 50%;
-            background: indigo;
+            background: #1a1535;
             color: white;
             display: flex;
             align-items: center;
@@ -200,7 +200,7 @@
 
         .user-bubble {
             background: #f0eeff;
-            border-left: 3px solid indigo;
+            border-left: 3px solid #1a1535;
             border-radius: 0 10px 10px 10px;
             padding: 12px 14px;
             font-size: 14px;
@@ -291,7 +291,7 @@
             width: 32px;
             height: 32px;
             border: 3px solid #e0e0e0;
-            border-top-color: indigo;
+            border-top-color: #1a1535;
             border-radius: 50%;
             animation: spin 0.7s linear infinite;
             margin-bottom: 12px;
@@ -339,7 +339,7 @@
             padding: 11px 24px;
             border: none;
             border-radius: 10px;
-            background: indigo;
+            background: #1a1535;
             color: white;
             font-weight: bold;
             font-size: 14px;
@@ -412,7 +412,9 @@
         <a href="landlords.html">Landlords</a>
         <a href="contact.html">Contact</a>
         <a href="mymessages.html" style="color:#a78bfa;">My Messages</a>
-        <a href="welcome.html" onclick="alert('You will be logged out of this device')">Log out</a>
+        <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
+            🚪 Log out
+        </a>
         
     </div>
 
