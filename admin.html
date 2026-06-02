@@ -1064,6 +1064,25 @@
         <div class="actions">
         <button class="btn-approve" ${isFixed?'disabled':''} onclick="verifyLandlord(${l.id},'approve',this)">${l.verified===1?'✓ Approved':'✅ Approve'}</button>
         <button class="btn-reject"  ${isFixed?'disabled':''} onclick="verifyLandlord(${l.id},'reject',this)">${l.verified===-1?'✕ Rejected':'❌ Reject'}</button>
+        <a class="btn-email"
+           href="mailto:${l.email}?subject=QejaConnect%20Support&body=Hello%20${encodeURIComponent(l.fullname || '')},%0D%0A%0D%0A"
+           style="
+                flex:1;
+                display:flex;
+                align-items:center;
+                justify-content:center;
+                text-decoration:none;
+                padding:10px;
+                border-radius:8px;
+                font-family: var(--head);
+                font-size:13px;
+                font-weight:700;
+                background: rgba(124,58,237,.15);
+                color:#a78bfa;
+                border:1px solid rgba(124,58,237,.3);
+           ">
+           ✉ Email
+        </a>
         </div>
         </div>`;
         }
