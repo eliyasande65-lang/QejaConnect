@@ -537,6 +537,164 @@
             }
         }
         
+
+        /*adminupdates*/
+        /* ── UPDATE CARDS in the property grid ── */
+        .update-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+            border-top: 4px solid #4f46e5;
+            position: relative;
+        }
+
+            .update-card:hover {
+                transform: translateY(-5px);
+            }
+
+        .update-card-banner {
+            background: linear-gradient(135deg, #1a1535, #312e81);
+            padding: 20px;
+            position: relative;
+        }
+
+            .update-card-banner img {
+                width: 100%;
+                height: 160px;
+                object-fit: cover;
+                border-radius: 8px;
+                margin-top: 10px;
+                display: block;
+            }
+
+        .update-type-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            padding: 4px 12px;
+            border-radius: 20px;
+        }
+
+        .badge-announcement {
+            background: rgba(99,102,241,0.3);
+            color: #a5b4fc;
+        }
+
+        .badge-maintenance {
+            background: rgba(251,146,60,0.3);
+            color: #fdba74;
+        }
+
+        .badge-alert {
+            background: rgba(239,68,68,0.3);
+            color: #fca5a5;
+        }
+
+        .badge-feature {
+            background: rgba(52,211,153,0.3);
+            color: #6ee7b7;
+        }
+
+        .badge-promotion {
+            background: rgba(167,139,250,0.3);
+            color: #c4b5fd;
+        }
+
+        .update-card-body {
+            padding: 18px 20px 20px;
+        }
+
+            .update-card-body h3 {
+                color: indigo;
+                margin: 0 0 8px;
+                font-size: 1rem;
+            }
+
+            .update-card-body p {
+                color: #555;
+                font-size: 14px;
+                line-height: 1.6;
+                margin-bottom: 12px;
+            }
+
+        .update-cta-btn {
+            display: inline-block;
+            padding: 9px 18px;
+            background: #1a1535;
+            color: white;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: background 0.2s;
+        }
+
+            .update-cta-btn:hover {
+                background: darkviolet;
+            }
+
+        .update-meta-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 6px;
+        }
+
+        .update-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        /* dark mode support */
+        body.dark .update-card {
+            background: #1e1e1e;
+        }
+
+        body.dark .update-card-body h3 {
+            color: #c084fc;
+        }
+
+        body.dark .update-card-body p {
+            color: #ccc;
+        }
+
+        body.dark .update-cta-btn {
+            background: #312e81;
+        }
+
+        /* ── SECTION LABEL for updates strip ── */
+        .feed-divider {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin: 32px 0 18px;
+        }
+
+            .feed-divider span {
+                font-weight: 700;
+                font-size: 1rem;
+                color: #4f46e5;
+                white-space: nowrap;
+            }
+
+            .feed-divider::after {
+                content: '';
+                flex: 1;
+                height: 1px;
+                background: #ddd;
+            }
+
+        body.dark .feed-divider::after {
+            background: #333;
+        }
+
+        body.dark .feed-divider span {
+            color: #a78bfa;
+        }
     </style>
 </head>
 <body>
@@ -607,6 +765,11 @@
         <div class="section-title">
             <h2>Available Properties</h2>
         </div>
+
+        <!-- Updates strip — injected by loadFeed() -->
+        <div id="updatesStrip"></div>
+
+        <!-- Properties grid -->
         <div class="property-grid" id="propertyGrid"></div>
     </section>
 
@@ -1015,13 +1178,70 @@
     </script>
 
     <script>
-        async function loadProperties() {
-        try {
-        const res  = await fetch("https://qeja-backend-azkf.onrender.com/properties");
-        const data = await res.json();
+        // ── Renders an update as a grid card ──────────────────────
+        function buildUpdateCard(u) {
+        const typeMap = {
+        announcement: { badge: "badge-announcement", emoji: "📢" },
+        maintenance:  { badge: "badge-maintenance",  emoji: "🔧" },
+        alert:        { badge: "badge-alert",         emoji: "🚨" },
+        feature:      { badge: "badge-feature",       emoji: "✨" },
+        promotion:    { badge: "badge-promotion",     emoji: "🎁" },
+        };
+        const meta = typeMap[u.type] || typeMap.announcement;
+        const label = u.type ? u.type.charAt(0).toUpperCase() + u.type.slice(1) : "Announcement";
+        const dateStr = new Date(u.created_at).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric" });
+
+        return `
+        <div class="update-card">
+        <div class="update-card-banner">
+        <div class="update-meta-row">
+        <span class="update-type-badge ${meta.badge}">${meta.emoji} ${label}</span>
+        <span class="update-date" style="color:#94a3b8;">${dateStr}</span>
+        </div>
+        ${u.image_url ? `<img src="${u.image_url}" alt="${u.title}">` : ""}
+        </div>
+        <div class="update-card-body">
+        <h3>${u.title}</h3>
+        <p>${u.body.length > 160 ? u.body.slice(0, 160) + "…" : u.body}</p>
+        ${u.cta_url ? `<a class="update-cta-btn" href="${u.cta_url}" target="_blank">${u.cta_label || "Learn more"} ↗</a>` : ""}
+        </div>
+        </div>`;
+        }
+
+        // ── Load updates + properties together ───────────────────
+        async function loadFeed() {
         const grid = document.getElementById("propertyGrid");
+        const strip = document.getElementById("updatesStrip");
+
+        try {
+        // Fetch in parallel
+        const [propsRes, updatesRes] = await Promise.all([
+        fetch("https://qeja-backend-azkf.onrender.com/properties"),
+        fetch("https://qeja-backend-azkf.onrender.com/updates")
+        ]);
+
+        const [propsData, updatesData] = await Promise.all([
+        propsRes.json(),
+        updatesRes.json()
+        ]);
+
+        // ── Render updates strip (above properties) ───────────
+        if (updatesData.success && updatesData.updates.length) {
+        strip.innerHTML = `
+        <div class="feed-divider"><span>📣 Platform Updates</span></div>
+        <div class="property-grid" id="updatesGrid"></div>
+        <div class="feed-divider" style="margin-top:28px;"><span>🏠 Available Properties</span></div>`;
+
+        const ugrid = document.getElementById("updatesGrid");
+        updatesData.updates.forEach(u => {
+        ugrid.innerHTML += buildUpdateCard(u);
+        });
+        }
+
+        // ── Render properties ─────────────────────────────────
         grid.innerHTML = "";
-        data.properties.forEach(property => {
+        if (propsData.success && propsData.properties.length) {
+        propsData.properties.forEach(property => {
         grid.innerHTML += `
         <div class="property-card">
         <img src="${property.image_url}" />
@@ -1035,14 +1255,19 @@
         </div>
         </div>`;
         });
+        } else {
+        grid.innerHTML = `<p style="text-align:center;color:#999;padding:40px;">No properties available right now.</p>`;
+        }
+
         } catch (err) {
         console.error(err);
-        alert("Failed to load properties");
+        grid.innerHTML = `<p style="text-align:center;color:#f87171;padding:40px;">Failed to load properties.</p>`;
         }
         }
-        loadProperties();
-    </script>
 
+        // Replace the old loadProperties() call:
+        loadFeed();
+    </script>
     <script>
         function toggleTheme() {
         document.body.classList.toggle("dark");

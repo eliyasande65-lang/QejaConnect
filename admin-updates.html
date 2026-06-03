@@ -1,0 +1,854 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QejaConnect — Admin Updates</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #080b14;
+            --surface: #0e1525;
+            --border: #1c2a42;
+            --accent: #3b6fff;
+            --accent2: #00e5a0;
+            --danger: #ff4c6a;
+            --warn: #ffb74d;
+            --text: #e8edf8;
+            --muted: #5a6a85;
+            --card: #111827;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+        }
+
+        /* ── GRID LAYOUT ── */
+        .shell {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            min-height: 100vh;
+        }
+
+        /* ── SIDEBAR ── */
+        aside {
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 32px 0;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-logo {
+            padding: 0 28px 28px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .sidebar-logo .badge {
+                display: inline-block;
+                background: var(--accent);
+                color: white;
+                font-family: 'Syne', sans-serif;
+                font-size: 11px;
+                font-weight: 700;
+                letter-spacing: 2px;
+                padding: 3px 10px;
+                border-radius: 4px;
+                margin-bottom: 8px;
+            }
+
+            .sidebar-logo h1 {
+                font-family: 'Syne', sans-serif;
+                font-size: 1.4rem;
+                font-weight: 800;
+                background: linear-gradient(120deg, #fff, #8ab4ff);
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+            }
+
+            .sidebar-logo p {
+                font-size: 12px;
+                color: var(--muted);
+                margin-top: 2px;
+            }
+
+        nav {
+            padding: 20px 16px;
+            flex: 1;
+        }
+
+            nav a {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                padding: 11px 14px;
+                border-radius: 10px;
+                color: var(--muted);
+                text-decoration: none;
+                font-size: 14px;
+                font-weight: 500;
+                transition: all 0.2s;
+                margin-bottom: 4px;
+            }
+
+                nav a:hover {
+                    background: var(--border);
+                    color: var(--text);
+                }
+
+                nav a.active {
+                    background: rgba(59,111,255,0.15);
+                    color: #7ca9ff;
+                    border-left: 3px solid var(--accent);
+                    padding-left: 11px;
+                }
+
+        .nav-icon {
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-footer {
+            padding: 16px 28px;
+            border-top: 1px solid var(--border);
+            font-size: 12px;
+            color: var(--muted);
+        }
+
+        /* ── MAIN ── */
+        main {
+            padding: 40px 44px;
+            overflow-y: auto;
+        }
+
+        .page-header {
+            margin-bottom: 36px;
+        }
+
+            .page-header h2 {
+                font-family: 'Syne', sans-serif;
+                font-size: 2rem;
+                font-weight: 800;
+                margin-bottom: 6px;
+            }
+
+            .page-header p {
+                color: var(--muted);
+                font-size: 14px;
+            }
+
+        /* ── COMPOSE CARD ── */
+        .compose-card {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 32px;
+            margin-bottom: 36px;
+        }
+
+            .compose-card h3 {
+                font-family: 'Syne', sans-serif;
+                font-size: 1.05rem;
+                font-weight: 700;
+                margin-bottom: 22px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+                .compose-card h3::before {
+                    content: '';
+                    display: inline-block;
+                    width: 4px;
+                    height: 18px;
+                    background: var(--accent);
+                    border-radius: 2px;
+                }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 16px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+            .form-group.full {
+                grid-column: 1 / -1;
+            }
+
+        label {
+            font-size: 12px;
+            font-weight: 600;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: var(--muted);
+        }
+
+        input, textarea, select {
+            background: var(--surface);
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 16px;
+            color: var(--text);
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+            input:focus, textarea:focus, select:focus {
+                border-color: var(--accent);
+            }
+
+        textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        select option {
+            background: var(--surface);
+        }
+
+        /* type chips */
+        .type-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .type-chip {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 16px;
+            border-radius: 50px;
+            border: 1.5px solid var(--border);
+            background: transparent;
+            color: var(--muted);
+            font-size: 13px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .type-chip:hover {
+                border-color: var(--accent);
+                color: var(--text);
+            }
+
+            .type-chip.selected {
+                background: rgba(59,111,255,0.18);
+                border-color: var(--accent);
+                color: #7ca9ff;
+            }
+
+            .type-chip[data-type="maintenance"].selected {
+                background: rgba(255,183,77,0.15);
+                border-color: var(--warn);
+                color: var(--warn);
+            }
+
+            .type-chip[data-type="alert"].selected {
+                background: rgba(255,76,106,0.15);
+                border-color: var(--danger);
+                color: var(--danger);
+            }
+
+            .type-chip[data-type="feature"].selected {
+                background: rgba(0,229,160,0.15);
+                border-color: var(--accent2);
+                color: var(--accent2);
+            }
+
+            .type-chip[data-type="promotion"].selected {
+                background: rgba(167,99,255,0.15);
+                border-color: #a763ff;
+                color: #a763ff;
+            }
+
+        /* image upload */
+        .upload-zone {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 28px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+            .upload-zone:hover {
+                border-color: var(--accent);
+                background: rgba(59,111,255,0.04);
+            }
+
+            .upload-zone.has-file {
+                border-color: var(--accent2);
+                background: rgba(0,229,160,0.05);
+            }
+
+            .upload-zone input {
+                display: none;
+            }
+
+        .upload-icon {
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .upload-zone p {
+            font-size: 13px;
+            color: var(--muted);
+        }
+
+        .upload-zone .file-name {
+            color: var(--accent2);
+            font-weight: 600;
+            margin-top: 4px;
+        }
+
+        /* submit btn */
+        .submit-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 24px;
+        }
+
+        .btn-primary {
+            padding: 13px 28px;
+            background: var(--accent);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+            font-weight: 700;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+            .btn-primary:hover {
+                opacity: 0.88;
+                transform: translateY(-1px);
+            }
+
+            .btn-primary:disabled {
+                opacity: 0.4;
+                cursor: not-allowed;
+                transform: none;
+            }
+
+        .btn-ghost {
+            padding: 13px 20px;
+            background: transparent;
+            border: 1.5px solid var(--border);
+            border-radius: 10px;
+            color: var(--muted);
+            font-size: 14px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+            .btn-ghost:hover {
+                border-color: var(--danger);
+                color: var(--danger);
+            }
+
+        #postStatus {
+            font-size: 13px;
+        }
+
+        .ok {
+            color: var(--accent2);
+            font-weight: 600;
+        }
+
+        .err {
+            color: var(--danger);
+            font-weight: 600;
+        }
+
+        /* ── UPDATES TABLE ── */
+        .updates-section h3 {
+            font-family: 'Syne', sans-serif;
+            font-size: 1.05rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+            .updates-section h3::before {
+                content: '';
+                display: inline-block;
+                width: 4px;
+                height: 18px;
+                background: var(--accent2);
+                border-radius: 2px;
+            }
+
+        .update-item {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            padding: 20px 24px;
+            margin-bottom: 14px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 12px;
+            align-items: start;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .update-left {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .update-meta {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            display: inline-block;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+        .tag-announcement {
+            background: rgba(59,111,255,0.18);
+            color: #7ca9ff;
+        }
+
+        .tag-maintenance {
+            background: rgba(255,183,77,0.18);
+            color: var(--warn);
+        }
+
+        .tag-alert {
+            background: rgba(255,76,106,0.18);
+            color: var(--danger);
+        }
+
+        .tag-feature {
+            background: rgba(0,229,160,0.18);
+            color: var(--accent2);
+        }
+
+        .tag-promotion {
+            background: rgba(167,99,255,0.18);
+            color: #a763ff;
+        }
+
+        .update-title {
+            font-family: 'Syne', sans-serif;
+            font-size: 1rem;
+            font-weight: 700;
+        }
+
+        .update-body {
+            font-size: 13.5px;
+            color: #8fa0bc;
+            line-height: 1.6;
+        }
+
+        .update-date {
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .update-img {
+            width: 80px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            border: 1px solid var(--border);
+        }
+
+        .delete-btn {
+            padding: 6px 14px;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            color: var(--muted);
+            font-size: 12px;
+            font-family: 'DM Sans', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+            .delete-btn:hover {
+                border-color: var(--danger);
+                color: var(--danger);
+                background: rgba(255,76,106,0.08);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 50px 20px;
+            color: var(--muted);
+        }
+
+            .empty-state .emoji {
+                font-size: 2.5rem;
+                margin-bottom: 12px;
+            }
+
+            .empty-state p {
+                font-size: 14px;
+            }
+
+        .loading-pulse {
+            background: var(--border);
+            border-radius: 8px;
+            height: 80px;
+            margin-bottom: 12px;
+            animation: pulse 1.4s infinite ease-in-out;
+        }
+
+        @keyframes pulse {
+            0%,100% {
+                opacity: .4;
+            }
+
+            50% {
+                opacity: .9;
+            }
+        }
+
+        /* ── RESPONSIVE ── */
+        @media (max-width: 900px) {
+            .shell {
+                grid-template-columns: 1fr;
+            }
+
+            aside {
+                display: none;
+            }
+
+            main {
+                padding: 24px 18px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="shell">
+
+        <!-- SIDEBAR -->
+        <aside>
+            <div class="sidebar-logo">
+                <div class="badge">ADMIN</div>
+                <h1>QejaConnect</h1>
+                <p>Control Panel</p>
+            </div>
+            <nav>
+                <a href="#" class="active">
+                    <span class="nav-icon">📢</span> Updates & Announcements
+                </a>
+                <a href="javascript:void(0)" onclick="alert('Navigate to your admin landlords page')">
+                    <span class="nav-icon">🏘</span> Landlords
+                </a>
+                <a href="javascript:void(0)" onclick="alert('Navigate to admin messages page')">
+                    <span class="nav-icon">💬</span> Messages
+                </a>
+                <a href="home.html">
+                    <span class="nav-icon">🏠</span> View Live Site
+                </a>
+            </nav>
+            <div class="sidebar-footer">
+                <div id="adminLabel">Signed in as admin</div>
+            </div>
+        </aside>
+
+        <!-- MAIN -->
+        <main>
+            <div class="page-header">
+                <h2>📢 Updates &amp; Announcements</h2>
+                <p>Post platform news, maintenance alerts, promotions, and feature releases. These appear as cards on the home feed.</p>
+            </div>
+
+            <!-- COMPOSE -->
+            <div class="compose-card">
+                <h3>New Update</h3>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Title</label>
+                        <input type="text" id="upTitle" placeholder="e.g. New feature: instant notifications" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Type</label>
+                        <div class="type-picker" id="typePicker">
+                            <button class="type-chip selected" data-type="announcement">📢 Announcement</button>
+                            <button class="type-chip" data-type="maintenance">🔧 Maintenance</button>
+                            <button class="type-chip" data-type="alert">🚨 Alert</button>
+                            <button class="type-chip" data-type="feature">✨ Feature</button>
+                            <button class="type-chip" data-type="promotion">🎁 Promotion</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group full">
+                        <label>Body</label>
+                        <textarea id="upBody" placeholder="Write the full update content here…" maxlength="1000"></textarea>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Cover image (optional)</label>
+                        <label class="upload-zone" id="uploadZone" for="upImage">
+                            <input type="file" id="upImage" accept="image/*">
+                            <div class="upload-icon">🖼️</div>
+                            <p>Click to attach an image</p>
+                            <p class="file-name" id="fileName"></p>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>CTA link (optional)</label>
+                        <input type="url" id="upLink" placeholder="https://...">
+                        <br>
+                        <label>CTA label</label>
+                        <input type="text" id="upLinkLabel" placeholder="e.g. Learn more">
+                    </div>
+                </div>
+
+                <div class="submit-row">
+                    <button class="btn-primary" id="postBtn" onclick="postUpdate()">
+                        <span>🚀</span> Publish Update
+                    </button>
+                    <button class="btn-ghost" onclick="clearForm()">Clear</button>
+                    <span id="postStatus"></span>
+                </div>
+            </div>
+
+            <!-- EXISTING UPDATES -->
+            <div class="updates-section">
+                <h3>Published Updates</h3>
+                <div id="updatesList">
+                    <div class="loading-pulse"></div>
+                    <div class="loading-pulse" style="height:60px;opacity:.6"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script>
+        const API = "https://qeja-backend-azkf.onrender.com";
+        const ADMIN_SECRET = prompt("Enter admin secret to continue:") || "";
+
+        if (!ADMIN_SECRET) {
+        document.body.innerHTML = "<p style='color:red;padding:40px;font-family:sans-serif'>Access denied — no secret provided.</p>";
+        }
+
+        // ── Type picker ──────────────────────────────────────────
+        let selectedType = "announcement";
+
+        document.getElementById("typePicker").addEventListener("click", e => {
+        const chip = e.target.closest(".type-chip");
+        if (!chip) return;
+        document.querySelectorAll(".type-chip").forEach(c => c.classList.remove("selected"));
+        chip.classList.add("selected");
+        selectedType = chip.dataset.type;
+        });
+
+        // ── Image upload preview ─────────────────────────────────
+        document.getElementById("upImage").addEventListener("change", function () {
+        const zone = document.getElementById("uploadZone");
+        const name = document.getElementById("fileName");
+        if (this.files[0]) {
+        zone.classList.add("has-file");
+        name.textContent = "✅ " + this.files[0].name;
+        } else {
+        zone.classList.remove("has-file");
+        name.textContent = "";
+        }
+        });
+
+        // ── Post update ──────────────────────────────────────────
+        async function postUpdate() {
+        const title = document.getElementById("upTitle").value.trim();
+        const body  = document.getElementById("upBody").value.trim();
+        const link  = document.getElementById("upLink").value.trim();
+        const label = document.getElementById("upLinkLabel").value.trim();
+        const file  = document.getElementById("upImage").files[0];
+        const statusEl = document.getElementById("postStatus");
+        const btn = document.getElementById("postBtn");
+
+        if (!title || !body) {
+        statusEl.className = "err";
+        statusEl.textContent = "Title and body are required.";
+        return;
+        }
+
+        btn.disabled = true;
+        btn.innerHTML = "<span>⏳</span> Publishing…";
+        statusEl.textContent = "";
+
+        const fd = new FormData();
+        fd.append("title", title);
+        fd.append("body", body);
+        fd.append("type", selectedType);
+        if (link)  fd.append("cta_url", link);
+        if (label) fd.append("cta_label", label);
+        if (file)  fd.append("image", file);
+
+        try {
+        const res  = await fetch(`${API}/admin/updates`, {
+        method: "POST",
+        headers: { "x-admin-secret": ADMIN_SECRET },
+        body: fd
+        });
+        const data = await res.json();
+
+        if (data.success) {
+        statusEl.className = "ok";
+        statusEl.textContent = "✅ Published!";
+        clearForm();
+        loadUpdates();
+        } else {
+        statusEl.className = "err";
+        statusEl.textContent = "❌ " + (data.message || "Failed");
+        }
+        } catch (err) {
+        statusEl.className = "err";
+        statusEl.textContent = "❌ Network error";
+        }
+
+        btn.disabled = false;
+        btn.innerHTML = "<span>🚀</span> Publish Update";
+        }
+
+        function clearForm() {
+        document.getElementById("upTitle").value = "";
+        document.getElementById("upBody").value = "";
+        document.getElementById("upLink").value = "";
+        document.getElementById("upLinkLabel").value = "";
+        document.getElementById("upImage").value = "";
+        document.getElementById("fileName").textContent = "";
+        document.getElementById("uploadZone").classList.remove("has-file");
+        document.getElementById("postStatus").textContent = "";
+        selectedType = "announcement";
+        document.querySelectorAll(".type-chip").forEach(c => c.classList.remove("selected"));
+        document.querySelector('[data-type="announcement"]').classList.add("selected");
+        }
+
+        // ── Delete update ────────────────────────────────────────
+        async function deleteUpdate(id) {
+        if (!confirm("Delete this update? This cannot be undone.")) return;
+        try {
+        const res  = await fetch(`${API}/admin/updates/${id}`, {
+        method: "DELETE",
+        headers: { "x-admin-secret": ADMIN_SECRET }
+        });
+        const data = await res.json();
+        if (data.success) loadUpdates();
+        else alert(data.message || "Delete failed");
+        } catch { alert("Network error"); }
+        }
+
+        // ── Load updates ─────────────────────────────────────────
+        async function loadUpdates() {
+        const container = document.getElementById("updatesList");
+        try {
+        const res  = await fetch(`${API}/updates`);
+        const data = await res.json();
+        if (!data.success || !data.updates.length) {
+        container.innerHTML = `
+        <div class="empty-state">
+        <div class="emoji">📭</div>
+        <p>No updates published yet. Use the form above to post one.</p>
+        </div>`;
+        return;
+        }
+
+        container.innerHTML = "";
+
+        data.updates.forEach(u => {
+        const tag = `tag-${u.type || "announcement"}`;
+        const label = (u.type || "announcement").charAt(0).toUpperCase() + (u.type || "announcement").slice(1);
+        const dateStr = new Date(u.created_at).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+
+        container.innerHTML += `
+        <div class="update-item" id="upitem-${u.id}">
+        <div class="update-left">
+        <div class="update-meta">
+        <span class="tag ${tag}">${label}</span>
+        <span class="update-date">${dateStr}</span>
+        </div>
+        <div class="update-title">${escHtml(u.title)}</div>
+        <div class="update-body">${escHtml(u.body)}</div>
+        ${u.cta_url ? `<a href="${u.cta_url}" target="_blank" style="color:#7ca9ff;font-size:13px;margin-top:4px;">${escHtml(u.cta_label || u.cta_url)} ↗</a>` : ""}
+        <button class="delete-btn" onclick="deleteUpdate(${u.id})">🗑 Delete</button>
+        </div>
+        ${u.image_url ? `<img class="update-img" src="${u.image_url}" alt="update image">` : ""}
+        </div>`;
+        });
+        } catch (err) {
+        container.innerHTML = `<p class="err" style="padding:20px;">Failed to load updates.</p>`;
+        }
+        }
+
+        function escHtml(str) {
+        return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        }
+
+        loadUpdates();
+    </script>
+</body>
+</html>
