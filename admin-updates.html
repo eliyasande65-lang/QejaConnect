@@ -5,626 +5,836 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QejaConnect — Admin Updates</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Instrument+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --bg: #080b14;
-            --surface: #0e1525;
-            --border: #1c2a42;
-            --accent: #3b6fff;
-            --accent2: #00e5a0;
-            --danger: #ff4c6a;
-            --warn: #ffb74d;
-            --text: #e8edf8;
-            --muted: #5a6a85;
-            --card: #111827;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: 'DM Sans', sans-serif;
-            background: var(--bg);
-            color: var(--text);
-            min-height: 100vh;
-        }
-
-        /* ── GRID LAYOUT ── */
-        .shell {
-            display: grid;
-            grid-template-columns: 260px 1fr;
-            min-height: 100vh;
-        }
-
-        /* ── SIDEBAR ── */
-        aside {
-            background: var(--surface);
-            border-right: 1px solid var(--border);
-            padding: 32px 0;
-            position: sticky;
-            top: 0;
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .sidebar-logo {
-            padding: 0 28px 28px;
-            border-bottom: 1px solid var(--border);
-        }
-
-            .sidebar-logo .badge {
-                display: inline-block;
-                background: var(--accent);
-                color: white;
-                font-family: 'Syne', sans-serif;
-                font-size: 11px;
-                font-weight: 700;
-                letter-spacing: 2px;
-                padding: 3px 10px;
-                border-radius: 4px;
-                margin-bottom: 8px;
+            :root {
+                --bg: #05080f;
+                --surface: #0a0f1c;
+                --surface2: #0f1628;
+                --border: #1a2540;
+                --border2: #243050;
+                --accent: #4f7cff;
+                --accent-glow: rgba(79,124,255,0.18);
+                --green: #00d084;
+                --green-glow: rgba(0,208,132,0.15);
+                --red: #ff4f6a;
+                --amber: #ffb340;
+                --purple: #a855f7;
+                --text: #dce6f8;
+                --muted: #4a5d80;
+                --muted2: #6b7fa8;
+                --card: #080c18;
             }
 
-            .sidebar-logo h1 {
-                font-family: 'Syne', sans-serif;
-                font-size: 1.4rem;
-                font-weight: 800;
-                background: linear-gradient(120deg, #fff, #8ab4ff);
-                -webkit-background-clip: text;
-                -webkit-text-fill-color: transparent;
+            *, *::before, *::after {
+                box-sizing: border-box;
+                margin: 0;
+                padding: 0;
             }
 
-            .sidebar-logo p {
-                font-size: 12px;
-                color: var(--muted);
-                margin-top: 2px;
+            body {
+                font-family: 'Instrument Sans', sans-serif;
+                background: var(--bg);
+                color: var(--text);
+                min-height: 100vh;
+                overflow-x: hidden;
             }
 
-        nav {
-            padding: 20px 16px;
-            flex: 1;
-        }
+            /* ═══════════════════════════════════════════
+           GRID
+        ═══════════════════════════════════════════ */
+            .shell {
+                display: grid;
+                grid-template-columns: 72px 1fr;
+                min-height: 100vh;
+            }
 
-            nav a {
+            @media (min-width: 900px) {
+                .shell {
+                    grid-template-columns: 240px 1fr;
+                }
+            }
+
+            /* ═══════════════════════════════════════════
+           SIDEBAR
+        ═══════════════════════════════════════════ */
+            aside {
+                background: var(--surface);
+                border-right: 1px solid var(--border);
+                display: flex;
+                flex-direction: column;
+                position: sticky;
+                top: 0;
+                height: 100vh;
+                overflow: hidden;
+            }
+
+            .sidebar-logo {
+                padding: 22px 16px 20px;
+                border-bottom: 1px solid var(--border);
                 display: flex;
                 align-items: center;
                 gap: 12px;
-                padding: 11px 14px;
-                border-radius: 10px;
-                color: var(--muted);
-                text-decoration: none;
-                font-size: 14px;
-                font-weight: 500;
-                transition: all 0.2s;
-                margin-bottom: 4px;
+                overflow: hidden;
             }
 
-                nav a:hover {
-                    background: var(--border);
+            .logo-icon {
+                width: 38px;
+                height: 38px;
+                background: linear-gradient(135deg, var(--accent), #2244cc);
+                border-radius: 10px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                font-size: 18px;
+                flex-shrink: 0;
+                box-shadow: 0 0 20px var(--accent-glow);
+            }
+
+            .logo-text {
+                overflow: hidden;
+            }
+
+                .logo-text h1 {
+                    font-family: 'Clash Display', sans-serif;
+                    font-size: 1rem;
+                    font-weight: 700;
+                    white-space: nowrap;
+                    background: linear-gradient(90deg, #fff 40%, #8ab4ff);
+                    -webkit-background-clip: text;
+                    -webkit-text-fill-color: transparent;
+                }
+
+                .logo-text span {
+                    font-size: 10px;
+                    letter-spacing: 2px;
+                    text-transform: uppercase;
+                    color: var(--muted);
+                }
+
+            nav {
+                flex: 1;
+                padding: 16px 10px;
+                display: flex;
+                flex-direction: column;
+                gap: 4px;
+                overflow: hidden;
+            }
+
+                nav a {
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    padding: 11px 12px;
+                    border-radius: 10px;
+                    color: var(--muted2);
+                    text-decoration: none;
+                    font-size: 13.5px;
+                    font-weight: 500;
+                    white-space: nowrap;
+                    overflow: hidden;
+                    transition: background 0.2s, color 0.2s;
+                }
+
+                    nav a:hover {
+                        background: var(--border);
+                        color: var(--text);
+                    }
+
+                    nav a.active {
+                        background: var(--accent-glow);
+                        color: #7ca9ff;
+                        border: 1px solid rgba(79,124,255,0.25);
+                    }
+
+            .nav-icon {
+                font-size: 17px;
+                flex-shrink: 0;
+                width: 20px;
+                text-align: center;
+            }
+
+            .sidebar-footer {
+                padding: 14px 16px;
+                border-top: 1px solid var(--border);
+                font-size: 11px;
+                color: var(--muted);
+                white-space: nowrap;
+                overflow: hidden;
+            }
+
+            /* ═══════════════════════════════════════════
+           MAIN
+        ═══════════════════════════════════════════ */
+            main {
+                padding: 36px 40px;
+                overflow-y: auto;
+                background: radial-gradient(ellipse 60% 50% at 80% -10%, rgba(79,124,255,0.06) 0%, transparent 70%), radial-gradient(ellipse 40% 30% at 10% 80%, rgba(0,208,132,0.04) 0%, transparent 60%), var(--bg);
+                min-height: 100vh;
+            }
+
+            @media (max-width: 900px) {
+                main {
+                    padding: 24px 18px;
+                }
+            }
+
+            /* ═══════════════════════════════════════════
+           PAGE HEADER
+        ═══════════════════════════════════════════ */
+            .page-header {
+                margin-bottom: 32px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: space-between;
+                flex-wrap: wrap;
+                gap: 12px;
+            }
+
+                .page-header h2 {
+                    font-family: 'Clash Display', sans-serif;
+                    font-size: clamp(1.6rem, 3vw, 2.2rem);
+                    font-weight: 700;
+                    letter-spacing: -0.5px;
+                    line-height: 1.15;
+                }
+
+                .page-header p {
+                    color: var(--muted2);
+                    font-size: 13.5px;
+                    margin-top: 4px;
+                }
+
+            .header-pill {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: var(--accent-glow);
+                border: 1px solid rgba(79,124,255,0.3);
+                color: #7ca9ff;
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 1.5px;
+                text-transform: uppercase;
+                padding: 5px 12px;
+                border-radius: 50px;
+                margin-bottom: 8px;
+                display: inline-block;
+            }
+
+            /* ═══════════════════════════════════════════
+           COMPOSE CARD
+        ═══════════════════════════════════════════ */
+            .compose-card {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 20px;
+                padding: 30px 32px;
+                margin-bottom: 36px;
+                position: relative;
+                overflow: hidden;
+            }
+
+                .compose-card::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    height: 2px;
+                    background: linear-gradient(90deg, var(--accent), var(--green), var(--purple));
+                    border-radius: 20px 20px 0 0;
+                }
+
+            .section-heading {
+                font-family: 'Clash Display', sans-serif;
+                font-size: 1rem;
+                font-weight: 600;
+                letter-spacing: 0.3px;
+                margin-bottom: 24px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+                color: var(--text);
+            }
+
+                .section-heading .dot {
+                    width: 8px;
+                    height: 8px;
+                    border-radius: 50%;
+                    background: var(--accent);
+                    box-shadow: 0 0 8px var(--accent);
+                    flex-shrink: 0;
+                }
+
+                    .section-heading .dot.green {
+                        background: var(--green);
+                        box-shadow: 0 0 8px var(--green);
+                    }
+
+            /* form layout */
+            .form-grid {
+                display: grid;
+                grid-template-columns: 1fr 1fr;
+                gap: 18px;
+                margin-bottom: 18px;
+            }
+
+            @media (max-width: 700px) {
+                .form-grid {
+                    grid-template-columns: 1fr;
+                }
+            }
+
+            .form-group {
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+            }
+
+                .form-group.full {
+                    grid-column: 1 / -1;
+                }
+
+            label {
+                font-size: 11px;
+                font-weight: 600;
+                letter-spacing: 1px;
+                text-transform: uppercase;
+                color: var(--muted2);
+            }
+
+            input, textarea, select {
+                background: var(--surface2);
+                border: 1.5px solid var(--border);
+                border-radius: 10px;
+                padding: 12px 15px;
+                color: var(--text);
+                font-size: 14px;
+                font-family: 'Instrument Sans', sans-serif;
+                outline: none;
+                transition: border-color 0.2s, box-shadow 0.2s;
+            }
+
+                input:focus, textarea:focus, select:focus {
+                    border-color: var(--accent);
+                    box-shadow: 0 0 0 3px var(--accent-glow);
+                }
+
+                input::placeholder, textarea::placeholder {
+                    color: var(--muted);
+                }
+
+            textarea {
+                resize: vertical;
+                min-height: 100px;
+            }
+
+            select option {
+                background: var(--surface);
+            }
+
+            /* ── type chips ── */
+            .type-picker {
+                display: flex;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .type-chip {
+                display: flex;
+                align-items: center;
+                gap: 6px;
+                padding: 7px 15px;
+                border-radius: 50px;
+                border: 1.5px solid var(--border);
+                background: transparent;
+                color: var(--muted2);
+                font-size: 12.5px;
+                font-family: 'Instrument Sans', sans-serif;
+                font-weight: 500;
+                cursor: pointer;
+                transition: all 0.18s;
+            }
+
+                .type-chip:hover {
+                    border-color: var(--accent);
                     color: var(--text);
                 }
 
-                nav a.active {
-                    background: rgba(59,111,255,0.15);
+                .type-chip.selected {
+                    background: var(--accent-glow);
+                    border-color: var(--accent);
                     color: #7ca9ff;
-                    border-left: 3px solid var(--accent);
-                    padding-left: 11px;
                 }
 
-        .nav-icon {
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-        }
+                .type-chip[data-type="maintenance"].selected {
+                    background: rgba(255,179,64,0.12);
+                    border-color: var(--amber);
+                    color: var(--amber);
+                }
 
-        .sidebar-footer {
-            padding: 16px 28px;
-            border-top: 1px solid var(--border);
-            font-size: 12px;
-            color: var(--muted);
-        }
+                .type-chip[data-type="alert"].selected {
+                    background: rgba(255,79,106,0.12);
+                    border-color: var(--red);
+                    color: var(--red);
+                }
 
-        /* ── MAIN ── */
-        main {
-            padding: 40px 44px;
-            overflow-y: auto;
-        }
+                .type-chip[data-type="feature"].selected {
+                    background: var(--green-glow);
+                    border-color: var(--green);
+                    color: var(--green);
+                }
 
-        .page-header {
-            margin-bottom: 36px;
-        }
+                .type-chip[data-type="promotion"].selected {
+                    background: rgba(168,85,247,0.12);
+                    border-color: var(--purple);
+                    color: var(--purple);
+                }
 
-            .page-header h2 {
-                font-family: 'Syne', sans-serif;
-                font-size: 2rem;
-                font-weight: 800;
+            /* ── upload zone ── */
+            .upload-zone {
+                border: 2px dashed var(--border2);
+                border-radius: 12px;
+                padding: 24px 20px;
+                text-align: center;
+                cursor: pointer;
+                transition: all 0.2s;
+                position: relative;
+            }
+
+                .upload-zone:hover {
+                    border-color: var(--accent);
+                    background: rgba(79,124,255,0.04);
+                }
+
+                .upload-zone.has-file {
+                    border-color: var(--green);
+                    background: var(--green-glow);
+                }
+
+                .upload-zone input {
+                    display: none;
+                }
+
+            .upload-icon {
+                font-size: 26px;
                 margin-bottom: 6px;
             }
 
-            .page-header p {
-                color: var(--muted);
-                font-size: 14px;
+            .upload-zone p {
+                font-size: 12.5px;
+                color: var(--muted2);
             }
 
-        /* ── COMPOSE CARD ── */
-        .compose-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 18px;
-            padding: 32px;
-            margin-bottom: 36px;
-        }
+            .upload-zone .file-name {
+                color: var(--green);
+                font-weight: 600;
+                margin-top: 4px;
+                font-size: 12px;
+            }
 
-            .compose-card h3 {
-                font-family: 'Syne', sans-serif;
-                font-size: 1.05rem;
-                font-weight: 700;
-                margin-bottom: 22px;
+            /* ── submit row ── */
+            .submit-row {
+                display: flex;
+                align-items: center;
+                gap: 12px;
+                margin-top: 22px;
+                flex-wrap: wrap;
+            }
+
+            .btn-primary {
+                padding: 12px 26px;
+                background: var(--accent);
+                border: none;
+                border-radius: 10px;
+                color: white;
+                font-size: 13.5px;
+                font-weight: 600;
+                font-family: 'Instrument Sans', sans-serif;
+                cursor: pointer;
+                transition: all 0.2s;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                box-shadow: 0 4px 20px var(--accent-glow);
+            }
+
+                .btn-primary:hover {
+                    opacity: 0.88;
+                    transform: translateY(-1px);
+                    box-shadow: 0 6px 24px rgba(79,124,255,0.35);
+                }
+
+                .btn-primary:disabled {
+                    opacity: 0.35;
+                    cursor: not-allowed;
+                    transform: none;
+                    box-shadow: none;
+                }
+
+            .btn-ghost {
+                padding: 12px 18px;
+                background: transparent;
+                border: 1.5px solid var(--border2);
+                border-radius: 10px;
+                color: var(--muted2);
+                font-size: 13.5px;
+                font-family: 'Instrument Sans', sans-serif;
+                cursor: pointer;
+                transition: all 0.2s;
+            }
+
+                .btn-ghost:hover {
+                    border-color: var(--red);
+                    color: var(--red);
+                }
+
+            #postStatus {
+                font-size: 13px;
+                font-weight: 500;
+            }
+
+            .ok {
+                color: var(--green);
+            }
+
+            .err {
+                color: var(--red);
+            }
+
+            /* ── status toast ── */
+            .toast {
+                position: fixed;
+                bottom: 28px;
+                right: 28px;
+                padding: 13px 20px;
+                border-radius: 12px;
+                font-size: 13.5px;
+                font-weight: 500;
+                z-index: 9999;
+                transform: translateY(20px);
+                opacity: 0;
+                pointer-events: none;
+                transition: all 0.3s cubic-bezier(0.34,1.56,0.64,1);
+                max-width: 320px;
                 display: flex;
                 align-items: center;
                 gap: 10px;
             }
 
-                .compose-card h3::before {
-                    content: '';
-                    display: inline-block;
-                    width: 4px;
-                    height: 18px;
-                    background: var(--accent);
-                    border-radius: 2px;
+                .toast.show {
+                    transform: translateY(0);
+                    opacity: 1;
+                    pointer-events: auto;
                 }
 
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 16px;
-        }
+                .toast.toast-ok {
+                    background: rgba(0,208,132,0.15);
+                    border: 1px solid rgba(0,208,132,0.4);
+                    color: var(--green);
+                }
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 7px;
-        }
+                .toast.toast-err {
+                    background: rgba(255,79,106,0.12);
+                    border: 1px solid rgba(255,79,106,0.35);
+                    color: var(--red);
+                }
 
-            .form-group.full {
-                grid-column: 1 / -1;
+            /* ═══════════════════════════════════════════
+           UPDATES LIST
+        ═══════════════════════════════════════════ */
+            .updates-section {
             }
 
-        label {
-            font-size: 12px;
-            font-weight: 600;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: var(--muted);
-        }
-
-        input, textarea, select {
-            background: var(--surface);
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            padding: 12px 16px;
-            color: var(--text);
-            font-size: 14px;
-            font-family: 'DM Sans', sans-serif;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-            input:focus, textarea:focus, select:focus {
-                border-color: var(--accent);
+            .update-item {
+                background: var(--card);
+                border: 1px solid var(--border);
+                border-radius: 16px;
+                padding: 20px 22px;
+                margin-bottom: 12px;
+                display: grid;
+                grid-template-columns: 1fr auto;
+                gap: 16px;
+                align-items: start;
+                animation: slideUp 0.3s ease both;
+                transition: border-color 0.2s;
             }
 
-        textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
+                .update-item:hover {
+                    border-color: var(--border2);
+                }
 
-        select option {
-            background: var(--surface);
-        }
+            @keyframes slideUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                }
 
-        /* type chips */
-        .type-picker {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .type-chip {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 8px 16px;
-            border-radius: 50px;
-            border: 1.5px solid var(--border);
-            background: transparent;
-            color: var(--muted);
-            font-size: 13px;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-            .type-chip:hover {
-                border-color: var(--accent);
-                color: var(--text);
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
             }
 
-            .type-chip.selected {
-                background: rgba(59,111,255,0.18);
-                border-color: var(--accent);
+            .update-left {
+                display: flex;
+                flex-direction: column;
+                gap: 7px;
+            }
+
+            .update-meta {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                flex-wrap: wrap;
+            }
+
+            .tag {
+                display: inline-block;
+                font-size: 9.5px;
+                font-weight: 700;
+                letter-spacing: 1.2px;
+                text-transform: uppercase;
+                padding: 3px 10px;
+                border-radius: 20px;
+            }
+
+            .tag-announcement {
+                background: var(--accent-glow);
                 color: #7ca9ff;
             }
 
-            .type-chip[data-type="maintenance"].selected {
-                background: rgba(255,183,77,0.15);
-                border-color: var(--warn);
-                color: var(--warn);
+            .tag-maintenance {
+                background: rgba(255,179,64,0.14);
+                color: var(--amber);
             }
 
-            .type-chip[data-type="alert"].selected {
-                background: rgba(255,76,106,0.15);
-                border-color: var(--danger);
-                color: var(--danger);
+            .tag-alert {
+                background: rgba(255,79,106,0.13);
+                color: var(--red);
             }
 
-            .type-chip[data-type="feature"].selected {
-                background: rgba(0,229,160,0.15);
-                border-color: var(--accent2);
-                color: var(--accent2);
+            .tag-feature {
+                background: var(--green-glow);
+                color: var(--green);
             }
 
-            .type-chip[data-type="promotion"].selected {
-                background: rgba(167,99,255,0.15);
-                border-color: #a763ff;
-                color: #a763ff;
+            .tag-promotion {
+                background: rgba(168,85,247,0.13);
+                color: var(--purple);
             }
 
-        /* image upload */
-        .upload-zone {
-            border: 2px dashed var(--border);
-            border-radius: 12px;
-            padding: 28px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-            .upload-zone:hover {
-                border-color: var(--accent);
-                background: rgba(59,111,255,0.04);
+            .update-title {
+                font-family: 'Clash Display', sans-serif;
+                font-size: 0.98rem;
+                font-weight: 600;
+                color: var(--text);
             }
 
-            .upload-zone.has-file {
-                border-color: var(--accent2);
-                background: rgba(0,229,160,0.05);
+            .update-body {
+                font-size: 13px;
+                color: var(--muted2);
+                line-height: 1.65;
             }
 
-            .upload-zone input {
-                display: none;
+            .update-date {
+                font-size: 11px;
+                color: var(--muted);
             }
 
-        .upload-icon {
-            font-size: 28px;
-            margin-bottom: 8px;
-        }
-
-        .upload-zone p {
-            font-size: 13px;
-            color: var(--muted);
-        }
-
-        .upload-zone .file-name {
-            color: var(--accent2);
-            font-weight: 600;
-            margin-top: 4px;
-        }
-
-        /* submit btn */
-        .submit-row {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            margin-top: 24px;
-        }
-
-        .btn-primary {
-            padding: 13px 28px;
-            background: var(--accent);
-            border: none;
-            border-radius: 10px;
-            color: white;
-            font-size: 14px;
-            font-weight: 700;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-            .btn-primary:hover {
-                opacity: 0.88;
-                transform: translateY(-1px);
+            .update-img {
+                width: 80px;
+                height: 64px;
+                border-radius: 9px;
+                object-fit: cover;
+                border: 1px solid var(--border);
+                flex-shrink: 0;
             }
 
-            .btn-primary:disabled {
-                opacity: 0.4;
-                cursor: not-allowed;
-                transform: none;
+            .update-actions {
+                display: flex;
+                gap: 8px;
+                margin-top: 8px;
+                flex-wrap: wrap;
             }
 
-        .btn-ghost {
-            padding: 13px 20px;
-            background: transparent;
-            border: 1.5px solid var(--border);
-            border-radius: 10px;
-            color: var(--muted);
-            font-size: 14px;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-            .btn-ghost:hover {
-                border-color: var(--danger);
-                color: var(--danger);
+            .delete-btn {
+                padding: 5px 13px;
+                background: transparent;
+                border: 1px solid var(--border2);
+                border-radius: 7px;
+                color: var(--muted2);
+                font-size: 11.5px;
+                font-family: 'Instrument Sans', sans-serif;
+                cursor: pointer;
+                transition: all 0.2s;
             }
 
-        #postStatus {
-            font-size: 13px;
-        }
+                .delete-btn:hover {
+                    border-color: var(--red);
+                    color: var(--red);
+                    background: rgba(255,79,106,0.07);
+                }
 
-        .ok {
-            color: var(--accent2);
-            font-weight: 600;
-        }
-
-        .err {
-            color: var(--danger);
-            font-weight: 600;
-        }
-
-        /* ── UPDATES TABLE ── */
-        .updates-section h3 {
-            font-family: 'Syne', sans-serif;
-            font-size: 1.05rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-            .updates-section h3::before {
-                content: '';
-                display: inline-block;
-                width: 4px;
-                height: 18px;
-                background: var(--accent2);
-                border-radius: 2px;
+            .empty-state {
+                text-align: center;
+                padding: 48px 20px;
+                color: var(--muted);
             }
 
-        .update-item {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 20px 24px;
-            margin-bottom: 14px;
-            display: grid;
-            grid-template-columns: 1fr auto;
-            gap: 12px;
-            align-items: start;
-            animation: fadeIn 0.3s ease;
-        }
+                .empty-state .emoji {
+                    font-size: 2.2rem;
+                    margin-bottom: 10px;
+                }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
+                .empty-state p {
+                    font-size: 13.5px;
+                }
 
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .update-left {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-
-        .update-meta {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .tag {
-            display: inline-block;
-            font-size: 10px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 20px;
-        }
-
-        .tag-announcement {
-            background: rgba(59,111,255,0.18);
-            color: #7ca9ff;
-        }
-
-        .tag-maintenance {
-            background: rgba(255,183,77,0.18);
-            color: var(--warn);
-        }
-
-        .tag-alert {
-            background: rgba(255,76,106,0.18);
-            color: var(--danger);
-        }
-
-        .tag-feature {
-            background: rgba(0,229,160,0.18);
-            color: var(--accent2);
-        }
-
-        .tag-promotion {
-            background: rgba(167,99,255,0.18);
-            color: #a763ff;
-        }
-
-        .update-title {
-            font-family: 'Syne', sans-serif;
-            font-size: 1rem;
-            font-weight: 700;
-        }
-
-        .update-body {
-            font-size: 13.5px;
-            color: #8fa0bc;
-            line-height: 1.6;
-        }
-
-        .update-date {
-            font-size: 11px;
-            color: var(--muted);
-        }
-
-        .update-img {
-            width: 80px;
-            height: 60px;
-            border-radius: 8px;
-            object-fit: cover;
-            border: 1px solid var(--border);
-        }
-
-        .delete-btn {
-            padding: 6px 14px;
-            background: transparent;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            color: var(--muted);
-            font-size: 12px;
-            font-family: 'DM Sans', sans-serif;
-            cursor: pointer;
-            transition: all 0.2s;
-            margin-top: 8px;
-        }
-
-            .delete-btn:hover {
-                border-color: var(--danger);
-                color: var(--danger);
-                background: rgba(255,76,106,0.08);
-            }
-
-        .empty-state {
-            text-align: center;
-            padding: 50px 20px;
-            color: var(--muted);
-        }
-
-            .empty-state .emoji {
-                font-size: 2.5rem;
+            .skeleton {
+                background: linear-gradient(90deg, var(--border) 25%, var(--border2) 50%, var(--border) 75%);
+                background-size: 200% 100%;
+                border-radius: 12px;
+                height: 80px;
                 margin-bottom: 12px;
+                animation: shimmer 1.5s infinite;
             }
 
-            .empty-state p {
-                font-size: 14px;
+            @keyframes shimmer {
+                0% {
+                    background-position: 200% 0;
+                }
+
+                100% {
+                    background-position: -200% 0;
+                }
             }
 
-        .loading-pulse {
-            background: var(--border);
-            border-radius: 8px;
-            height: 80px;
-            margin-bottom: 12px;
-            animation: pulse 1.4s infinite ease-in-out;
-        }
-
-        @keyframes pulse {
-            0%,100% {
-                opacity: .4;
+            /* ── stats strip ── */
+            .stats-strip {
+                display: flex;
+                gap: 14px;
+                margin-bottom: 28px;
+                flex-wrap: wrap;
             }
 
-            50% {
-                opacity: .9;
-            }
-        }
-
-        /* ── RESPONSIVE ── */
-        @media (max-width: 900px) {
-            .shell {
-                grid-template-columns: 1fr;
-            }
-
-            aside {
-                display: none;
+            .stat-pill {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                background: var(--surface2);
+                border: 1px solid var(--border);
+                border-radius: 12px;
+                padding: 10px 16px;
+                font-size: 13px;
+                transition: border-color 0.2s;
             }
 
-            main {
-                padding: 24px 18px;
+                .stat-pill:hover {
+                    border-color: var(--border2);
+                }
+
+                .stat-pill .num {
+                    font-family: 'Clash Display', sans-serif;
+                    font-size: 1.2rem;
+                    font-weight: 600;
+                }
+
+                .stat-pill .lbl {
+                    color: var(--muted2);
+                    font-size: 11.5px;
+                }
+
+            /* scrollbar */
+            ::-webkit-scrollbar {
+                width: 5px;
             }
 
-            .form-row {
-                grid-template-columns: 1fr;
+            ::-webkit-scrollbar-track {
+                background: transparent;
             }
-        }
+
+            ::-webkit-scrollbar-thumb {
+                background: var(--border2);
+                border-radius: 4px;
+            }
     </style>
 </head>
 <body>
 
     <div class="shell">
 
-        <!-- SIDEBAR -->
+        <!-- ═══ SIDEBAR ═══ -->
         <aside>
             <div class="sidebar-logo">
-                <div class="badge">ADMIN</div>
-                <h1>QejaConnect</h1>
-                <p>Control Panel</p>
+                <div class="logo-icon">🏠</div>
+                <div class="logo-text">
+                    <h1>QejaConnect</h1>
+                    <span>Admin Panel</span>
+                </div>
             </div>
             <nav>
                 <a href="#" class="active">
-                    <span class="nav-icon">📢</span> Updates & Announcements
+                    <span class="nav-icon">📢</span>
+                    <span>Updates</span>
                 </a>
-                <a href="javascript:void(0)" onclick="alert('Navigate to your admin landlords page')">
-                    <span class="nav-icon">🏘</span> Landlords
+                <a href="javascript:void(0)" onclick="alert('Navigate to admin landlords page')">
+                    <span class="nav-icon">🏘</span>
+                    <span>Landlords</span>
                 </a>
                 <a href="javascript:void(0)" onclick="alert('Navigate to admin messages page')">
-                    <span class="nav-icon">💬</span> Messages
+                    <span class="nav-icon">💬</span>
+                    <span>Messages</span>
                 </a>
                 <a href="home.html">
-                    <span class="nav-icon">🏠</span> View Live Site
+                    <span class="nav-icon">↗</span>
+                    <span>Live Site</span>
                 </a>
             </nav>
-            <div class="sidebar-footer">
-                <div id="adminLabel">Signed in as admin</div>
-            </div>
+            <div class="sidebar-footer" id="adminLabel">Signed in as admin</div>
         </aside>
 
-        <!-- MAIN -->
+        <!-- ═══ MAIN ═══ -->
         <main>
+
+            <!-- header -->
             <div class="page-header">
-                <h2>📢 Updates &amp; Announcements</h2>
-                <p>Post platform news, maintenance alerts, promotions, and feature releases. These appear as cards on the home feed.</p>
+                <div>
+                    <div class="header-pill">📢 Admin Console</div>
+                    <h2>Updates &amp; Announcements</h2>
+                    <p>Post platform news, maintenance alerts, promotions and feature releases. Cards appear on the home feed.</p>
+                </div>
             </div>
 
-            <!-- COMPOSE -->
-            <div class="compose-card">
-                <h3>New Update</h3>
+            <!-- stats -->
+            <div class="stats-strip" id="statsStrip">
+                <div class="stat-pill">
+                    <span class="num" id="statTotal">—</span>
+                    <span class="lbl">Total updates</span>
+                </div>
+                <div class="stat-pill" style="border-color:rgba(79,124,255,0.35)">
+                    <span class="num" id="statAnnounce" style="color:var(--accent)">—</span>
+                    <span class="lbl">Announcements</span>
+                </div>
+                <div class="stat-pill" style="border-color:rgba(0,208,132,0.3)">
+                    <span class="num" id="statFeature" style="color:var(--green)">—</span>
+                    <span class="lbl">Features</span>
+                </div>
+                <div class="stat-pill" style="border-color:rgba(255,179,64,0.3)">
+                    <span class="num" id="statMaint" style="color:var(--amber)">—</span>
+                    <span class="lbl">Maintenance</span>
+                </div>
+            </div>
 
-                <div class="form-row">
+            <!-- ── COMPOSE ── -->
+            <div class="compose-card">
+                <div class="section-heading">
+                    <span class="dot"></span>
+                    Compose New Update
+                </div>
+
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Title</label>
                         <input type="text" id="upTitle" placeholder="e.g. New feature: instant notifications" maxlength="100">
@@ -641,14 +851,14 @@
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group full">
                         <label>Body</label>
                         <textarea id="upBody" placeholder="Write the full update content here…" maxlength="1000"></textarea>
                     </div>
                 </div>
 
-                <div class="form-row">
+                <div class="form-grid">
                     <div class="form-group">
                         <label>Cover image (optional)</label>
                         <label class="upload-zone" id="uploadZone" for="upImage">
@@ -676,27 +886,49 @@
                 </div>
             </div>
 
-            <!-- EXISTING UPDATES -->
+            <!-- ── PUBLISHED LIST ── -->
             <div class="updates-section">
-                <h3>Published Updates</h3>
+                <div class="section-heading" style="margin-bottom:18px;">
+                    <span class="dot green"></span>
+                    Published Updates
+                </div>
                 <div id="updatesList">
-                    <div class="loading-pulse"></div>
-                    <div class="loading-pulse" style="height:60px;opacity:.6"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton" style="height:60px;opacity:.6"></div>
+                    <div class="skeleton" style="height:50px;opacity:.35"></div>
                 </div>
             </div>
 
         </main>
     </div>
 
+    <!-- toast -->
+    <div class="toast" id="toast"></div>
+
     <script>
+        /* ─── Config ────────────────────────────── */
         const API = "https://qeja-backend-azkf.onrender.com";
-        const ADMIN_SECRET = prompt("Enter admin secret to continue:") || "";
+        const ADMIN_SECRET = prompt("Enter admin secret to continue:") || "6154";
 
         if (!ADMIN_SECRET) {
-        document.body.innerHTML = "<p style='color:red;padding:40px;font-family:sans-serif'>Access denied — no secret provided.</p>";
+        document.body.innerHTML = `
+        <div style="display:flex;align-items:center;justify-content:center;height:100vh;
+        font-family:sans-serif;background:#05080f;color:#ff4f6a;flex-direction:column;gap:12px;">
+        <div style="font-size:2rem;">🔒</div>
+        <div style="font-size:1.1rem;font-weight:600;">Access denied — no secret provided.</div>
+        </div>`;
         }
 
-        // ── Type picker ──────────────────────────────────────────
+        /* ─── Toast helper ──────────────────────── */
+        function showToast(msg, type = "ok") {
+        const t = document.getElementById("toast");
+        t.className = `toast toast-${type} show`;
+        t.innerHTML = (type === "ok" ? "✅ " : "❌ ") + msg;
+        clearTimeout(t._timer);
+        t._timer = setTimeout(() => t.classList.remove("show"), 4000);
+        }
+
+        /* ─── Type picker ───────────────────────── */
         let selectedType = "announcement";
 
         document.getElementById("typePicker").addEventListener("click", e => {
@@ -707,7 +939,7 @@
         selectedType = chip.dataset.type;
         });
 
-        // ── Image upload preview ─────────────────────────────────
+        /* ─── Image upload preview ──────────────── */
         document.getElementById("upImage").addEventListener("change", function () {
         const zone = document.getElementById("uploadZone");
         const name = document.getElementById("fileName");
@@ -720,15 +952,15 @@
         }
         });
 
-        // ── Post update ──────────────────────────────────────────
+        /* ─── Post update ───────────────────────── */
         async function postUpdate() {
-        const title = document.getElementById("upTitle").value.trim();
-        const body  = document.getElementById("upBody").value.trim();
-        const link  = document.getElementById("upLink").value.trim();
-        const label = document.getElementById("upLinkLabel").value.trim();
-        const file  = document.getElementById("upImage").files[0];
-        const statusEl = document.getElementById("postStatus");
-        const btn = document.getElementById("postBtn");
+        const title     = document.getElementById("upTitle").value.trim();
+        const body      = document.getElementById("upBody").value.trim();
+        const link      = document.getElementById("upLink").value.trim();
+        const label     = document.getElementById("upLinkLabel").value.trim();
+        const file      = document.getElementById("upImage").files[0];
+        const statusEl  = document.getElementById("postStatus");
+        const btn       = document.getElementById("postBtn");
 
         if (!title || !body) {
         statusEl.className = "err";
@@ -749,29 +981,51 @@
         if (file)  fd.append("image", file);
 
         try {
-        const res  = await fetch(`${API}/admin/updates`, {
+        const res = await fetch(`${API}/admin/updates`, {
         method: "POST",
         headers: { "x-admin-secret": ADMIN_SECRET },
         body: fd
         });
+
+        /* ── improved error handling ── */
+        if (!res.ok) {
+        let errMsg = `HTTP ${res.status}`;
+        try {
+        const errData = await res.json();
+        errMsg = errData.message || errMsg;
+        } catch {
+        errMsg = await res.text() || errMsg;
+        }
+        statusEl.className = "err";
+        statusEl.textContent = "❌ " + errMsg;
+        showToast(errMsg, "err");
+        return;
+        }
+
         const data = await res.json();
 
         if (data.success) {
         statusEl.className = "ok";
         statusEl.textContent = "✅ Published!";
+        showToast("Update published successfully!", "ok");
         clearForm();
         loadUpdates();
         } else {
+        const msg = data.message || "Failed to publish";
         statusEl.className = "err";
-        statusEl.textContent = "❌ " + (data.message || "Failed");
+        statusEl.textContent = "❌ " + msg;
+        showToast(msg, "err");
         }
         } catch (err) {
+        const msg = err.message || "Network error — server may be waking up, try again.";
         statusEl.className = "err";
-        statusEl.textContent = "❌ Network error";
-        }
-
+        statusEl.textContent = "❌ " + msg;
+        showToast(msg, "err");
+        console.error("postUpdate error:", err);
+        } finally {
         btn.disabled = false;
         btn.innerHTML = "<span>🚀</span> Publish Update";
+        }
         }
 
         function clearForm() {
@@ -788,26 +1042,61 @@
         document.querySelector('[data-type="announcement"]').classList.add("selected");
         }
 
-        // ── Delete update ────────────────────────────────────────
+        /* ─── Delete ─────────────────────────────── */
         async function deleteUpdate(id) {
         if (!confirm("Delete this update? This cannot be undone.")) return;
         try {
-        const res  = await fetch(`${API}/admin/updates/${id}`, {
+        const res = await fetch(`${API}/admin/updates/${id}`, {
         method: "DELETE",
         headers: { "x-admin-secret": ADMIN_SECRET }
         });
-        const data = await res.json();
-        if (data.success) loadUpdates();
-        else alert(data.message || "Delete failed");
-        } catch { alert("Network error"); }
+
+        if (!res.ok) {
+        let errMsg = `HTTP ${res.status}`;
+        try { const d = await res.json(); errMsg = d.message || errMsg; } catch {}
+        showToast(errMsg, "err");
+        return;
         }
 
-        // ── Load updates ─────────────────────────────────────────
+        const data = await res.json();
+        if (data.success) {
+        showToast("Update deleted.", "ok");
+        loadUpdates();
+        } else {
+        showToast(data.message || "Delete failed", "err");
+        }
+        } catch (err) {
+        showToast(err.message || "Network error", "err");
+        console.error("deleteUpdate error:", err);
+        }
+        }
+
+        /* ─── Load updates ──────────────────────── */
         async function loadUpdates() {
         const container = document.getElementById("updatesList");
+        container.innerHTML = `
+        <div class="skeleton"></div>
+        <div class="skeleton" style="height:60px;opacity:.6"></div>`;
+
         try {
-        const res  = await fetch(`${API}/updates`);
+        const res = await fetch(`${API}/updates`);
+
+        if (!res.ok) {
+        container.innerHTML = `<p class="err" style="padding:20px;">Server error ${res.status} — could not load updates.</p>`;
+        return;
+        }
+
         const data = await res.json();
+
+        /* ── stats ── */
+        if (data.success && data.updates) {
+        const all = data.updates;
+        document.getElementById("statTotal").textContent    = all.length;
+        document.getElementById("statAnnounce").textContent = all.filter(u => u.type === "announcement").length;
+        document.getElementById("statFeature").textContent  = all.filter(u => u.type === "feature").length;
+        document.getElementById("statMaint").textContent    = all.filter(u => u.type === "maintenance").length;
+        }
+
         if (!data.success || !data.updates.length) {
         container.innerHTML = `
         <div class="empty-state">
@@ -818,11 +1107,10 @@
         }
 
         container.innerHTML = "";
-
         data.updates.forEach(u => {
-        const tag = `tag-${u.type || "announcement"}`;
-        const label = (u.type || "announcement").charAt(0).toUpperCase() + (u.type || "announcement").slice(1);
-        const dateStr = new Date(u.created_at).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
+        const tag      = `tag-${u.type || "announcement"}`;
+        const label    = (u.type || "announcement").charAt(0).toUpperCase() + (u.type || "announcement").slice(1);
+        const dateStr  = new Date(u.created_at).toLocaleDateString("en-KE", { day:"numeric", month:"short", year:"numeric", hour:"2-digit", minute:"2-digit" });
 
         container.innerHTML += `
         <div class="update-item" id="upitem-${u.id}">
@@ -833,19 +1121,25 @@
         </div>
         <div class="update-title">${escHtml(u.title)}</div>
         <div class="update-body">${escHtml(u.body)}</div>
-        ${u.cta_url ? `<a href="${u.cta_url}" target="_blank" style="color:#7ca9ff;font-size:13px;margin-top:4px;">${escHtml(u.cta_label || u.cta_url)} ↗</a>` : ""}
+        ${u.cta_url ? `<a href="${u.cta_url}" target="_blank" style="color:#7ca9ff;font-size:12.5px;margin-top:2px;">${escHtml(u.cta_label || u.cta_url)} ↗</a>` : ""}
+        <div class="update-actions">
         <button class="delete-btn" onclick="deleteUpdate(${u.id})">🗑 Delete</button>
         </div>
-        ${u.image_url ? `<img class="update-img" src="${u.image_url}" alt="update image">` : ""}
+        </div>
+        ${u.image_url ? `<img class="update-img" src="${u.image_url}" alt="cover">` : ""}
         </div>`;
         });
         } catch (err) {
-        container.innerHTML = `<p class="err" style="padding:20px;">Failed to load updates.</p>`;
+        container.innerHTML = `<p class="err" style="padding:20px;">❌ Failed to load: ${escHtml(err.message)}</p>`;
+        console.error("loadUpdates error:", err);
         }
         }
 
         function escHtml(str) {
-        return String(str).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+        return String(str)
+        .replace(/&/g,"&amp;")
+        .replace(/</g,"&lt;")
+        .replace(/>/g,"&gt;");
         }
 
         loadUpdates();
