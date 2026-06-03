@@ -393,13 +393,14 @@
         <div class="pay-notice">
             <span class="icon">💳</span>
             <div>
-                Listing fee: <strong>Ksh 195.00</strong> via M-Pesa. Your property stays live on the feed for <strong>30 days</strong>. Payment is collected before upload.
+                Listing fee is charged per units via M-Pesa. Your property stays live on the feed for <strong>30 days</strong>. Payment is collected before upload.
             </div>
         </div>
 
         <form id="propertyForm" enctype="multipart/form-data">
 
             <input type="text" id="title" placeholder="Property Title" required>
+            <input type="text" id="units" placeholder="How many units are available" required>
             <input type="text" id="price" placeholder="Price e.g Ksh 7000/month" required>
             <input type="text" id="location" placeholder="Location" required>
             <input type="url" id="maps_url" placeholder="📍 Google Maps URL (optional)">
@@ -420,18 +421,18 @@
 
             <div id="uploadStatus"></div>
 
-            <button type="submit" id="submitBtn">💳 Pay Ksh 195.00 &amp; Upload</button>
+            <button type="submit" id="submitBtn"></button>
 
         </form>
     </div>
 
 
-    
+
     <div class="modal-overlay" id="mpesaModal">
         <div class="modal">
             <div class="mpesa-logo">📲</div>
             <h2>M-Pesa Payment</h2>
-            <div class="amount-badge">Ksh 195.00</div>
+            <div class="amount-badge"></div>
             <p class="sub">Enter your Safaricom number. An STK push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
 
             <div class="phone-wrapper">
@@ -456,13 +457,23 @@
             </div>
         </div>
     </div>
-
-
     <script>
-        
+        document.querySelector('#units').addEventListener('input', function(){
+            const unit=document.getElementById('units').value;
+            const units=unit*95;
+            document.querySelector('.amount-badge').innerHTML=`Ksh. ${units}`;
+            document.getElementById('submitBtn').innerHTML=`💳Pay Ksh ${units} and upload`;
+            localStorage.setItem('rooms', units);
+        });
+
+        document.getElementById('submitBtn').textContent = '💳 Pay & Upload'; 
+    </script>
+    
+    <script>
+
         const API_BASE = "https://qeja-backend-azkf.onrender.com";
 
-        
+
         document.getElementById("image").addEventListener("change", function () {
         const label = document.getElementById("uploadLabel");
         if (this.files[0]) {
@@ -474,28 +485,28 @@
         }
         });
 
-        
+
         let pendingFormData = null;
 
         //  Form submit > validate > open modal
         document.getElementById("propertyForm").addEventListener("submit", function (e) {
-          e.preventDefault();
+        e.preventDefault();
 
-          const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
-          const token = localStorage.getItem("token");
+        const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
+        const token = localStorage.getItem("token");
 
-          if (!loggedUser || !token) {
-            alert("Please login first.");
-            return;
-          }
+        if (!loggedUser || !token) {
+        alert("Please login first.");
+        return;
+        }
 
-          // Block tenants
-          const role = localStorage.getItem("role") || loggedUser.role;
-          if (role !== "landlord") {
-            alert("Only landlords can list properties.");
-            window.location.href = "home.html";
-            return;
-          }
+        // Block tenants
+        const role = localStorage.getItem("role") || loggedUser.role;
+        if (role !== "landlord") {
+        alert("Only landlords can list properties.");
+        window.location.href = "home.html";
+        return;
+        }
 
         const file = document.getElementById("image").files[0];
         if (!file) { alert("Please select a property image."); return; }
@@ -571,13 +582,15 @@
 
         try {
         // 1️⃣ Initiate STK push
+        const units = localStorage.getItem('rooms') || 195; 
+
         const stkRes = await fetch(`${API_BASE}/mpesa/stk-push`, {
-        method: "POST",
-        headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`
-        },
-        body: JSON.stringify({ phone, amount: 1, description: "Property listing fee" })
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ phone, amount: units, description: "Property listing fee" })
         });
 
         const stkData = await stkRes.json();
@@ -604,7 +617,7 @@
         }
         }
 
-        // ── Poll payment status 
+        // ── Poll payment status
         async function pollPayment(checkoutRequestId, token) {
         const MAX_TRIES = 20;       // 20 × 3s = 60s max wait
         const INTERVAL  = 3000;
@@ -716,6 +729,6 @@
         el.innerHTML = `<p class="${type === "error" ? "error-text" : "success-text"}">${msg}</p>`;
         }
     </script>
-    
+
 </body>
 </html>
