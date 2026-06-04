@@ -525,7 +525,7 @@
         // Block tenants
         const role = localStorage.getItem("role") || loggedUser.role;
         if (role !== "landlord") {
-        document.getElementById('customalert').style.display="block";
+        document.querySelector('.customalert').style.display="block";
         
         return;
         }
