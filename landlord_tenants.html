@@ -752,7 +752,7 @@
         const start = document.getElementById('startDate').value;
         const dur   = parseInt(document.getElementById('duration').value);
 
-        if (!rent || rent < 500) { alert('Please enter a valid rent amount.'); return; }
+        if (!rent || rent < 1) { alert('Please enter a valid rent amount.'); return; }
         if (!start)              { alert('Please select a start date.'); return; }
 
         const btn = document.querySelector('.btn-confirm');
