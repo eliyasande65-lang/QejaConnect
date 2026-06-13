@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="manifest" href="/QejaConnect/manifest.json">
-    <meta name="theme-color" content="#4f46e5">
+    <meta name="theme-color" content="#1a1535">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
@@ -466,7 +466,10 @@
                     <label>Email Address</label>
                     <input type="email" name="email" id="email" placeholder="you@gmail.com" required>
                 </div>
-
+                <div class="field">
+                    <label>Phone Number</label>
+                    <input type="tel" name="phone" id="phone" placeholder="e.g. 0712345678" required>
+                </div>
                 <div class="section-label">🔒 Set Password</div>
 
                 <div class="field">
@@ -622,7 +625,11 @@
         const email    = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value;
         const confirm  = document.getElementById('confirm').value;
+        const phone = document.getElementById('phone').value.trim();
 
+        if (!phone || !/^(\+254|0)[71]\d{8}$/.test(phone)) {
+            showToast('Please enter a valid Kenyan phone number.', 'warning'); return;
+        }
         if (!fullname) { showToast('Please enter your full name.', 'warning'); return; }
 
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
@@ -651,7 +658,7 @@
         const response = await fetch(`${API}/signup`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ fullname, email, password })
+        body: JSON.stringify({ fullname, email, phone, password })
         });
 
         const data = await response.json();
