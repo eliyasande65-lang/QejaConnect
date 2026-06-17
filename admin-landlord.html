@@ -6,9 +6,11 @@
     <title>Admin — Landlords & Withdrawals | Qeja Connect</title>
     <script>
         (function () {
-        const role = localStorage.getItem('role');
-        if (!localStorage.getItem('token') || role !== 'admin') {
-        window.location.replace('login.html');
+        let secret = localStorage.getItem('admin_secret');
+        if (!secret) {
+        secret = prompt('🛡️ Enter Admin Secret:');
+        if (!secret) { window.location.replace('login.html'); return; }
+        localStorage.setItem('admin_secret', secret);
         }
         })();
     </script>
@@ -978,7 +980,7 @@
 
     <script>
         const API   = 'https://qeja-backend-azkf.onrender.com';
-        const token = localStorage.getItem('token');
+        const adminSecret = localStorage.getItem('admin_secret');
         let allLandlordData   = [];
         let allWithdrawals    = [];
         let noteTargetId      = null;
