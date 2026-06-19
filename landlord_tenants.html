@@ -408,7 +408,7 @@
                 margin-bottom: 5px;
             }
 
-            .modal-bd input, .modal-bd select {
+            .modal-bd input {
                 width: 100%;
                 padding: 11px;
                 border: 1px solid var(--border);
@@ -418,9 +418,31 @@
                 outline: none;
             }
 
-                .modal-bd input:focus, .modal-bd select:focus {
+                .modal-bd input:focus {
                     border-color: var(--indigo);
                 }
+
+        /* Duration input with suffix */
+        .input-suffix-wrap {
+            position: relative;
+            margin-bottom: 14px;
+        }
+
+            .input-suffix-wrap input {
+                margin-bottom: 0;
+                padding-right: 80px;
+            }
+
+        .input-suffix {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--muted);
+            pointer-events: none;
+        }
 
         .modal-notice {
             background: #eff6ff;
@@ -515,8 +537,7 @@
                 color: #eaeaea;
             }
 
-            body.dark .modal-bd input,
-            body.dark .modal-bd select {
+            body.dark .modal-bd input {
                 background: #2a2a2a;
                 color: white;
                 border-color: #444;
@@ -536,6 +557,10 @@
             body.dark .btn-cancel2 {
                 background: #2a2a2a;
                 color: #eaeaea;
+            }
+
+            body.dark .input-suffix {
+                color: #999;
             }
 
         @media (max-width: 600px) {
@@ -595,15 +620,13 @@
                 <input type="number" id="rentAmount" placeholder="e.g. 12000" min="1">
                 <label>Tenancy Start Date</label>
                 <input type="date" id="startDate">
-                <label>Duration</label>
-                <select id="duration">
-                    <option value="30">30 Months (Standard)</option>
-                    <option value="12">12 Months</option>
-                    <option value="6">6 Months</option>
-                    <option value="24">24 Months</option>
-                </select>
+                <label>Duration (months)</label>
+                <div class="input-suffix-wrap">
+                    <input type="number" id="duration" placeholder="e.g. 12" min="1" max="600">
+                    <span class="input-suffix">months</span>
+                </div>
                 <div class="modal-notice">
-                    ℹ️ Once confirmed, the tenant will be notified and their 30-month payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
+                    ℹ️ Once confirmed, the tenant will be notified and their payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
                 </div>
             </div>
             <div class="modal-ft">
@@ -629,7 +652,6 @@
         allTenants = data.data || [];
         updateStats(allTenants);
         renderTenants(allTenants);
-        // Mark seen
         const ids = allTenants.map(t => t.id);
         localStorage.setItem('seenRequests', JSON.stringify(ids));
         } else showEmpty('No requests found.');
@@ -740,10 +762,10 @@
         <strong>${t.tenant_name || 'Tenant'}</strong><br>
         📍 ${t.property_title || 'Property'} — ${t.location || ''}<br>
         📞 ${t.tenant_phone || '—'}`;
-        // Set default start date to today
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').value = today;
         document.getElementById('rentAmount').value = t.price || '';
+        document.getElementById('duration').value = '';
         document.getElementById('sessionModal').classList.add('open');
         }
 
@@ -752,8 +774,9 @@
         const start = document.getElementById('startDate').value;
         const dur   = parseInt(document.getElementById('duration').value);
 
-        if (!rent || rent < 1) { alert('Please enter a valid rent amount.'); return; }
-        if (!start)              { alert('Please select a start date.'); return; }
+        if (!rent || rent < 1)       { alert('Please enter a valid rent amount.'); return; }
+        if (!start)                   { alert('Please select a start date.'); return; }
+        if (!dur || dur < 1)          { alert('Please enter a valid duration in months.'); return; }
 
         const btn = document.querySelector('.btn-confirm');
         btn.disabled = true; btn.textContent = 'Starting…';
@@ -763,12 +786,12 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + token },
         body: JSON.stringify({
-        booking_id:  selectedBooking.id,
-        landlord_id: loggedUser.id,
-        tenant_id:   selectedBooking.tenant_id,
-        property_id: selectedBooking.property_id,
-        rent_amount: rent,
-        start_date:  start,
+        booking_id:      selectedBooking.id,
+        landlord_id:     loggedUser.id,
+        tenant_id:       selectedBooking.tenant_id,
+        property_id:     selectedBooking.property_id,
+        rent_amount:     rent,
+        start_date:      start,
         duration_months: dur
         })
         });
