@@ -1280,7 +1280,7 @@
         ['Receipt Date',     now],
         ['Receipt No.',      `QJR-${ref.slice(-8).toUpperCase()}`],
         ['M-Pesa Reference', ref],
-        ['Tenant Name',      loggedUser.name || loggedUser.username || 'Tenant'],
+        ['Tenant Name',      loggedUser.name || loggedUser.fullname || 'Tenant'],
         ['Tenant Phone',     loggedUser.phone || '—'],
         ['Property',         t.property_title || '—'],
         ['Location',         t.location || '—'],
