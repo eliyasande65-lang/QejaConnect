@@ -768,7 +768,7 @@
 
     <script>
         const API = 'https://qeja-backend-azkf.onrender.com';
-        let emailVerified = true;
+        let emailVerified = false;
         let resendCountdown;
         let toastTimer;
 
@@ -796,7 +796,7 @@
 
         // Reset verification state if email is changed after verifying
         if (emailVerified) {
-        emailVerified = true;
+        emailVerified = false;
         document.getElementById('otpGroup').style.display = 'none';
         document.getElementById('verifiedBadge').style.display = 'none';
         document.getElementById('otpInputArea').style.display = 'block';
@@ -999,11 +999,11 @@
         showToast('Please enter a valid email address.', 'warning'); return;
         }
 
-        if (!emailVerified) {
-        showToast('Please verify your email with the OTP before submitting.', 'warning');
-        document.getElementById('otpGroup').style.display = 'block';
-        return;
-        }
+        //if (!emailVerified) {
+        //showToast('Please verify your email with the OTP before submitting.', 'warning');
+        //document.getElementById('otpGroup').style.display = 'block';
+        //return;
+        //}
 
         if (!phone || !/^(254|0)[17]\d{8}$/.test(phone)) {
         showToast('Enter a valid Kenyan phone number (e.g. 254712345678).', 'warning'); return;
