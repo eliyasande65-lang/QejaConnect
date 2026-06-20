@@ -1256,7 +1256,7 @@
 
         // ── WATERMARK ── faded logo (or text fallback) centered behind the body content
         doc.saveGraphicsState();
-        doc.setGState(new doc.GState({ opacity: 0.08 }));
+        doc.setGState(new doc.GState({ opacity: 0.18 }));
         if (logoDataUrl) {
         const wmSize = 120; // mm
         doc.addImage(logoDataUrl, 'JPEG', (210 - wmSize) / 2, (297 - wmSize) / 2, wmSize, wmSize);
