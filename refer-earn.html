@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="manifest" href="/QejaConnect/manifest.json">
-    <meta name="theme-color" content="#0d0a1a">
+    <meta name="theme-color" content="#ffffff">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
@@ -26,25 +26,27 @@
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn · QejaConnect</title>
-    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #0d0a1a;
-            --surface: #13102a;
-            --card: #1a1535;
-            --border: rgba(139, 92, 246, 0.18);
-            --border-focus: #7c3aed;
-            --accent: #7c3aed;
-            --accent-light: #a78bfa;
-            --accent-glow: rgba(124, 58, 237, 0.25);
-            --text: #f1f0f7;
-            --muted: #8b84a8;
-            --dim: rgba(255,255,255,0.06);
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
-            --gold: #fbbf24;
+            --bg: #f6f7f5;
+            --surface: #ffffff;
+            --card: #ffffff;
+            --border: #e3e5e0;
+            --ink: #14201c;
+            --muted: #667066;
+            --accent: #0f7a5c;
+            --accent-dark: #0b5c45;
+            --accent-tint: #e6f3ee;
+            --gold: #b8860b;
+            --gold-tint: #fbf3e2;
+            --success: #1a8f5c;
+            --success-tint: #e7f6ee;
+            --warning: #b8720b;
+            --warning-tint: #fbf1e2;
+            --error: #c0392b;
+            --shadow: 0 1px 2px rgba(20,32,28,0.04), 0 8px 24px rgba(20,32,28,0.06);
+            --radius: 12px;
         }
 
         * {
@@ -54,9 +56,9 @@
         }
 
         body {
-            font-family: 'DM Sans', sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
             background: var(--bg);
-            color: var(--text);
+            color: var(--ink);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -64,102 +66,60 @@
             padding: 0 16px 64px;
         }
 
-            body::before, body::after {
-                content: '';
-                position: fixed;
-                border-radius: 50%;
-                filter: blur(120px);
-                pointer-events: none;
-                z-index: 0;
-            }
-
-            body::before {
-                width: 500px;
-                height: 500px;
-                background: radial-gradient(circle, rgba(109,40,217,0.2) 0%, transparent 70%);
-                top: -100px;
-                left: -150px;
-            }
-
-            body::after {
-                width: 400px;
-                height: 400px;
-                background: radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 70%);
-                bottom: 0;
-                right: -120px;
-            }
-
         .page {
             width: 100%;
             max-width: 560px;
-            position: relative;
-            z-index: 1;
             padding-top: 32px;
         }
 
-        /* Header */
+        /* Header block */
         .header {
-            text-align: center;
-            margin-bottom: 28px;
+            margin-bottom: 24px;
         }
 
             .header .eyebrow {
                 font-size: 0.72rem;
-                font-weight: 600;
-                letter-spacing: 0.16em;
+                font-weight: 700;
+                letter-spacing: 0.08em;
                 text-transform: uppercase;
-                color: var(--accent-light);
-                margin-bottom: 10px;
+                color: var(--accent);
+                margin-bottom: 8px;
             }
 
             .header h1 {
-                font-family: 'DM Serif Display', serif;
-                font-size: clamp(1.8rem, 6vw, 2.6rem);
-                font-weight: 400;
-                letter-spacing: -0.5px;
-                line-height: 1.15;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: clamp(1.5rem, 5vw, 2rem);
+                font-weight: 700;
+                letter-spacing: -0.3px;
+                line-height: 1.2;
+                color: var(--ink);
             }
 
             .header p {
                 color: var(--muted);
                 font-size: 0.95rem;
-                margin-top: 10px;
-                font-weight: 300;
-                max-width: 420px;
-                margin-inline: auto;
+                margin-top: 8px;
+                line-height: 1.5;
+                max-width: 460px;
             }
 
         /* Signature: Code card */
         .code-card {
-            background: linear-gradient(135deg, #1a1535 0%, #241b4a 100%);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 28px;
-            margin-bottom: 18px;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.05);
+            background: var(--accent-dark);
+            border-radius: var(--radius);
+            padding: 24px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow);
             position: relative;
-            overflow: hidden;
         }
-
-            .code-card::before {
-                content: '';
-                position: absolute;
-                top: -50%;
-                right: -20%;
-                width: 220px;
-                height: 220px;
-                background: radial-gradient(circle, rgba(124,58,237,0.35) 0%, transparent 70%);
-                pointer-events: none;
-            }
 
         .code-label {
             font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.14em;
+            font-weight: 700;
+            letter-spacing: 0.08em;
             text-transform: uppercase;
-            color: var(--accent-light);
-            margin-bottom: 14px;
-            position: relative;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 12px;
         }
 
         .code-display {
@@ -167,91 +127,83 @@
             align-items: center;
             justify-content: space-between;
             gap: 12px;
-            background: rgba(0,0,0,0.25);
-            border: 1.5px dashed var(--border);
-            border-radius: 14px;
-            padding: 18px 20px;
-            margin-bottom: 16px;
-            position: relative;
+            background: rgba(255,255,255,0.08);
+            border: 1px dashed rgba(255,255,255,0.35);
+            border-radius: 10px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
         }
 
         .code-value {
-            font-family: 'DM Serif Display', serif;
-            font-size: clamp(1.6rem, 7vw, 2.2rem);
-            letter-spacing: 0.08em;
-            color: var(--text);
-            font-style: italic;
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: clamp(1.3rem, 6vw, 1.7rem);
+            font-weight: 700;
+            letter-spacing: 0.04em;
+            color: #ffffff;
         }
 
             .code-value.loading {
-                color: var(--muted);
-                font-size: 1rem;
-                font-style: normal;
+                color: rgba(255,255,255,0.65);
+                font-size: 0.95rem;
+                font-weight: 400;
                 letter-spacing: normal;
             }
 
         .copy-btn {
             flex-shrink: 0;
-            padding: 10px 18px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             border: none;
-            background: linear-gradient(135deg, #7c3aed, #4f46e5);
-            color: white;
-            font-family: 'DM Sans', sans-serif;
+            background: #ffffff;
+            color: var(--accent-dark);
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 0.85rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
-            transition: opacity 0.2s, transform 0.15s;
+            transition: opacity 0.2s;
             white-space: nowrap;
         }
 
             .copy-btn:hover {
                 opacity: 0.9;
-                transform: translateY(-1px);
-            }
-
-            .copy-btn:active {
-                transform: translateY(0);
             }
 
         .share-row {
             display: flex;
             gap: 10px;
-            position: relative;
             flex-wrap: wrap;
         }
 
         .share-link-box {
             flex: 1;
             min-width: 0;
-            background: rgba(0,0,0,0.2);
-            border: 1px solid var(--border);
-            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
             padding: 10px 14px;
-            font-size: 0.8rem;
-            color: var(--muted);
+            font-size: 0.78rem;
+            color: rgba(255,255,255,0.8);
             overflow-x: auto;
             white-space: nowrap;
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
         }
 
         .share-btn {
             padding: 10px 16px;
-            border-radius: 10px;
-            border: 1px solid var(--border);
-            background: var(--dim);
-            color: var(--text);
-            font-family: 'DM Sans', sans-serif;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: #ffffff;
+            font-family: Arial, Helvetica, sans-serif;
             font-size: 0.82rem;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
-            transition: border-color 0.2s, background 0.2s;
+            transition: background 0.2s;
             white-space: nowrap;
         }
 
             .share-btn:hover {
-                border-color: var(--accent);
-                background: rgba(124,58,237,0.1);
+                background: rgba(255,255,255,0.12);
             }
 
         /* How it works strip */
@@ -259,24 +211,24 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .step {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 16px 14px;
+            border-radius: var(--radius);
+            padding: 16px 12px;
             text-align: center;
         }
 
             .step .step-icon {
-                font-size: 1.4rem;
-                margin-bottom: 8px;
+                font-size: 1.3rem;
+                margin-bottom: 6px;
             }
 
             .step .step-text {
-                font-size: 0.78rem;
+                font-size: 0.76rem;
                 color: var(--muted);
                 line-height: 1.4;
             }
@@ -292,59 +244,59 @@
         .earning-stat {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 14px;
-            padding: 18px 14px;
+            border-radius: var(--radius);
+            padding: 16px 12px;
             text-align: center;
         }
 
             .earning-stat .stat-value {
-                font-family: 'DM Serif Display', serif;
-                font-size: clamp(1.2rem, 5vw, 1.6rem);
-                color: var(--text);
+                font-size: clamp(1.05rem, 4.5vw, 1.35rem);
+                font-weight: 700;
+                color: var(--ink);
                 margin-bottom: 4px;
             }
 
-            .earning-stat.gold .stat-value {
-                color: var(--gold);
+            .earning-stat.gold {
+                background: var(--gold-tint);
+                border-color: rgba(184,134,11,0.2);
             }
 
-            .earning-stat.success .stat-value {
-                color: var(--success);
+                .earning-stat.gold .stat-value {
+                    color: var(--gold);
+                }
+
+            .earning-stat.success {
+                background: var(--success-tint);
+                border-color: rgba(26,143,92,0.2);
             }
+
+                .earning-stat.success .stat-value {
+                    color: var(--success);
+                }
 
             .earning-stat .stat-label {
-                font-size: 0.68rem;
-                font-weight: 600;
-                letter-spacing: 0.08em;
+                font-size: 0.66rem;
+                font-weight: 700;
+                letter-spacing: 0.06em;
                 text-transform: uppercase;
                 color: var(--muted);
             }
 
         /* Section label */
         .section-label {
-            font-size: 0.7rem;
-            font-weight: 600;
-            letter-spacing: 0.12em;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            color: var(--accent-light);
+            color: var(--muted);
             margin: 0 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
-
-            .section-label::after {
-                content: '';
-                flex: 1;
-                height: 1px;
-                background: var(--border);
-            }
 
         /* Earnings list */
         .earnings-card {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 16px;
+            border-radius: var(--radius);
             overflow: hidden;
         }
 
@@ -354,7 +306,7 @@
             justify-content: space-between;
             gap: 12px;
             padding: 16px 18px;
-            border-bottom: 1px solid rgba(255,255,255,0.04);
+            border-bottom: 1px solid var(--border);
         }
 
             .earning-row:last-child {
@@ -362,13 +314,14 @@
             }
 
         .earning-info .earning-name {
-            font-weight: 500;
+            font-weight: 700;
             font-size: 0.92rem;
             margin-bottom: 3px;
+            color: var(--ink);
         }
 
         .earning-info .earning-meta {
-            font-size: 0.74rem;
+            font-size: 0.76rem;
             color: var(--muted);
         }
 
@@ -378,42 +331,41 @@
         }
 
             .earning-amount .amount-value {
-                font-weight: 600;
-                font-size: 0.98rem;
+                font-weight: 700;
+                font-size: 0.95rem;
                 margin-bottom: 4px;
+                color: var(--ink);
             }
 
         .status-badge {
             display: inline-block;
-            font-size: 0.68rem;
-            font-weight: 600;
-            letter-spacing: 0.04em;
+            font-size: 0.66rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
             text-transform: uppercase;
             padding: 3px 10px;
             border-radius: 20px;
         }
 
             .status-badge.pending {
-                background: rgba(245,158,11,0.15);
+                background: var(--warning-tint);
                 color: var(--warning);
-                border: 1px solid rgba(245,158,11,0.3);
             }
 
             .status-badge.paid {
-                background: rgba(16,185,129,0.15);
+                background: var(--success-tint);
                 color: var(--success);
-                border: 1px solid rgba(16,185,129,0.3);
             }
 
         .empty-state {
             text-align: center;
-            padding: 50px 24px;
+            padding: 44px 24px;
             color: var(--muted);
         }
 
             .empty-state .empty-icon {
-                font-size: 2.2rem;
-                margin-bottom: 12px;
+                font-size: 2rem;
+                margin-bottom: 10px;
                 display: block;
             }
 
@@ -423,18 +375,18 @@
             }
 
             .empty-state a {
-                color: var(--accent-light);
-                font-weight: 600;
+                color: var(--accent);
+                font-weight: 700;
                 text-decoration: none;
             }
 
                 .empty-state a:hover {
-                    color: #c4b5fd;
+                    text-decoration: underline;
                 }
 
         .loading-state {
             text-align: center;
-            padding: 50px 24px;
+            padding: 44px 24px;
             color: var(--muted);
             font-size: 0.9rem;
         }
@@ -445,22 +397,21 @@
             bottom: 28px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: #1a1535;
-            border: 1px solid var(--border);
-            color: var(--text);
+            background: var(--ink);
+            color: #ffffff;
             padding: 13px 20px;
-            border-radius: 14px;
+            border-radius: 10px;
             font-size: 0.9rem;
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.5);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
             z-index: 999;
             max-width: 360px;
             width: 90%;
             opacity: 0;
             pointer-events: none;
-            transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s ease;
+            transition: transform 0.35s ease, opacity 0.3s ease;
         }
 
             #toast.show {
@@ -477,7 +428,7 @@
             }
 
             #toast.info {
-                border-left: 4px solid var(--accent-light);
+                border-left: 4px solid var(--accent);
             }
 
         @media (max-width: 480px) {
@@ -512,7 +463,8 @@
            ══════════════════════════════════════════════════════ */
         header {
             width: 100%;
-            background: #1a1535;
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
             padding: 15px 30px;
             display: flex;
             justify-content: space-between;
@@ -521,7 +473,6 @@
             position: sticky;
             top: 0;
             z-index: 10005;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .logo-area {
@@ -532,25 +483,26 @@
         }
 
         #logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+            width: 52px;
+            height: 52px;
+            border-radius: 10px;
             object-fit: cover;
         }
 
         .brand {
-            color: white;
+            color: var(--ink);
         }
 
             .brand h2 {
                 margin: 0;
-                font-family: 'DM Sans', sans-serif;
+                font-family: Arial, Helvetica, sans-serif;
+                font-size: 1.1rem;
             }
 
             .brand p {
                 margin: 0;
-                font-size: 14px;
-                opacity: 0.9;
+                font-size: 13px;
+                color: var(--muted);
             }
 
         .menu-btn {
@@ -562,7 +514,7 @@
             border: none;
             border-radius: 12px;
             background: none;
-            color: white;
+            color: var(--ink);
             font-size: 24px;
             cursor: pointer;
             z-index: 10005;
@@ -574,7 +526,7 @@
             left: -260px;
             width: 260px;
             height: 100%;
-            background: #1b1b1b;
+            background: #14201c;
             z-index: 10002;
             transition: 0.3s;
             padding-top: 80px;
@@ -590,28 +542,28 @@
                 display: flex;
                 align-items: center;
                 justify-content: space-between;
-                color: white;
+                color: #ffffff;
                 text-decoration: none;
                 padding: 16px 22px;
-                border-bottom: 1px solid #2a2a2a;
+                border-bottom: 1px solid rgba(255,255,255,0.08);
                 font-size: 15px;
                 font-weight: 500;
                 transition: background 0.2s;
             }
 
                 .side-menu a:hover {
-                    background: rgba(124,58,237,0.3);
+                    background: rgba(15,122,92,0.35);
                 }
 
                 .side-menu a.active-link {
-                    background: rgba(124,58,237,0.22);
-                    color: #a78bfa;
-                    border-left: 3px solid #a78bfa;
+                    background: rgba(15,122,92,0.25);
+                    color: #6fd6b0;
+                    border-left: 3px solid #6fd6b0;
                     padding-left: 19px;
                 }
 
         .menu-badge {
-            background: #7c3aed;
+            background: var(--accent);
             color: white;
             border-radius: 6px;
             font-size: 11px;
@@ -636,16 +588,20 @@
             }
 
         .uni {
-            background-color: #10b981;
+            background-color: var(--accent);
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            font-weight: 700;
             height: 40px;
             padding: 0 14px;
             cursor: pointer;
             color: white;
-            font-family: 'DM Sans', sans-serif;
+            font-family: Arial, Helvetica, sans-serif;
         }
+
+            .uni:hover {
+                background-color: var(--accent-dark);
+            }
 
         @media (max-width: 768px) {
             header {
@@ -660,7 +616,7 @@
         .share-popup-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0,0,0,0.65);
+            background: rgba(20,32,28,0.55);
             display: none;
             justify-content: center;
             align-items: center;
@@ -675,17 +631,17 @@
         .share-popup {
             background: var(--card);
             border: 1px solid var(--border);
-            border-radius: 18px;
+            border-radius: 16px;
             width: 100%;
             max-width: 380px;
             padding: 24px;
-            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
-            animation: sharePopupShow 0.25s ease;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
+            animation: sharePopupShow 0.2s ease;
         }
 
         @keyframes sharePopupShow {
             from {
-                transform: scale(0.9);
+                transform: scale(0.95);
                 opacity: 0;
             }
 
@@ -703,9 +659,10 @@
         }
 
             .share-popup-header h3 {
-                font-family: 'DM Serif Display', serif;
-                font-weight: 400;
-                font-size: 1.2rem;
+                font-family: Arial, Helvetica, sans-serif;
+                font-weight: 700;
+                font-size: 1.1rem;
+                color: var(--ink);
             }
 
         .share-popup-close {
@@ -716,17 +673,17 @@
         }
 
             .share-popup-close:hover {
-                color: var(--text);
+                color: var(--ink);
             }
 
         .share-popup-link {
-            background: rgba(0,0,0,0.2);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 10px;
+            border-radius: 8px;
             padding: 10px 14px;
             font-size: 0.78rem;
             color: var(--muted);
-            font-family: monospace;
+            font-family: 'Courier New', monospace;
             overflow-x: auto;
             white-space: nowrap;
             margin-bottom: 18px;
@@ -743,28 +700,27 @@
             flex-direction: column;
             align-items: center;
             gap: 8px;
-            background: rgba(255,255,255,0.03);
+            background: var(--bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
+            border-radius: 10px;
             padding: 14px 8px;
             cursor: pointer;
-            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+            transition: border-color 0.2s, transform 0.15s;
         }
 
             .share-option:hover {
                 border-color: var(--accent);
-                background: rgba(124,58,237,0.1);
                 transform: translateY(-2px);
             }
 
             .share-option .share-icon {
-                font-size: 1.5rem;
+                font-size: 1.4rem;
             }
 
             .share-option .share-label {
                 font-size: 0.72rem;
                 color: var(--muted);
-                font-weight: 500;
+                font-weight: 600;
                 text-align: center;
             }
     </style>
@@ -808,8 +764,8 @@
     <div class="page">
 
         <div class="header">
-            <div class="eyebrow">Refer & Earn</div>
-            <h1>Know someone looking<br>for a place?</h1>
+            <div class="eyebrow">Refer &amp; Earn</div>
+            <h1>Know someone looking for a place?</h1>
             <p>Share your code. When they move into a home through QejaConnect, you earn 1% of their monthly rent &mdash; every month they pay.</p>
         </div>
 
