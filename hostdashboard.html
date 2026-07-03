@@ -335,6 +335,13 @@
             padding-top: 8px;
         }
 
+        .prop-hidden-note {
+            margin-top: 4px;
+            font-size: 11px;
+            color: #dc2626;
+            font-weight: 600;
+        }
+
         .relist-btn {
             display: inline-block;
             margin-top: 12px;
@@ -353,6 +360,11 @@
 
             .relist-btn:hover {
                 opacity: 0.85;
+            }
+
+            .relist-btn:disabled {
+                opacity: 0.6;
+                cursor: not-allowed;
             }
 
         /* ── TABS ── */
@@ -589,6 +601,46 @@
         function toggleTheme() {
         document.body.classList.toggle("dark");
         }
+
+        // ── RENEW LISTING ──────────────────────────────────────
+        // Instantly extends listing_expires_at by 30 days on the backend,
+        // no re-upload or re-payment needed. Puts the property back on
+        // Home the moment /properties re-fetches (since it now passes the
+        // "not expired" filter again).
+        async function renewProperty(id, btn) {
+        if (!token) { alert("Please login first"); return; }
+        if (!confirm("Renew this listing for another 30 days? It will reappear on Home immediately.")) return;
+
+        const originalText = btn.textContent;
+        btn.disabled  = true;
+        btn.textContent = "Renewing…";
+
+        try {
+        const res = await fetch(
+        `https://qeja-backend-azkf.onrender.com/renew-property/${id}`,
+        {
+        method: "PATCH",
+        headers: { "Authorization": "Bearer " + token }
+        }
+        );
+        const data = await res.json();
+
+        if (data.success) {
+        alert("✅ Listing renewed! It's live on Home again.");
+        loadMyProperties();
+        } else {
+        alert(data.message || "Failed to renew listing.");
+        btn.disabled  = false;
+        btn.textContent = originalText;
+        }
+        } catch (err) {
+        console.error(err);
+        alert("Network error. Please try again.");
+        btn.disabled  = false;
+        btn.textContent = originalText;
+        }
+        }
+
         async function loadMyProperties() {
         const container = document.getElementById("myProperties");
         if (!userId || !token) {
@@ -620,12 +672,12 @@
 
         const expiryLine = expiry
         ? isExpired
-        ? `<div class="prop-expires">⛔ Expired: ${expiry.toLocaleDateString()}</div>`
+        ? `<div class="prop-expires">⛔ Expired: ${expiry.toLocaleDateString()}<div class="prop-hidden-note">Hidden from Home until renewed</div></div>`
         : `<div class="prop-expires">🗓 Expires: ${expiry.toLocaleDateString()}</div>`
         : "";
 
         const relistBtn = isExpired
-        ? `<br><a class="relist-btn" href="addproperty.html">🔄 Upload Again</a>`
+        ? `<br><button class="relist-btn" onclick="renewProperty(${p.id}, this)">🔄 Renew Listing</button>`
         : "";
 
         return `
