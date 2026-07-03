@@ -2,6 +2,28 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <link rel="manifest" href="/QejaConnect/manifest.json">
+    <meta name="theme-color" content="#0d0a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="QejaConnect">
+    <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+    <script>
+        (function() {
+        if (!localStorage.getItem('token')) {
+        window.location.replace('login.html');
+        }
+        })();
+    </script>
+    <script>
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/QejaConnect/sw.js')
+        .then(reg => console.log('SW registered:', reg.scope))
+        .catch(err => console.error('SW error:', err));
+        });
+        }
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Refer & Earn · QejaConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -39,7 +61,7 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 32px 16px 64px;
+            padding: 0 16px 64px;
         }
 
             body::before, body::after {
@@ -72,6 +94,7 @@
             max-width: 560px;
             position: relative;
             z-index: 1;
+            padding-top: 32px;
         }
 
         /* Header */
@@ -483,9 +506,305 @@
                 width: 100%;
             }
         }
+
+        /* ══════════════════════════════════════════════════════
+           SITE-WIDE HEADER / SIDE NAV (matches home.html layout)
+           ══════════════════════════════════════════════════════ */
+        header {
+            width: 100%;
+            background: #1a1535;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 10005;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            margin-left: 40px;
+            gap: 15px;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand {
+            color: white;
+        }
+
+            .brand h2 {
+                margin: 0;
+                font-family: 'DM Sans', sans-serif;
+            }
+
+            .brand p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 1px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10005;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: -260px;
+            width: 260px;
+            height: 100%;
+            background: #1b1b1b;
+            z-index: 10002;
+            transition: 0.3s;
+            padding-top: 80px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            overflow-y: auto;
+        }
+
+            .side-menu.active {
+                left: 0;
+            }
+
+            .side-menu a {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                color: white;
+                text-decoration: none;
+                padding: 16px 22px;
+                border-bottom: 1px solid #2a2a2a;
+                font-size: 15px;
+                font-weight: 500;
+                transition: background 0.2s;
+            }
+
+                .side-menu a:hover {
+                    background: rgba(124,58,237,0.3);
+                }
+
+                .side-menu a.active-link {
+                    background: rgba(124,58,237,0.22);
+                    color: #a78bfa;
+                    border-left: 3px solid #a78bfa;
+                    padding-left: 19px;
+                }
+
+        .menu-badge {
+            background: #7c3aed;
+            color: white;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+            padding: 2px 8px;
+            min-width: 22px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            top: 90px;
+            display: none;
+            z-index: 10000;
+        }
+
+            .overlay.active {
+                display: block;
+            }
+
+        .uni {
+            background-color: #10b981;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            height: 40px;
+            padding: 0 14px;
+            cursor: pointer;
+            color: white;
+            font-family: 'DM Sans', sans-serif;
+        }
+
+        @media (max-width: 768px) {
+            header {
+                justify-content: center;
+                gap: 10px;
+            }
+        }
+
+        /* ══════════════════════════════════════════════════════
+           SHARE POPUP
+           ══════════════════════════════════════════════════════ */
+        .share-popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.65);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 100010;
+            padding: 20px;
+        }
+
+            .share-popup-overlay.active {
+                display: flex;
+            }
+
+        .share-popup {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            width: 100%;
+            max-width: 380px;
+            padding: 24px;
+            box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+            animation: sharePopupShow 0.25s ease;
+        }
+
+        @keyframes sharePopupShow {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .share-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 18px;
+        }
+
+            .share-popup-header h3 {
+                font-family: 'DM Serif Display', serif;
+                font-weight: 400;
+                font-size: 1.2rem;
+            }
+
+        .share-popup-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--muted);
+            line-height: 1;
+        }
+
+            .share-popup-close:hover {
+                color: var(--text);
+            }
+
+        .share-popup-link {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 10px 14px;
+            font-size: 0.78rem;
+            color: var(--muted);
+            font-family: monospace;
+            overflow-x: auto;
+            white-space: nowrap;
+            margin-bottom: 18px;
+        }
+
+        .share-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .share-option {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 14px 8px;
+            cursor: pointer;
+            transition: border-color 0.2s, background 0.2s, transform 0.15s;
+        }
+
+            .share-option:hover {
+                border-color: var(--accent);
+                background: rgba(124,58,237,0.1);
+                transform: translateY(-2px);
+            }
+
+            .share-option .share-icon {
+                font-size: 1.5rem;
+            }
+
+            .share-option .share-label {
+                font-size: 0.72rem;
+                color: var(--muted);
+                font-weight: 500;
+                text-align: center;
+            }
     </style>
 </head>
 <body>
+
+    <header>
+        <div class="logo-area">
+            <button class="menu-btn" onclick="toggleMenu()">☰</button>
+            <img src="logo.jpg" id="logo" alt="logo">
+            <div class="brand">
+                <h2>Qeja Connect</h2>
+                <p>Quality accommodation providence</p>
+            </div>
+        </div>
+        <a href="mytenancy.html"><button class="uni">🏠 My house</button></a>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="side-menu" id="sideMenu">
+        <a href="home.html">🏠 Home</a>
+        <a href="landlords.html">🏘 Landlords</a>
+        <a href="contact.html">📞 Contact</a>
+        <a href="hostdashboard.html" id="menuDashboard">
+            📊 Dashboard
+            <span id="menuDashboardBadge" class="menu-badge" style="display:none;"></span>
+        </a>
+        <a href="myprofile.html">👤 Profile</a>
+        <a href="mymessages.html" id="menuMessages">
+            💬 Messages from QejaConnect
+            <span id="navNotifBadge" class="menu-badge" style="display:none;">0</span>
+        </a>
+        <a href="bookings.html">📌 My Bookings</a>
+        <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
+            🚪 Log out
+        </a>
+        <a href="refer-earn.html">🎉 Refer & earn</a>
+    </div>
+
     <div class="page">
 
         <div class="header">
@@ -549,6 +868,43 @@
 
     </div>
 
+    <!-- SHARE POPUP -->
+    <div class="share-popup-overlay" id="sharePopupOverlay">
+        <div class="share-popup">
+            <div class="share-popup-header">
+                <h3>Share your link</h3>
+                <span class="share-popup-close" id="sharePopupClose">&times;</span>
+            </div>
+            <div class="share-popup-link" id="sharePopupLink">&mdash;</div>
+            <div class="share-options">
+                <div class="share-option" data-platform="whatsapp">
+                    <span class="share-icon">🟢</span>
+                    <span class="share-label">WhatsApp</span>
+                </div>
+                <div class="share-option" data-platform="twitter">
+                    <span class="share-icon">✖️</span>
+                    <span class="share-label">X / Twitter</span>
+                </div>
+                <div class="share-option" data-platform="facebook">
+                    <span class="share-icon">📘</span>
+                    <span class="share-label">Facebook</span>
+                </div>
+                <div class="share-option" data-platform="telegram">
+                    <span class="share-icon">✈️</span>
+                    <span class="share-label">Telegram</span>
+                </div>
+                <div class="share-option" data-platform="email">
+                    <span class="share-icon">✉️</span>
+                    <span class="share-label">Email</span>
+                </div>
+                <div class="share-option" data-platform="copy">
+                    <span class="share-icon">📋</span>
+                    <span class="share-label">Copy Link</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
@@ -557,6 +913,17 @@
     <script>
         const API = 'https://qeja-backend-azkf.onrender.com';
         const SIGNUP_URL = 'https://eliyasande65-lang.github.io/QejaConnect/tenant.html';
+
+        // ── Side menu toggling ───────────────────────────────────────
+        function toggleMenu() {
+        document.getElementById("sideMenu").classList.toggle("active");
+        document.getElementById("overlay").classList.toggle("active");
+        }
+
+        function closeMenu() {
+        document.getElementById("sideMenu").classList.remove("active");
+        document.getElementById("overlay").classList.remove("active");
+        }
 
         // ── Toast ──────────────────────────────────────────────────
         let toastTimer;
@@ -716,22 +1083,108 @@
         });
         });
 
-        document.getElementById('shareBtn').addEventListener('click', () => {
+        // ── Share popup ──────────────────────────────────────────────
+        function openSharePopup() {
+        const link = document.getElementById('shareLink').textContent;
+        if (!link || link.includes('Loading') || link === '—') {
+        showToast('Please wait for your link to load.', 'info');
+        return;
+        }
+        document.getElementById('sharePopupLink').textContent = link;
+        document.getElementById('sharePopupOverlay').classList.add('active');
+        }
+
+        function closeSharePopup() {
+        document.getElementById('sharePopupOverlay').classList.remove('active');
+        }
+
+        document.getElementById('shareBtn').addEventListener('click', openSharePopup);
+        document.getElementById('sharePopupClose').addEventListener('click', closeSharePopup);
+        document.getElementById('sharePopupOverlay').addEventListener('click', (e) => {
+        if (e.target.id === 'sharePopupOverlay') closeSharePopup();
+        });
+
+        document.querySelectorAll('.share-option').forEach(opt => {
+        opt.addEventListener('click', () => {
         const link = document.getElementById('shareLink').textContent;
         if (!link || link.includes('Loading') || link === '—') return;
 
-        if (navigator.share) {
-        navigator.share({
-        title: 'QejaConnect - Find your perfect home',
-        text: 'Use my referral code to sign up on QejaConnect and find your perfect home in Kenya!',
-        url: link
-        }).catch(() => {});
-        } else {
+        const platform = opt.dataset.platform;
+        const text = 'Use my referral code to sign up on QejaConnect and find your perfect home in Kenya!';
+        let url = '';
+
+        switch (platform) {
+        case 'whatsapp':
+        url = `https://wa.me/?text=${encodeURIComponent(text + ' ' + link)}`;
+        window.open(url, '_blank');
+        break;
+        case 'twitter':
+        url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(link)}`;
+        window.open(url, '_blank');
+        break;
+        case 'facebook':
+        url = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(link)}`;
+        window.open(url, '_blank');
+        break;
+        case 'telegram':
+        url = `https://t.me/share/url?url=${encodeURIComponent(link)}&text=${encodeURIComponent(text)}`;
+        window.open(url, '_blank');
+        break;
+        case 'email':
+        url = `mailto:?subject=${encodeURIComponent('Join me on QejaConnect')}&body=${encodeURIComponent(text + '\n\n' + link)}`;
+        window.location.href = url;
+        break;
+        case 'copy':
         navigator.clipboard.writeText(link).then(() => {
-        showToast('Referral link copied! Share it with friends.', 'success');
+        showToast('Referral link copied!', 'success');
         });
+        break;
         }
+
+        if (platform !== 'copy') closeSharePopup();
+        else closeSharePopup();
         });
+        });
+
+        // ── Side-menu active link + notification badges ─────────────
+        (async function initMenuBadges() {
+        const { user, token } = getAuth();
+        if (!token) return;
+
+        const path = location.pathname.split('/').pop();
+        document.querySelectorAll('.side-menu a').forEach(a => {
+        const href = a.getAttribute('href');
+        if (href && path && href.includes(path)) a.classList.add('active-link');
+        });
+
+        try {
+        const msgRes  = await fetch(`${API}/my-messages`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const msgData = await msgRes.json();
+        if (msgData.success) {
+        let seen = [];
+        try { seen = JSON.parse(localStorage.getItem('seenReplies') || '[]'); } catch {}
+        const unread = msgData.messages.filter(m => m.reply && !seen.includes(m.id)).length;
+        const msgBadge = document.getElementById('navNotifBadge');
+        if (msgBadge && unread > 0) { msgBadge.textContent = unread; msgBadge.style.display = 'inline-block'; }
+        }
+
+        const userId = user?.id;
+        if (!userId) return;
+        const reqRes  = await fetch(`${API}/landlord/interests/${userId}`);
+        const reqData = await reqRes.json();
+        if (reqData.success && reqData.data?.length) {
+        let seenReqs = [];
+        try { seenReqs = JSON.parse(localStorage.getItem('seenRequests') || '[]'); } catch {}
+        const unseen = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
+        const dashBadge = document.getElementById('menuDashboardBadge');
+        if (dashBadge && unseen > 0) { dashBadge.textContent = unseen; dashBadge.style.display = 'inline-block'; }
+        }
+        } catch (err) {
+        console.error('Menu badge error:', err);
+        }
+        })();
 
         // ── Init ─────────────────────────────────────────────────
         loadReferrals();
