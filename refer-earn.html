@@ -461,64 +461,58 @@
         header {
             width: 100%;
             background: var(--brand);
-            padding: 12px 20px;
+            padding: 18px 30px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
+            flex-wrap: wrap;
             position: sticky;
             top: 0;
             z-index: 10005;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            gap: 12px;
+            margin-left: 40px;
+            gap: 15px;
         }
 
         #logo {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
             object-fit: cover;
         }
 
         .brand-text h2 {
             margin: 0;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             color: #ffffff;
         }
 
         .brand-text p {
             margin: 0;
-            font-size: 12px;
-            color: rgba(255,255,255,0.75);
+            font-size: 13px;
+            color: rgba(255,255,255,0.8);
         }
 
         /* ── Hamburger ── */
         .menu-btn {
-            position: absolute;
-            left: 14px;
-            top: 50%;
-            transform: translateY(-50%);
-            width: 44px;
-            height: 44px;
+            position: fixed;
+            top: 20px;
+            left: 1px;
+            width: 50px;
+            height: 50px;
             border: none;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.12);
+            border-radius: 12px;
+            background: none;
             color: #ffffff;
-            font-size: 20px;
+            font-size: 24px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             z-index: 10006;
         }
-
-            .menu-btn:active {
-                background: rgba(255,255,255,0.22);
-            }
 
         /* ── Side menu (mobile-first) ── */
         .side-menu {
@@ -644,13 +638,19 @@
            ══════════════════════════════════════════════════════ */
         .share-popup-overlay {
             position: fixed;
-            inset: 0;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
             background: rgba(20,20,20,0.55);
             display: none;
             justify-content: center;
             align-items: center;
             z-index: 100010;
             padding: 20px;
+            overflow-y: auto;
         }
 
             .share-popup-overlay.active {
@@ -666,6 +666,7 @@
             padding: 24px;
             box-shadow: 0 24px 60px rgba(0,0,0,0.25);
             animation: sharePopupShow 0.2s ease;
+            margin: auto;
         }
 
         @keyframes sharePopupShow {
@@ -751,6 +752,13 @@
                 font-weight: 600;
                 text-align: center;
             }
+
+        @media (max-width: 768px) {
+            header {
+                justify-content: center;
+                gap: 10px;
+            }
+        }
 
         @media (max-width: 600px) {
             .brand-text h2 {
