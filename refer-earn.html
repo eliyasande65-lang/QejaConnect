@@ -24,7 +24,7 @@
         });
         }
     </script>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Refer & Earn · QejaConnect</title>
 
     <style>
@@ -32,8 +32,7 @@
             --brand: #1a1535;
             --brand-light: #2a2354;
             --bg: #f4f4f4;
-            --surface: #ffffff;
-            --card: #ffffff;
+            --white: #ffffff;
             --border: #e5e5e5;
             --ink: #1a1a1a;
             --muted: #777;
@@ -44,7 +43,6 @@
             --warning: #b8720b;
             --warning-tint: #fbf1e2;
             --error: #c0392b;
-            --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
             --radius: 12px;
         }
 
@@ -52,6 +50,12 @@
             box-sizing: border-box;
             margin: 0;
             padding: 0;
+        }
+
+        html, body {
+            width: 100%;
+            max-width: 100%;
+            overflow-x: hidden;
         }
 
         body {
@@ -62,470 +66,106 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 0 16px 64px;
+            padding-bottom: 64px;
         }
 
-        .page {
-            width: 100%;
-            max-width: 560px;
-            padding-top: 32px;
-        }
-
-        /* Header block */
-        .header {
-            margin-bottom: 24px;
-        }
-
-            .header .eyebrow {
-                font-size: 0.72rem;
-                font-weight: 700;
-                letter-spacing: 0.08em;
-                text-transform: uppercase;
-                color: var(--brand);
-                margin-bottom: 8px;
-            }
-
-            .header h1 {
-                font-size: clamp(1.5rem, 5vw, 2rem);
-                font-weight: 700;
-                letter-spacing: -0.3px;
-                line-height: 1.2;
-                color: var(--brand);
-            }
-
-            .header p {
-                color: var(--muted);
-                font-size: 0.95rem;
-                margin-top: 8px;
-                line-height: 1.5;
-                max-width: 460px;
-            }
-
-        /* Signature: Code card */
-        .code-card {
-            background: var(--brand);
-            border-radius: var(--radius);
-            padding: 24px;
-            margin-bottom: 16px;
-            box-shadow: var(--shadow);
-            position: relative;
-        }
-
-        .code-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: rgba(255,255,255,0.7);
-            margin-bottom: 12px;
-        }
-
-        .code-display {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            background: rgba(255,255,255,0.08);
-            border: 1px dashed rgba(255,255,255,0.35);
-            border-radius: 10px;
-            padding: 16px 18px;
-            margin-bottom: 14px;
-        }
-
-        .code-value {
-            font-size: clamp(1.3rem, 6vw, 1.7rem);
-            font-weight: 700;
-            letter-spacing: 0.04em;
-            color: #ffffff;
-        }
-
-            .code-value.loading {
-                color: rgba(255,255,255,0.65);
-                font-size: 0.95rem;
-                font-weight: 400;
-                letter-spacing: normal;
-            }
-
-        .copy-btn {
-            flex-shrink: 0;
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: none;
-            background: #ffffff;
-            color: var(--brand);
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 0.85rem;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.2s;
-            white-space: nowrap;
-        }
-
-            .copy-btn:hover {
-                opacity: 0.9;
-            }
-
-        .share-row {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .share-link-box {
-            flex: 1;
-            min-width: 0;
-            background: rgba(255,255,255,0.08);
-            border: 1px solid rgba(255,255,255,0.25);
-            border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.78rem;
-            color: rgba(255,255,255,0.8);
-            overflow-x: auto;
-            white-space: nowrap;
-            font-family: 'Courier New', monospace;
-        }
-
-        .share-btn {
-            padding: 10px 16px;
-            border-radius: 8px;
-            border: 1px solid rgba(255,255,255,0.35);
-            background: transparent;
-            color: #ffffff;
-            font-family: Arial, Helvetica, sans-serif;
-            font-size: 0.82rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: background 0.2s;
-            white-space: nowrap;
-        }
-
-            .share-btn:hover {
-                background: rgba(255,255,255,0.12);
-            }
-
-        /* How it works strip */
-        .how-it-works {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .step {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 12px;
-            text-align: center;
-        }
-
-            .step .step-icon {
-                font-size: 1.3rem;
-                margin-bottom: 6px;
-            }
-
-            .step .step-text {
-                font-size: 0.76rem;
-                color: var(--muted);
-                line-height: 1.4;
-            }
-
-        /* Earnings summary */
-        .earnings-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 10px;
-            margin-bottom: 24px;
-        }
-
-        .earning-stat {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px 12px;
-            text-align: center;
-        }
-
-            .earning-stat .stat-value {
-                font-size: clamp(1.05rem, 4.5vw, 1.35rem);
-                font-weight: 700;
-                color: var(--ink);
-                margin-bottom: 4px;
-            }
-
-            .earning-stat.gold {
-                background: var(--gold-tint);
-                border-color: rgba(184,134,11,0.2);
-            }
-
-                .earning-stat.gold .stat-value {
-                    color: var(--gold);
-                }
-
-            .earning-stat.success {
-                background: var(--success-tint);
-                border-color: rgba(26,143,92,0.2);
-            }
-
-                .earning-stat.success .stat-value {
-                    color: var(--success);
-                }
-
-            .earning-stat .stat-label {
-                font-size: 0.66rem;
-                font-weight: 700;
-                letter-spacing: 0.06em;
-                text-transform: uppercase;
-                color: var(--muted);
-            }
-
-        /* Section label */
-        .section-label {
-            font-size: 0.72rem;
-            font-weight: 700;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--muted);
-            margin: 0 0 12px;
-        }
-
-        /* Earnings list */
-        .earnings-card {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            overflow: hidden;
-        }
-
-        .earning-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 12px;
-            padding: 16px 18px;
-            border-bottom: 1px solid var(--border);
-        }
-
-            .earning-row:last-child {
-                border-bottom: none;
-            }
-
-        .earning-info .earning-name {
-            font-weight: 700;
-            font-size: 0.92rem;
-            margin-bottom: 3px;
-            color: var(--ink);
-        }
-
-        .earning-info .earning-meta {
-            font-size: 0.76rem;
-            color: var(--muted);
-        }
-
-        .earning-amount {
-            text-align: right;
-            flex-shrink: 0;
-        }
-
-            .earning-amount .amount-value {
-                font-weight: 700;
-                font-size: 0.95rem;
-                margin-bottom: 4px;
-                color: var(--ink);
-            }
-
-        .status-badge {
-            display: inline-block;
-            font-size: 0.66rem;
-            font-weight: 700;
-            letter-spacing: 0.03em;
-            text-transform: uppercase;
-            padding: 3px 10px;
-            border-radius: 20px;
-        }
-
-            .status-badge.pending {
-                background: var(--warning-tint);
-                color: var(--warning);
-            }
-
-            .status-badge.paid {
-                background: var(--success-tint);
-                color: var(--success);
-            }
-
-        .empty-state {
-            text-align: center;
-            padding: 44px 24px;
-            color: var(--muted);
-        }
-
-            .empty-state .empty-icon {
-                font-size: 2rem;
-                margin-bottom: 10px;
-                display: block;
-            }
-
-            .empty-state p {
-                font-size: 0.88rem;
-                line-height: 1.5;
-            }
-
-            .empty-state a {
-                color: var(--brand);
-                font-weight: 700;
-                text-decoration: none;
-            }
-
-                .empty-state a:hover {
-                    text-decoration: underline;
-                }
-
-        .loading-state {
-            text-align: center;
-            padding: 44px 24px;
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        /* Toast */
-        #toast {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: var(--ink);
-            color: #ffffff;
-            padding: 13px 20px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
-            z-index: 999;
-            max-width: 360px;
-            width: 90%;
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.35s ease, opacity 0.3s ease;
-        }
-
-            #toast.show {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
-
-            #toast.success {
-                border-left: 4px solid var(--success);
-            }
-
-            #toast.error {
-                border-left: 4px solid var(--error);
-            }
-
-            #toast.info {
-                border-left: 4px solid var(--brand);
-            }
-
-        @media (max-width: 480px) {
-            .how-it-works {
-                grid-template-columns: 1fr;
-            }
-
-            .earnings-grid {
-                grid-template-columns: 1fr 1fr;
-            }
-
-                .earnings-grid .earning-stat:first-child {
-                    grid-column: 1 / -1;
-                }
-
-            .share-row {
-                flex-direction: column;
-            }
-
-            .share-link-box {
-                order: 1;
-            }
-
-            .share-btn {
-                order: 2;
-                width: 100%;
-            }
+        img, input, button {
+            max-width: 100%;
         }
 
         /* ══════════════════════════════════════════════════════
-           SITE-WIDE HEADER
+           HEADER
            ══════════════════════════════════════════════════════ */
         header {
             width: 100%;
             background: var(--brand);
-            padding: 18px 30px;
+            padding: 16px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
             position: sticky;
             top: 0;
-            z-index: 10005;
+            z-index: 500;
             box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            margin-left: 40px;
-            gap: 15px;
+            gap: 12px;
+            max-width: 100%;
         }
 
         #logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
             object-fit: cover;
+            flex-shrink: 0;
         }
 
         .brand-text h2 {
             margin: 0;
-            font-size: 1.15rem;
-            color: #ffffff;
+            font-size: 1.05rem;
+            color: var(--white);
         }
 
         .brand-text p {
             margin: 0;
-            font-size: 13px;
-            color: rgba(255,255,255,0.8);
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
         }
 
-        /* ── Hamburger ── */
         .menu-btn {
             position: fixed;
-            top: 20px;
-            left: 1px;
-            width: 50px;
-            height: 50px;
+            top: 12px;
+            left: 10px;
+            width: 44px;
+            height: 44px;
             border: none;
-            border-radius: 12px;
-            background: none;
-            color: #ffffff;
-            font-size: 24px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.12);
+            color: var(--white);
+            font-size: 20px;
             cursor: pointer;
-            z-index: 10006;
+            z-index: 510;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* ── Side menu (mobile-first) ── */
+            .menu-btn:active {
+                background: rgba(255,255,255,0.22);
+            }
+
+        /* ══════════════════════════════════════════════════════
+           OVERLAY + SIDE MENU
+           ══════════════════════════════════════════════════════ */
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            z-index: 400;
+        }
+
+            .overlay.active {
+                display: block;
+            }
+
         .side-menu {
             position: fixed;
             top: 0;
             left: -280px;
-            width: 78vw;
+            width: 78%;
             max-width: 300px;
             height: 100%;
             background: var(--brand);
-            z-index: 10007;
+            z-index: 520;
             transition: left 0.3s ease;
-            padding-top: 20px;
             padding-bottom: 24px;
             box-shadow: 4px 0 24px rgba(0,0,0,0.35);
             overflow-y: auto;
@@ -541,7 +181,7 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 10px 20px 20px;
+            padding: 18px 20px;
             border-bottom: 1px solid rgba(255,255,255,0.12);
             margin-bottom: 8px;
         }
@@ -554,7 +194,7 @@
             }
 
             .side-menu-header span {
-                color: #ffffff;
+                color: var(--white);
                 font-weight: bold;
                 font-size: 1.05rem;
             }
@@ -566,7 +206,7 @@
             color: rgba(255,255,255,0.7);
             font-size: 22px;
             cursor: pointer;
-            padding: 6px;
+            padding: 4px 8px;
             line-height: 1;
         }
 
@@ -574,7 +214,7 @@
             display: flex;
             align-items: center;
             gap: 14px;
-            color: #ffffff;
+            color: var(--white);
             text-decoration: none;
             padding: 15px 22px;
             font-size: 15px;
@@ -600,7 +240,7 @@
 
             .side-menu a.active-link {
                 background: rgba(255,255,255,0.14);
-                border-left: 3px solid #ffffff;
+                border-left: 3px solid var(--white);
                 padding-left: 19px;
             }
 
@@ -610,7 +250,7 @@
         }
 
         .menu-badge {
-            background: #ffffff;
+            background: var(--white);
             color: var(--brand);
             border-radius: 6px;
             font-size: 11px;
@@ -621,34 +261,391 @@
             flex-shrink: 0;
         }
 
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 10000;
+        /* ══════════════════════════════════════════════════════
+           PAGE
+           ══════════════════════════════════════════════════════ */
+        .page {
+            width: 100%;
+            max-width: 560px;
+            padding: 24px 16px 0;
         }
 
-            .overlay.active {
+        .page-header {
+            margin-bottom: 22px;
+        }
+
+            .page-header .eyebrow {
+                font-size: 0.72rem;
+                font-weight: 700;
+                letter-spacing: 0.08em;
+                text-transform: uppercase;
+                color: var(--brand);
+                margin-bottom: 8px;
+            }
+
+            .page-header h1 {
+                font-size: clamp(1.4rem, 5vw, 1.8rem);
+                font-weight: 700;
+                line-height: 1.25;
+                color: var(--brand);
+                word-wrap: break-word;
+            }
+
+            .page-header p {
+                color: var(--muted);
+                font-size: 0.92rem;
+                margin-top: 8px;
+                line-height: 1.5;
+            }
+
+        /* ── Referral code card ── */
+        .code-card {
+            background: var(--brand);
+            border-radius: var(--radius);
+            padding: 22px;
+            margin-bottom: 16px;
+        }
+
+        .code-label {
+            font-size: 0.68rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 12px;
+        }
+
+        .code-display {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            flex-wrap: wrap;
+            background: rgba(255,255,255,0.08);
+            border: 1px dashed rgba(255,255,255,0.35);
+            border-radius: 10px;
+            padding: 14px 16px;
+            margin-bottom: 14px;
+        }
+
+        .code-value {
+            font-size: clamp(1.2rem, 6vw, 1.5rem);
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            color: var(--white);
+            word-break: break-all;
+        }
+
+            .code-value.loading {
+                color: rgba(255,255,255,0.65);
+                font-size: 0.92rem;
+                font-weight: 400;
+                letter-spacing: normal;
+            }
+
+        .copy-btn {
+            flex-shrink: 0;
+            padding: 9px 14px;
+            border-radius: 8px;
+            border: none;
+            background: var(--white);
+            color: var(--brand);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.82rem;
+            font-weight: 700;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+            .copy-btn:active {
+                opacity: 0.85;
+            }
+
+        .share-row {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .share-link-box {
+            flex: 1 1 100%;
+            min-width: 0;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 8px;
+            padding: 10px 12px;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.8);
+            overflow-x: auto;
+            white-space: nowrap;
+            font-family: 'Courier New', monospace;
+        }
+
+        .share-btn {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.35);
+            background: transparent;
+            color: var(--white);
+            font-family: Arial, Helvetica, sans-serif;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+            .share-btn:active {
+                background: rgba(255,255,255,0.14);
+            }
+
+        /* ── How it works ── */
+        .how-it-works {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+
+        .step {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 10px;
+            text-align: center;
+            min-width: 0;
+        }
+
+            .step .step-icon {
+                font-size: 1.2rem;
+                margin-bottom: 6px;
+            }
+
+            .step .step-text {
+                font-size: 0.72rem;
+                color: var(--muted);
+                line-height: 1.35;
+            }
+
+        /* ── Earnings summary ── */
+        .earnings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 22px;
+        }
+
+        .earning-stat {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 8px;
+            text-align: center;
+            min-width: 0;
+        }
+
+            .earning-stat .stat-value {
+                font-size: clamp(0.95rem, 4.5vw, 1.2rem);
+                font-weight: 700;
+                color: var(--ink);
+                margin-bottom: 4px;
+                word-break: break-word;
+            }
+
+            .earning-stat.gold {
+                background: var(--gold-tint);
+                border-color: rgba(184,134,11,0.2);
+            }
+
+                .earning-stat.gold .stat-value {
+                    color: var(--gold);
+                }
+
+            .earning-stat.success {
+                background: var(--success-tint);
+                border-color: rgba(26,143,92,0.2);
+            }
+
+                .earning-stat.success .stat-value {
+                    color: var(--success);
+                }
+
+            .earning-stat .stat-label {
+                font-size: 0.62rem;
+                font-weight: 700;
+                letter-spacing: 0.05em;
+                text-transform: uppercase;
+                color: var(--muted);
+            }
+
+        /* ── Section label ── */
+        .section-label {
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            text-transform: uppercase;
+            color: var(--muted);
+            margin: 0 0 12px;
+        }
+
+        /* ── Earnings list ── */
+        .earnings-card {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .earning-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border);
+        }
+
+            .earning-row:last-child {
+                border-bottom: none;
+            }
+
+        .earning-info {
+            min-width: 0;
+        }
+
+            .earning-info .earning-name {
+                font-weight: 700;
+                font-size: 0.9rem;
+                margin-bottom: 3px;
+                color: var(--ink);
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            .earning-info .earning-meta {
+                font-size: 0.74rem;
+                color: var(--muted);
+            }
+
+        .earning-amount {
+            text-align: right;
+            flex-shrink: 0;
+        }
+
+            .earning-amount .amount-value {
+                font-weight: 700;
+                font-size: 0.92rem;
+                margin-bottom: 4px;
+                color: var(--ink);
+            }
+
+        .status-badge {
+            display: inline-block;
+            font-size: 0.64rem;
+            font-weight: 700;
+            letter-spacing: 0.03em;
+            text-transform: uppercase;
+            padding: 3px 10px;
+            border-radius: 20px;
+        }
+
+            .status-badge.pending {
+                background: var(--warning-tint);
+                color: var(--warning);
+            }
+
+            .status-badge.paid {
+                background: var(--success-tint);
+                color: var(--success);
+            }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+        }
+
+            .empty-state .empty-icon {
+                font-size: 1.8rem;
+                margin-bottom: 10px;
                 display: block;
             }
 
+            .empty-state p {
+                font-size: 0.86rem;
+                line-height: 1.5;
+            }
+
+            .empty-state a {
+                color: var(--brand);
+                font-weight: 700;
+                text-decoration: none;
+            }
+
+        .loading-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--muted);
+            font-size: 0.88rem;
+        }
+
         /* ══════════════════════════════════════════════════════
-           SHARE POPUP
+           TOAST
+           ══════════════════════════════════════════════════════ */
+        #toast {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--ink);
+            color: var(--white);
+            padding: 12px 18px;
+            border-radius: 10px;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+            z-index: 900;
+            max-width: calc(100% - 32px);
+            width: max-content;
+            opacity: 0;
+            pointer-events: none;
+            transition: transform 0.35s ease, opacity 0.3s ease;
+        }
+
+            #toast.show {
+                transform: translateX(-50%) translateY(0);
+                opacity: 1;
+            }
+
+            #toast.success {
+                border-left: 4px solid var(--success);
+            }
+
+            #toast.error {
+                border-left: 4px solid var(--error);
+            }
+
+            #toast.info {
+                border-left: 4px solid var(--brand-light);
+            }
+
+        /* ══════════════════════════════════════════════════════
+           SHARE POPUP — centered, firm on mobile
            ══════════════════════════════════════════════════════ */
         .share-popup-overlay {
             position: fixed;
             top: 0;
             left: 0;
-            right: 0;
-            bottom: 0;
             width: 100%;
             height: 100%;
-            background: rgba(20,20,20,0.55);
+            background: rgba(20,20,20,0.6);
             display: none;
-            justify-content: center;
             align-items: center;
-            z-index: 100010;
+            justify-content: center;
+            z-index: 1000;
             padding: 20px;
             overflow-y: auto;
         }
@@ -658,119 +655,110 @@
             }
 
         .share-popup {
-            background: var(--card);
-            border: 1px solid var(--border);
+            background: var(--white);
             border-radius: 16px;
             width: 100%;
-            max-width: 380px;
-            padding: 24px;
-            box-shadow: 0 24px 60px rgba(0,0,0,0.25);
-            animation: sharePopupShow 0.2s ease;
+            max-width: 360px;
+            padding: 22px;
+            box-shadow: 0 24px 60px rgba(0,0,0,0.3);
             margin: auto;
-        }
-
-        @keyframes sharePopupShow {
-            from {
-                transform: scale(0.95);
-                opacity: 0;
-            }
-
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
         }
 
         .share-popup-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
             .share-popup-header h3 {
                 font-weight: 700;
-                font-size: 1.1rem;
+                font-size: 1.05rem;
                 color: var(--brand);
             }
 
         .share-popup-close {
             cursor: pointer;
-            font-size: 24px;
+            font-size: 22px;
             color: var(--muted);
             line-height: 1;
+            background: none;
+            border: none;
         }
-
-            .share-popup-close:hover {
-                color: var(--ink);
-            }
 
         .share-popup-link {
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 8px;
-            padding: 10px 14px;
-            font-size: 0.78rem;
+            padding: 10px 12px;
+            font-size: 0.74rem;
             color: var(--muted);
             font-family: 'Courier New', monospace;
             overflow-x: auto;
             white-space: nowrap;
-            margin-bottom: 18px;
+            margin-bottom: 16px;
         }
 
         .share-options {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            gap: 10px;
         }
 
         .share-option {
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             background: var(--bg);
             border: 1px solid var(--border);
             border-radius: 10px;
-            padding: 14px 8px;
+            padding: 12px 6px;
             cursor: pointer;
-            transition: border-color 0.2s, transform 0.15s;
         }
 
-            .share-option:hover {
-                border-color: var(--brand);
-                transform: translateY(-2px);
+            .share-option:active {
+                background: #eeecf7;
             }
 
             .share-option .share-icon {
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
 
             .share-option .share-label {
-                font-size: 0.72rem;
+                font-size: 0.68rem;
                 color: var(--muted);
                 font-weight: 600;
                 text-align: center;
             }
 
-        @media (max-width: 768px) {
-            header {
-                justify-content: center;
-                gap: 10px;
+        /* ══════════════════════════════════════════════════════
+           SMALL SCREEN TWEAKS (still no horizontal scroll)
+           ══════════════════════════════════════════════════════ */
+        @media (max-width: 420px) {
+            .how-it-works {
+                grid-template-columns: 1fr;
             }
-        }
 
-        @media (max-width: 600px) {
-            .brand-text h2 {
-                font-size: 1rem;
+            .earnings-grid {
+                grid-template-columns: 1fr 1fr;
+            }
+
+                .earnings-grid .earning-stat:first-child {
+                    grid-column: 1 / -1;
+                }
+
+            .share-row {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 <body>
 
+    <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
+
     <header>
-        <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
         <div class="logo-area">
             <img src="logo.jpg" id="logo" alt="logo">
             <div class="brand-text">
@@ -812,13 +800,13 @@
 
     <div class="page">
 
-        <div class="header">
+        <div class="page-header">
             <div class="eyebrow">Refer &amp; Earn</div>
             <h1>Know someone looking for a place?</h1>
             <p>Share your code. When they move into a home through QejaConnect, you earn 1% of their monthly rent &mdash; every month they pay.</p>
         </div>
 
-        <!-- Signature: referral code card -->
+        <!-- Referral code card -->
         <div class="code-card">
             <div class="code-label">Your referral code</div>
             <div class="code-display">
@@ -878,7 +866,7 @@
         <div class="share-popup">
             <div class="share-popup-header">
                 <h3>Share your link</h3>
-                <span class="share-popup-close" id="sharePopupClose">&times;</span>
+                <button class="share-popup-close" id="sharePopupClose" aria-label="Close">&times;</button>
             </div>
             <div class="share-popup-link" id="sharePopupLink">&mdash;</div>
             <div class="share-options">
