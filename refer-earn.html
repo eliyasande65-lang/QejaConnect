@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <link rel="manifest" href="/QejaConnect/manifest.json">
-    <meta name="theme-color" content="#ffffff">
+    <meta name="theme-color" content="#1a1535">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
@@ -29,15 +29,14 @@
 
     <style>
         :root {
-            --bg: #f6f7f5;
+            --brand: #1a1535;
+            --brand-light: #2a2354;
+            --bg: #f4f4f4;
             --surface: #ffffff;
             --card: #ffffff;
-            --border: #e3e5e0;
-            --ink: #14201c;
-            --muted: #667066;
-            --accent: #0f7a5c;
-            --accent-dark: #0b5c45;
-            --accent-tint: #e6f3ee;
+            --border: #e5e5e5;
+            --ink: #1a1a1a;
+            --muted: #777;
             --gold: #b8860b;
             --gold-tint: #fbf3e2;
             --success: #1a8f5c;
@@ -45,7 +44,7 @@
             --warning: #b8720b;
             --warning-tint: #fbf1e2;
             --error: #c0392b;
-            --shadow: 0 1px 2px rgba(20,32,28,0.04), 0 8px 24px rgba(20,32,28,0.06);
+            --shadow: 0 1px 2px rgba(0,0,0,0.04), 0 8px 24px rgba(0,0,0,0.06);
             --radius: 12px;
         }
 
@@ -82,17 +81,16 @@
                 font-weight: 700;
                 letter-spacing: 0.08em;
                 text-transform: uppercase;
-                color: var(--accent);
+                color: var(--brand);
                 margin-bottom: 8px;
             }
 
             .header h1 {
-                font-family: Arial, Helvetica, sans-serif;
                 font-size: clamp(1.5rem, 5vw, 2rem);
                 font-weight: 700;
                 letter-spacing: -0.3px;
                 line-height: 1.2;
-                color: var(--ink);
+                color: var(--brand);
             }
 
             .header p {
@@ -105,7 +103,7 @@
 
         /* Signature: Code card */
         .code-card {
-            background: var(--accent-dark);
+            background: var(--brand);
             border-radius: var(--radius);
             padding: 24px;
             margin-bottom: 16px;
@@ -135,7 +133,6 @@
         }
 
         .code-value {
-            font-family: Arial, Helvetica, sans-serif;
             font-size: clamp(1.3rem, 6vw, 1.7rem);
             font-weight: 700;
             letter-spacing: 0.04em;
@@ -155,7 +152,7 @@
             border-radius: 8px;
             border: none;
             background: #ffffff;
-            color: var(--accent-dark);
+            color: var(--brand);
             font-family: Arial, Helvetica, sans-serif;
             font-size: 0.85rem;
             font-weight: 700;
@@ -375,7 +372,7 @@
             }
 
             .empty-state a {
-                color: var(--accent);
+                color: var(--brand);
                 font-weight: 700;
                 text-decoration: none;
             }
@@ -428,7 +425,7 @@
             }
 
             #toast.info {
-                border-left: 4px solid var(--accent);
+                border-left: 4px solid var(--brand);
             }
 
         @media (max-width: 480px) {
@@ -459,112 +456,168 @@
         }
 
         /* ══════════════════════════════════════════════════════
-           SITE-WIDE HEADER / SIDE NAV (matches home.html layout)
+           SITE-WIDE HEADER
            ══════════════════════════════════════════════════════ */
         header {
             width: 100%;
-            background: var(--surface);
-            border-bottom: 1px solid var(--border);
-            padding: 15px 30px;
+            background: var(--brand);
+            padding: 12px 20px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
+            justify-content: center;
             position: sticky;
             top: 0;
             z-index: 10005;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
         }
 
         .logo-area {
             display: flex;
             align-items: center;
-            margin-left: 40px;
-            gap: 15px;
+            gap: 12px;
         }
 
         #logo {
-            width: 52px;
-            height: 52px;
+            width: 44px;
+            height: 44px;
             border-radius: 10px;
             object-fit: cover;
         }
 
-        .brand {
-            color: var(--ink);
+        .brand-text h2 {
+            margin: 0;
+            font-size: 1.1rem;
+            color: #ffffff;
         }
 
-            .brand h2 {
-                margin: 0;
-                font-family: Arial, Helvetica, sans-serif;
-                font-size: 1.1rem;
-            }
+        .brand-text p {
+            margin: 0;
+            font-size: 12px;
+            color: rgba(255,255,255,0.75);
+        }
 
-            .brand p {
-                margin: 0;
-                font-size: 13px;
-                color: var(--muted);
-            }
-
+        /* ── Hamburger ── */
         .menu-btn {
-            position: fixed;
-            top: 20px;
-            left: 1px;
-            width: 50px;
-            height: 50px;
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
             border: none;
-            border-radius: 12px;
-            background: none;
-            color: var(--ink);
-            font-size: 24px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.12);
+            color: #ffffff;
+            font-size: 20px;
             cursor: pointer;
-            z-index: 10005;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10006;
         }
 
+            .menu-btn:active {
+                background: rgba(255,255,255,0.22);
+            }
+
+        /* ── Side menu (mobile-first) ── */
         .side-menu {
             position: fixed;
             top: 0;
-            left: -260px;
-            width: 260px;
+            left: -280px;
+            width: 78vw;
+            max-width: 300px;
             height: 100%;
-            background: #14201c;
-            z-index: 10002;
-            transition: 0.3s;
-            padding-top: 80px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.4);
+            background: var(--brand);
+            z-index: 10007;
+            transition: left 0.3s ease;
+            padding-top: 20px;
+            padding-bottom: 24px;
+            box-shadow: 4px 0 24px rgba(0,0,0,0.35);
             overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
             .side-menu.active {
                 left: 0;
             }
 
-            .side-menu a {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                color: #ffffff;
-                text-decoration: none;
-                padding: 16px 22px;
-                border-bottom: 1px solid rgba(255,255,255,0.08);
-                font-size: 15px;
-                font-weight: 500;
-                transition: background 0.2s;
+        .side-menu-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 20px 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.12);
+            margin-bottom: 8px;
+        }
+
+            .side-menu-header img {
+                width: 40px;
+                height: 40px;
+                border-radius: 9px;
+                object-fit: cover;
             }
 
-                .side-menu a:hover {
-                    background: rgba(15,122,92,0.35);
-                }
+            .side-menu-header span {
+                color: #ffffff;
+                font-weight: bold;
+                font-size: 1.05rem;
+            }
 
-                .side-menu a.active-link {
-                    background: rgba(15,122,92,0.25);
-                    color: #6fd6b0;
-                    border-left: 3px solid #6fd6b0;
-                    padding-left: 19px;
-                }
+        .side-menu-close {
+            margin-left: auto;
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.7);
+            font-size: 22px;
+            cursor: pointer;
+            padding: 6px;
+            line-height: 1;
+        }
+
+        .side-menu a {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            color: #ffffff;
+            text-decoration: none;
+            padding: 15px 22px;
+            font-size: 15px;
+            font-weight: 600;
+            transition: background 0.2s;
+        }
+
+            .side-menu a .icon {
+                font-size: 18px;
+                width: 22px;
+                text-align: center;
+                flex-shrink: 0;
+            }
+
+            .side-menu a .label {
+                flex: 1;
+            }
+
+            .side-menu a:hover,
+            .side-menu a:active {
+                background: rgba(255,255,255,0.1);
+            }
+
+            .side-menu a.active-link {
+                background: rgba(255,255,255,0.14);
+                border-left: 3px solid #ffffff;
+                padding-left: 19px;
+            }
+
+        .side-menu .logout-link {
+            margin-top: auto;
+            border-top: 1px solid rgba(255,255,255,0.12);
+        }
 
         .menu-badge {
-            background: var(--accent);
-            color: white;
+            background: #ffffff;
+            color: var(--brand);
             border-radius: 6px;
             font-size: 11px;
             font-weight: 700;
@@ -578,7 +631,6 @@
             position: fixed;
             inset: 0;
             background: rgba(0,0,0,0.5);
-            top: 90px;
             display: none;
             z-index: 10000;
         }
@@ -587,36 +639,13 @@
                 display: block;
             }
 
-        .uni {
-            background-color: var(--accent);
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            height: 40px;
-            padding: 0 14px;
-            cursor: pointer;
-            color: white;
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-            .uni:hover {
-                background-color: var(--accent-dark);
-            }
-
-        @media (max-width: 768px) {
-            header {
-                justify-content: center;
-                gap: 10px;
-            }
-        }
-
         /* ══════════════════════════════════════════════════════
            SHARE POPUP
            ══════════════════════════════════════════════════════ */
         .share-popup-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(20,32,28,0.55);
+            background: rgba(20,20,20,0.55);
             display: none;
             justify-content: center;
             align-items: center;
@@ -659,10 +688,9 @@
         }
 
             .share-popup-header h3 {
-                font-family: Arial, Helvetica, sans-serif;
                 font-weight: 700;
                 font-size: 1.1rem;
-                color: var(--ink);
+                color: var(--brand);
             }
 
         .share-popup-close {
@@ -709,7 +737,7 @@
         }
 
             .share-option:hover {
-                border-color: var(--accent);
+                border-color: var(--brand);
                 transform: translateY(-2px);
             }
 
@@ -723,42 +751,55 @@
                 font-weight: 600;
                 text-align: center;
             }
+
+        @media (max-width: 600px) {
+            .brand-text h2 {
+                font-size: 1rem;
+            }
+        }
     </style>
 </head>
 <body>
 
     <header>
+        <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu">☰</button>
         <div class="logo-area">
-            <button class="menu-btn" onclick="toggleMenu()">☰</button>
             <img src="logo.jpg" id="logo" alt="logo">
-            <div class="brand">
+            <div class="brand-text">
                 <h2>Qeja Connect</h2>
                 <p>Quality accommodation providence</p>
             </div>
         </div>
-        <a href="mytenancy.html"><button class="uni">🏠 My house</button></a>
     </header>
 
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
     <div class="side-menu" id="sideMenu">
-        <a href="home.html">🏠 Home</a>
-        <a href="landlords.html">🏘 Landlords</a>
-        <a href="contact.html">📞 Contact</a>
+        <div class="side-menu-header">
+            <img src="logo.jpg" alt="logo">
+            <span>Qeja Connect</span>
+            <button class="side-menu-close" onclick="closeMenu()" aria-label="Close menu">&times;</button>
+        </div>
+
+        <a href="home.html"><span class="icon">🏠</span><span class="label">Home</span></a>
+        <a href="landlords.html"><span class="icon">🏘️</span><span class="label">Landlords</span></a>
+        <a href="contact.html"><span class="icon">📞</span><span class="label">Contact</span></a>
         <a href="hostdashboard.html" id="menuDashboard">
-            📊 Dashboard
+            <span class="icon">📊</span><span class="label">Dashboard</span>
             <span id="menuDashboardBadge" class="menu-badge" style="display:none;"></span>
         </a>
-        <a href="myprofile.html">👤 Profile</a>
+        <a href="myprofile.html"><span class="icon">👤</span><span class="label">Profile</span></a>
         <a href="mymessages.html" id="menuMessages">
-            💬 Messages from QejaConnect
+            <span class="icon">💬</span><span class="label">Messages</span>
             <span id="navNotifBadge" class="menu-badge" style="display:none;">0</span>
         </a>
-        <a href="bookings.html">📌 My Bookings</a>
-        <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-            🚪 Log out
+        <a href="bookings.html"><span class="icon">📌</span><span class="label">My Bookings</span></a>
+        <a href="mytenancy.html"><span class="icon">🔑</span><span class="label">My House</span></a>
+        <a href="refer-earn.html"><span class="icon">🎉</span><span class="label">Refer & earn</span></a>
+
+        <a class="logout-link" href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
+            <span class="icon">🚪</span><span class="label">Log out</span>
         </a>
-        <a href="refer-earn.html">🎉 Refer & earn</a>
     </div>
 
     <div class="page">
