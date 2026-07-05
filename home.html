@@ -896,7 +896,7 @@
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
     <div class="side-menu" id="sideMenu">
-        <a href="property-group.html">Chat with housemates</a>
+        <a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>
         <a href="landlords.html"> Landlords</a>
         <a href="contact.html">📞Contact</a>
         <a href="hostdashboard.html" id="menuDashboard">
@@ -1761,6 +1761,38 @@
 
 
         loadFeed();
+    </script>
+    <script>
+        async function goToMyGroup() {
+        if (!token || !userId) {
+        alert("Please login first");
+        return;
+        }
+
+        if (userRole === "landlord") {
+        location.href = "my-groups.html";
+        return;
+        }
+
+        // Tenant: find their active tenancy's property and jump straight there
+        try {
+        const res = await fetch(
+        `https://qeja-backend-azkf.onrender.com/tenancy/tenant/${userId}`,
+        { headers: { "Authorization": "Bearer " + token } }
+        );
+        const data = await res.json();
+
+        if (!data.success || !data.tenancy) {
+        alert("You don't have an active tenancy yet, so there's no group chat to join.");
+        return;
+        }
+
+        location.href = `property-group.html?property_id=${data.tenancy.property_id}`;
+        } catch (err) {
+        console.error(err);
+        alert("Couldn't open your group chat. Please try again.");
+        }
+        }
     </script>
     <script>
         function toggleTheme() {
