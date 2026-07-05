@@ -1764,6 +1764,13 @@
         loadFeed();
     </script>
     <script>
+        const token    = localStorage.getItem("token");
+        const role     = localStorage.getItem("role");
+        let   userId   = null;
+        try {
+            userId = JSON.parse(localStorage.getItem("loggedUser") || "{}").id;
+        } catch (e) { /* ignore */ }
+
         async function goToMyGroup() {
         if (!token || !userId) {
         alert("Please login first");
