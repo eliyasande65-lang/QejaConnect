@@ -2,17 +2,17 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="manifest" href="/QejaConnect/manifest.json">
+    <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1a1535">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
-    <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+    <link rel="apple-touch-icon" href="logo.jpg">
     <!--brotherfromanothermother-->
     <script>
         (function() {
         if (!localStorage.getItem('token')) {
-        window.location.replace('login.html');
+        //window.location.replace('login.html');
         }
         })();
     </script>
@@ -896,26 +896,26 @@
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
     <div class="side-menu" id="sideMenu">
-        
+        <button class="menu-btn" onclick="toggleMenu()">☰</button>
         <a href="landlords.html"> Landlords</a>
-        <a href="contact.html">📞Contact</a>
+        <a href="contact.html">Contact</a>
         <a href="hostdashboard.html" id="menuDashboard">
             Dashboard
             <span id="menuDashboardBadge" class="menu-badge" style="display:none;"></span>
         </a>
         <a href="myprofile.html">Profile</a>
         <a href="mymessages.html" id="menuMessages">
-            💬 Support team
+            Support team
             <span id="navNotifBadge" class="menu-badge" style="display:none;">0</span>
         </a>
-        <a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>
+        <a href="#" onclick="goToMyGroup(); return false;">Chat with housemates</a>
         <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-            ! Log out
+            Log out
         </a>
 
         <a href="refer-earn.html">Refer & earn</a>
         <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
-            🌙 Theme
+            Theme
         </button>
     </div>
 
@@ -1767,7 +1767,7 @@
 
         async function goToMyGroup() {
         const token    = localStorage.getItem("token");
-        const role     = localStorage.getItem("role");
+        const userRole     = localStorage.getItem("role");
         let   userId   = null;
         try {
             userId = JSON.parse(localStorage.getItem("loggedUser") || "{}").id;
