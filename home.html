@@ -890,7 +890,7 @@
                 <p>Quality accommodation providence</p>
             </div>
         </div>
-        <a href="mytenancy.html"><button class="uni">🏠 My house 🔴</button></a>
+       <button class="uni">🏠 My house 🔴</button></a>
     </header>
 
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
@@ -1802,6 +1802,19 @@
         alert("Couldn't open your group chat. Please try again.");
         }
         }
+
+        const role    = localStorage.getItem("role");
+        const myhoue=document.querySelector('.uni').addEventListener('click', () => {
+            if (role==="landlord"){
+                location.href="landlord-tenants.html";
+                return;
+            } else if(role==="tenant"){
+                location.href="mytenancy.html";
+                return;
+            } else {
+                alert('Please login first');
+            }
+        });
     </script>
     <script>
         function toggleTheme() {
