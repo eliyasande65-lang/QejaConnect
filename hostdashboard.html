@@ -454,10 +454,14 @@
         <button class="add" onclick="location.href='bookings.html'">📋 Track My Booking</button>
     </div>
 
-    <div class="section-title">Your Properties</div>
-    <div class="dashboard" id="myProperties"></div>
+    <!-- FIX: wrapped so this whole section (heading + cards) can be
+         hidden for tenants — it's landlord-only content. -->
+    <div id="propertiesSection">
+        <div class="section-title">Your Properties</div>
+        <div class="dashboard" id="myProperties"></div>
+    </div>
 
-    <div class="dashboard" id="dashboard"<a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>></div>
+    <div class="dashboard" id="dashboard"></div>
 
     <div class="section-title">Your Chats</div>
 
@@ -483,18 +487,21 @@
         }
 
         // ── SHOW/HIDE ACTIONS BASED ON ROLE ──────────────────────
-        // Landlords see "Add Property" + "Inquiries".
-        // Tenants see "Track My Booking" instead.
+        // Landlords see "Add Property" + "Inquiries" + "Your Properties".
+        // Tenants see "Track My Booking" instead, and no properties section.
         function setupRoleUI() {
-        const landlordActions = document.getElementById("landlordActions");
-        const tenantActions   = document.getElementById("tenantActions");
+        const landlordActions   = document.getElementById("landlordActions");
+        const tenantActions     = document.getElementById("tenantActions");
+        const propertiesSection = document.getElementById("propertiesSection");
 
         if (userRole === "tenant") {
-        if (landlordActions) landlordActions.style.display = "none";
-        if (tenantActions)   tenantActions.style.display   = "block";
+        if (landlordActions)   landlordActions.style.display   = "none";
+        if (tenantActions)     tenantActions.style.display     = "block";
+        if (propertiesSection) propertiesSection.style.display = "none";
         } else {
-        if (landlordActions) landlordActions.style.display = "";
-        if (tenantActions)   tenantActions.style.display   = "none";
+        if (landlordActions)   landlordActions.style.display   = "";
+        if (tenantActions)     tenantActions.style.display     = "none";
+        if (propertiesSection) propertiesSection.style.display = "";
         }
         }
 
@@ -515,11 +522,17 @@
         return;
         }
 
+        // FIX: the /landlord/interests/:id endpoint aliases these columns
+        // as property_title / tenant_name / tenant_email (see backend SQL:
+        // "p.title AS property_title", "t.fullname AS tenant_name",
+        // "t.email AS tenant_email"). The old code read r.title / r.fullname /
+        // r.email, none of which exist on the row, so every card rendered
+        // "undefined" for title, tenant name, and email.
         dashboard.innerHTML = data.data.map(r => `
         <div class="card">
-        <h3>${r.title}</h3>
-        <p><b>Tenant:</b> ${r.fullname}</p>
-        <p><b>Email:</b> ${r.email}</p>
+        <h3>${r.property_title}</h3>
+        <p><b>Tenant:</b> ${r.tenant_name}</p>
+        <p><b>Email:</b> ${r.tenant_email}</p>
         <p><b>Message:</b> ${r.message}</p>
         <p><b>Date:</b> ${new Date(r.created_at).toLocaleString()}</p>
         </div>
