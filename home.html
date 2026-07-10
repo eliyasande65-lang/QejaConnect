@@ -890,7 +890,13 @@
                 <p>Quality accommodation providence</p>
             </div>
         </div>
-       <button class="uni">🏠 My house 🔴</button></a>
+        <div style="display:flex;align-items:center;gap:12px;">
+            <button class="uni">🏠 My house 🔴</button>
+            <a href="notification.html" id="bellIcon" title="Notifications" style="position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);text-decoration:none;color:white;font-size:22px;">
+                🔔
+                <span id="bellBadge" class="menu-badge" style="display:none;position:absolute;top:-4px;right:-4px;font-size:10px;padding:1px 6px;">0</span>
+            </a>
+        </div>
     </header>
 
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
@@ -1771,7 +1777,7 @@
         const userRole     = localStorage.getItem("role");
         let   userId   = null;
         try {
-            userId = JSON.parse(localStorage.getItem("loggedUser") || "{}").id;
+        userId = JSON.parse(localStorage.getItem("loggedUser") || "{}").id;
         } catch (e) { /* ignore */ }
 
         if (!token || !userId) {
@@ -1806,15 +1812,15 @@
 
         const role    = localStorage.getItem("role");
         const myhoue=document.querySelector('.uni').addEventListener('click', () => {
-            if (role==="landlord"){
-                location.href="landlord_tenants.html";
-                return;
-            } else if(role==="tenant"){
-                location.href="mytenancy.html";
-                return;
-            } else {
-                alert('Please login first');
-            }
+        if (role==="landlord"){
+        location.href="landlord_tenants.html";
+        return;
+        } else if(role==="tenant"){
+        location.href="mytenancy.html";
+        return;
+        } else {
+        alert('Please login first');
+        }
         });
     </script>
     <script>
