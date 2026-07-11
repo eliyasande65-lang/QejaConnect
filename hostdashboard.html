@@ -474,6 +474,14 @@
     <div class="dashboard tab-content" id="tenantChats"></div>
 
     <script>
+        // Mark every currently-fetched request as "checked" so the
+        // Dashboard and Inquiries badges on other pages clear.
+        try {
+            const allIds = data.data.map(r => r.id);
+            localStorage.setItem('seenRequests', JSON.stringify(allIds));
+        } catch (err) {
+            console.error('Could not update seenRequests:', err);
+        }
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
         const token      = localStorage.getItem("token");
         const userId     = loggedUser?.id;
@@ -875,7 +883,7 @@
         msgBadge.style.display = 'inline-block';
         }
 
-        // ── New booking requests → Dashboard badge ──
+        // ── New booking requests → Dashboard badge + Inquiries badge ──
         // (landlords only — tenants have no "interests" to fetch)
         const role   = localStorage.getItem('role');
         const userId = JSON.parse(localStorage.getItem('loggedUser') || '{}')?.id;
@@ -884,37 +892,36 @@
         const reqRes  = await fetch(`https://qeja-backend-azkf.onrender.com/landlord/interests/${userId}`);
         const reqData = await reqRes.json();
 
-        // Dashboard badge = "unseen" interests since last visit to My Tenants
-        let unseenRequests = 0;
+        // Both badges now share one definition of "unchecked": requests
+        // whose id hasn't been recorded in 'seenRequests' yet. That list
+        // gets written the moment the landlord opens landlord_tenants.html
+        // (see the snippet for that page below), so both badges clear
+        // together as soon as the requests are actually looked at.
+        let uncheckedCount = 0;
         if (reqData.success && reqData.data?.length) {
-        let seenReqs = [];
-        try { seenReqs = JSON.parse(localStorage.getItem('seenRequests') || '[]'); } catch {}
-        unseenRequests = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
+            let seenReqs = [];
+            try { seenReqs = JSON.parse(localStorage.getItem('seenRequests') || '[]'); } catch {}
+            uncheckedCount = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
         }
 
         const dashBadge = document.getElementById('menuDashboardBadge');
-        if (dashBadge && unseenRequests > 0) {
-        dashBadge.textContent = unseenRequests;
-        dashBadge.style.display = 'inline-block';
-        }
-
-        // Inquiries badge = count of bookings still PENDING (mirrors the
-        // "Pending" stat on landlord_tenants.html). This stays accurate
-        // even after visiting that page, unlike "unseen" counts, since it
-        // only clears once a booking is approved/rejected — not just viewed.
-        let pendingCount = 0;
-        if (reqData.success && reqData.data?.length) {
-        pendingCount = reqData.data.filter(r => (r.status || 'pending') === 'pending').length;
+        if (dashBadge) {
+            if (uncheckedCount > 0) {
+                dashBadge.textContent = uncheckedCount;
+                dashBadge.style.display = 'inline-block';
+            } else {
+                dashBadge.style.display = 'none';
+            }
         }
 
         const inqBadge = document.getElementById('inquiriesBadge');
         if (inqBadge) {
-        if (pendingCount > 0) {
-        inqBadge.textContent = pendingCount;
-        inqBadge.style.display = 'inline-block';
-        } else {
-        inqBadge.style.display = 'none';
-        }
+            if (uncheckedCount > 0) {
+                inqBadge.textContent = uncheckedCount;
+                inqBadge.style.display = 'inline-block';
+            } else {
+                inqBadge.style.display = 'none';
+            }
         }
 
         } catch (err) {
