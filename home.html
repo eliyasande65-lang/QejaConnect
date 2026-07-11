@@ -1856,8 +1856,10 @@
         if (href && path && href.includes(path)) a.classList.add('active-link');
         });
 
+        let totalUnread = 0;
+
+        // ── Support message replies ──────────────────────────────
         try {
-        // Messages badge
         const msgRes  = await fetch('https://qeja-backend-azkf.onrender.com/my-messages', {
         headers: { 'Authorization': 'Bearer ' + token }
         });
@@ -1868,11 +1870,16 @@
         const unread = msgData.messages.filter(m => m.reply && !seen.includes(m.id)).length;
         const msgBadge = document.getElementById('navNotifBadge');
         if (msgBadge && unread > 0) { msgBadge.textContent = unread; msgBadge.style.display = 'inline-block'; }
+        totalUnread += unread;
         }
+        } catch (err) { console.error('Menu badge error (messages):', err); }
 
-        // Dashboard badge
+        // ── Landlord dashboard: new booking interests ────────────
         const userId = JSON.parse(localStorage.getItem('loggedUser') || '{}')?.id;
-        if (!userId) return;
+        const role   = localStorage.getItem('role');
+
+        if (userId && role === 'landlord') {
+        try {
         const reqRes  = await fetch(`https://qeja-backend-azkf.onrender.com/landlord/interests/${userId}`);
         const reqData = await reqRes.json();
         if (reqData.success && reqData.data?.length) {
@@ -1881,9 +1888,55 @@
         const unseen = reqData.data.filter(r => !seenReqs.includes(r.id)).length;
         const dashBadge = document.getElementById('menuDashboardBadge');
         if (dashBadge && unseen > 0) { dashBadge.textContent = unseen; dashBadge.style.display = 'inline-block'; }
+        totalUnread += unseen;
         }
-        } catch (err) {
-        console.error('Menu badge error:', err);
+        } catch (err) { console.error('Menu badge error (dashboard):', err); }
+        }
+
+        // ── Tenant: booking status changes + active tenancy ──────
+        if (userId && role === 'tenant') {
+        try {
+        let seenIds = [];
+        try { seenIds = JSON.parse(localStorage.getItem('notif_seen_ids') || '[]'); } catch {}
+
+        const bookRes  = await fetch(`https://qeja-backend-azkf.onrender.com/bookings/tenant/${userId}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const bookData = await bookRes.json();
+        if (bookData.success) {
+        totalUnread += bookData.bookings.filter(b => !seenIds.includes(`booking-${b.id}`)).length;
+        }
+
+        const tenRes  = await fetch(`https://qeja-backend-azkf.onrender.com/tenancy/tenant/${userId}`, {
+        headers: { 'Authorization': 'Bearer ' + token }
+        });
+        const tenData = await tenRes.json();
+        if (tenData.success && tenData.tenancy && !seenIds.includes(`tenancy-${tenData.tenancy.id}`)) {
+        totalUnread += 1;
+        }
+        } catch (err) { console.error('Menu badge error (tenant):', err); }
+        }
+
+        // ── Platform-wide updates (announcements, alerts, etc.) ──
+        try {
+        const upRes  = await fetch('https://qeja-backend-azkf.onrender.com/updates');
+        const upData = await upRes.json();
+        if (upData.success && upData.updates?.length) {
+        let seenIds = [];
+        try { seenIds = JSON.parse(localStorage.getItem('notif_seen_ids') || '[]'); } catch {}
+        totalUnread += upData.updates.filter(u => !seenIds.includes(`update-${u.id}`)).length;
+        }
+        } catch (err) { console.error('Menu badge error (updates):', err); }
+
+        // ── Bell icon: combined unread count ──────────────────────
+        const bellBadge = document.getElementById('bellBadge');
+        if (bellBadge) {
+        if (totalUnread > 0) {
+        bellBadge.textContent = totalUnread > 99 ? '99+' : totalUnread;
+        bellBadge.style.display = 'inline-block';
+        } else {
+        bellBadge.style.display = 'none';
+        }
         }
         })();
     </script>
