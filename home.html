@@ -1705,7 +1705,7 @@
         <div class="price">Ksh ${property.price}</div>
         <div class="location">${property.location}</div>
         <p>${property.description}</p>
-        <a href= "landlord-profile.html? who= ${property.landlord_name} && landlord_id=property.landlord_id"><small>Posted by: ${property.landlord_name || "Unknown"}</small></a>
+        <a href="landlord-profile.html?landlord_id=${property.landlord_id}&who=${encodeURIComponent(property.landlord_name || '')}"><small>Posted by: ${property.landlord_name || "Unknown"}</small></a>
         ${own ? `<span class="booked-tag" style="color:#b8720b;">📌 This is your listing</span>` : ''}
         ${sortByBooked ? `<span class="booked-tag">🔥 ${property.booking_count || 0} booking${(property.booking_count || 0) === 1 ? '' : 's'}</span>` : ''}
         <button class="view-btn" onclick='openPopup(${JSON.stringify(property)})'>View Details</button>
