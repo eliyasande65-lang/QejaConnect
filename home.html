@@ -24,6 +24,52 @@
         .catch(err => console.error('SW error:', err));
         });
         }
+        const VAPID_PUBLIC_KEY = "BE3u50iOkmwX_n3S2hUaKLq31fQ1RCS45GoMKnUghiYsJqfyH8rH4LfqmERRDFKCbS9DA5sLxVscw6oIX6nyjg8"; 
+            function urlBase64ToUint8Array(base64String) {
+              const padding = '='.repeat((4 - base64String.length % 4) % 4);
+              const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+              const rawData = window.atob(base64);
+              return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+            }
+
+            async function subscribeToPush() {
+              if (!('serviceWorker' in navigator) || !('PushManager' in window)) {
+                console.warn('Push not supported on this browser');
+                return;
+              }
+
+              const permission = await Notification.requestPermission();
+              if (permission !== 'granted') {
+                console.warn('Notification permission not granted:', permission);
+                return;
+              }
+
+              const reg = await navigator.serviceWorker.ready;
+
+              let subscription = await reg.pushManager.getSubscription();
+              if (!subscription) {
+                subscription = await reg.pushManager.subscribe({
+                  userVisibleOnly: true,
+                  applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY)
+                });
+              }
+
+              await fetch("https://qeja-backend-azkf.onrender.com/subscribe", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(subscription)
+              });
+            }
+
+            // Trigger it — ideally on a user gesture (button tap) rather than page load,
+            // since iOS/Chrome are more likely to honor the prompt that way.
+            document.getElementById('bellIcon')?.addEventListener('click', (e) => {
+              // don't block navigation to notification.html — fire and forget
+              subscribeToPush();
+            });
+
+            // Or just call it once per session on load (some browsers allow this):
+            subscribeToPush();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Qeja Connect | Home</title>
