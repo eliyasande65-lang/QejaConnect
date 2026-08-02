@@ -67,8 +67,7 @@
               // don't block navigation to notification.html — fire and forget
               subscribeToPush();
             });
-
-            // Or just call it once per session on load (some browsers allow this):
+           
             subscribeToPush();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -942,7 +941,7 @@
                     style="display:flex;align-items:center;gap:6px;background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.25);color:white;padding:8px 14px;border-radius:20px;font-size:13px;font-weight:600;cursor:pointer;">
                 🤖 Ask AI
             </button>
-            <a href="notification.html" id="bellIcon" title="Notifications" style="position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);text-decoration:none;color:white;font-size:22px;">
+            <a href="notification.html" onclick="maybeShowNotifPrompt()" id="bellIcon" title="Notifications" style="position:relative;display:flex;align-items:center;justify-content:center;width:44px;height:44px;border-radius:50%;background:rgba(255,255,255,0.08);text-decoration:none;color:white;font-size:22px;">
                 🔔
                 <span id="bellBadge" class="menu-badge" style="display:none;position:absolute;top:-4px;right:-4px;font-size:10px;padding:1px 6px;">0</span>
             </a>
@@ -1132,6 +1131,29 @@
         toast.classList.remove("show");
         setTimeout(() => toast.remove(), 300);
         }, duration);
+        }
+
+        function maybeShowNotifPrompt() {
+          if (Notification.permission !== 'default') return; // already granted or denied — don't ask again
+  
+          const banner = document.createElement('div');
+          banner.style.cssText = `position:fixed;bottom:20px;left:50%;transform:translateX(-50%);
+            background:#1a1535;color:white;padding:14px 20px;border-radius:12px;
+            display:flex;gap:12px;align-items:center;z-index:999998;box-shadow:0 6px 18px rgba(0,0,0,.25);`;
+          banner.innerHTML = `
+            <span>🔔 Get notified about new messages & updates</span>
+            <button id="enableNotifBtn" style="background:white;color:#1a1535;border:none;
+              padding:8px 14px;border-radius:8px;font-weight:bold;cursor:pointer;">Enable</button>
+            <button id="dismissNotifBtn" style="background:none;color:#ccc;border:none;
+              cursor:pointer;font-size:18px;">✕</button>
+          `;
+          document.body.appendChild(banner);
+
+          document.getElementById('enableNotifBtn').onclick = async () => {
+            banner.remove();
+            await subscribeToPush(); // your existing function
+          };
+          document.getElementById('dismissNotifBtn').onclick = () => banner.remove();
         }
     </script>
 
