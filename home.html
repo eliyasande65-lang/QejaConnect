@@ -1708,57 +1708,50 @@
         }
 
         function renderProperties(searchText) {
-        const grid  = document.getElementById("propertyGrid");
-        const count = document.getElementById("resultsCount");
-        let list    = [...allProperties];
+  const grid  = document.getElementById("propertyGrid");
+  const count = document.getElementById("resultsCount");
+  let list    = [...allProperties];
+  // ... your existing filter logic ...
 
-        // Location chip filter
-        if (activeLocation !== "all") {
-        list = list.filter(p => (p.location || "").toLowerCase() === activeLocation.toLowerCase());
-        }
+  grid.innerHTML = "";
+  count.textContent = `${list.length} propert${list.length === 1 ? 'y' : 'ies'} found`;
 
-        // Text search box (town/area) — works alongside the chip filter
-        if (searchText) {
-        list = list.filter(p =>
-        (p.location || "").toLowerCase().includes(searchText) ||
-        (p.title || "").toLowerCase().includes(searchText) ||
-        (p.description || "").toLowerCase().includes(searchText)
-        );
-        }
+  if (!list.length) {
+    grid.innerHTML = `<p style="text-align:center;color:#999;padding:40px;">No properties match this filter.</p>`;
+    return;
+  }
 
-        // Most booked sort
-        if (sortByBooked) {
-        list.sort((a, b) => (b.booking_count || 0) - (a.booking_count || 0));
-        }
+  const myId = getLoggedInUserId();
 
-        grid.innerHTML = "";
-        count.textContent = `${list.length} propert${list.length === 1 ? 'y' : 'ies'} found`;
-
-        if (!list.length) {
-        grid.innerHTML = `<p style="text-align:center;color:#999;padding:40px;">No properties match this filter.</p>`;
-        return;
-        }
-
-        const myId = getLoggedInUserId();
-
-        list.forEach(property => {
-        const own = myId && property.landlord_id != null && String(property.landlord_id) === myId;
-        grid.innerHTML += `
-        <div class="property-card">
-        <img src="${property.image_url}" />
-        <div class="property-info">
+  list.forEach((property) => {
+    const own = myId && property.landlord_id != null && String(property.landlord_id) === myId;
+    grid.innerHTML += `
+    <div class="property-card">
+      <img src="${property.image_url}" />
+      <div class="property-info">
         <h3>${property.title}</h3>
         <div class="price">Ksh ${property.price}</div>
         <div class="location">${property.location}</div>
         <p>${property.description}</p>
         <a href="landlord-profile.html?id=${property.landlord_id}&who=${encodeURIComponent(property.landlord_name || '')}">
+          <small>Posted by: ${property.landlord_name || "Unknown"}</small>
+        </a>
         ${own ? `<span class="booked-tag" style="color:#b8720b;">📌 This is your listing</span>` : ''}
         ${sortByBooked ? `<span class="booked-tag">🔥 ${property.booking_count || 0} booking${(property.booking_count || 0) === 1 ? '' : 's'}</span>` : ''}
-        <button class="view-btn" onclick='openPopup(${JSON.stringify(property)})'>View Details</button>
-        </div>
-        </div>`;
-        });
-        }
+        <button class="view-btn" data-property-id="${property.id}">View Details</button>
+      </div>
+    </div>`;
+  });
+
+  // Attach click handlers after render — no inline JSON in HTML at all
+  grid.querySelectorAll('.view-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const id = btn.getAttribute('data-property-id');
+      const property = allProperties.find(p => String(p.id) === String(id));
+      if (property) openPopup(property);
+    });
+  });
+}
     </script>
 
     <script>
