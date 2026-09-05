@@ -6,9 +6,9 @@
 
     <!-- PWA Manifest -->
     <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/x-icon" href="/QejaConnect/favicon.ico">
-    <link rel="icon" type="image/png" sizes="192x192" href="/QejaConnect/logo-192.png">
-    <link rel="icon" type="image/png" sizes="512x512" href="/QejaConnect/logo-512.png">
+    <link rel="icon" type="image/x-icon" href="favicon.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="logo-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="logo-512.png">
     <!-- Theme colour -->
     <meta name="theme-color" content="#1a1535">
 
@@ -22,8 +22,8 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="Qeja Connect — Find Rental Accommodation in Kenya">
     <meta property="og:description" content="Qeja Connect links tenants with verified landlords. Browse listings, chat directly, and secure your home with ease.">
-    <meta property="og:url" content="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">
-    <meta property="og:image" content="https://eliyasande65-lang.github.io/QejaConnect/logo-512.png">
+    <meta property="og:url" content="https://qejaconnect.co.ke/index.html">
+    <meta property="og:image" content="https://qejaconnect.co.ke/logo-512.png">
     <meta property="og:site_name" content="Qeja Connect">
     <meta property="og:locale" content="en_KE">
     <!-- iOS home-screen support -->
@@ -46,7 +46,7 @@
     <script>
         if ('serviceWorker' in navigator) {
         window.addEventListener('load', async () => {
-        const reg = await navigator.serviceWorker.register('/QejaConnect/sw.js');
+        const reg = await navigator.serviceWorker.register('sw.js');
         console.log('SW registered:', reg.scope);
         setTimeout(async () => {
         if ('Notification' in window && Notification.permission === 'default') {
