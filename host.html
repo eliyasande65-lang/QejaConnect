@@ -955,11 +955,36 @@
         </div>
     </div>
 
+
+	<!-- ── OTP verification modal ── -->
+	<div class="modal-overlay" id="otpModal">
+		<div class="modal-card" style="max-width:420px;">
+			<div class="modal-header">
+				<h2>Verify your email</h2>
+				<button class="modal-close" id="closeOtpModal" aria-label="Close">✕</button>
+			</div>
+			<div class="modal-body" style="text-align:center;">
+				<p style="color:var(--muted); margin-bottom:18px;">
+					We sent a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below to verify your account.
+				</p>
+				<input type="text" id="otpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*"
+					   placeholder="••••••"
+					   style="text-align:center; font-size:1.4rem; letter-spacing:8px; font-weight:600;">
+					<button type="button" class="submit-btn" id="verifyOtpBtn" style="margin-top:18px;">Verify</button>
+					<p style="margin-top:16px; font-size:0.85rem; color:var(--muted);">
+						Didn't get it?
+						<button type="button" id="resendOtpBtn" style="background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;">Resend code</button>
+						<span id="resendCooldown"></span>
+					</p>
+				</div>
+		</div>
+	</div>
+	
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
     </div>
-
+	<script src="otp.js"></script>
     <script>
         const API = 'https://qeja-backend-azkf.onrender.com';
         let toastTimer;
@@ -1197,35 +1222,35 @@
 
         const btn = document.getElementById('createaccount');
         btn.innerHTML = '<span class="spinner"></span> Creating account…';
-        btn.classList.add('loading');
+			btn.classList.add('loading');
 
-        try {
-        const res  = await fetch(`${API}/register-landlord`, { method: 'POST', body: formData });
-        const data = await res.json();
+			try {
+			const res  = await fetch(`${API}/register-landlord`, { method: 'POST', body: formData });
+			const data = await res.json();
 
-        if (data.success) {
-        showToast("Application submitted! We'll notify you once approved.", 'success', 4000);
 
-        // Show the newly generated referral code if the backend returned one.
-        if (data.referral_code) {
-        document.getElementById('referralCodeText').textContent = data.referral_code;
-        document.getElementById('referralReveal').classList.add('show');
-        btn.style.display = 'none';
-        } else {
-        setTimeout(() => { window.location.href = 'login.html'; }, 3000);
-        }
-        } else {
-        showToast(data.message || 'Sign up failed. Please try again.', 'error');
-        btn.innerHTML = 'Create Host Account';
-        btn.classList.remove('loading');
-        }
-        } catch (err) {
-        console.error(err);
-        showToast('Network error. Please check your connection and try again.', 'error');
-        btn.innerHTML = 'Create Host Account';
-        btn.classList.remove('loading');
-        }
-        });
-    </script>
+			if (data.success) {
+			showToast("Application submitted! Check your email for a verification code.", 'success', 4000);
+
+			if (data.referral_code) {
+			document.getElementById('referralCodeText').textContent = data.referral_code;
+			document.getElementById('referralReveal').classList.add('show');
+			btn.style.display = 'none';
+			}
+
+			openOtpModal(email);
+			} else {
+			showToast(data.message || 'Sign up failed. Please try again.', 'error');
+			btn.innerHTML = 'Create Host Account';
+			btn.classList.remove('loading');
+			}
+			} catch (err) {
+			console.error(err);
+			showToast('Network error. Please check your connection and try again.', 'error');
+			btn.innerHTML = 'Create Host Account';
+			btn.classList.remove('loading');
+			}
+			});
+		</script>
 </body>
 </html>

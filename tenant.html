@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <link rel="manifest" href="/QejaConnect/manifest.json">
+		<link rel="manifest" href="/QejaConnect/manifest.json">
     <meta name="theme-color" content="#7c3aed">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
@@ -773,12 +773,37 @@
         </div>
     </div>
 
+	<!-- ── OTP verification modal ── -->
+	<div class="modal-overlay" id="otpModal">
+		<div class="modal-card" style="max-width:420px;">
+			<div class="modal-header">
+				<h2>Verify your email</h2>
+				<button class="modal-close" id="closeOtpModal" aria-label="Close">✕</button>
+			</div>
+			<div class="modal-body" style="text-align:center;">
+				<p style="color:var(--muted); margin-bottom:18px;">
+					We sent a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below to verify your account.
+				</p>
+				<input type="text" id="otpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*"
+					   placeholder="••••••"
+					   style="text-align:center; font-size:1.4rem; letter-spacing:8px; font-weight:600;">
+					<button type="button" class="submit-btn" id="verifyOtpBtn" style="margin-top:18px;">Verify</button>
+					<p style="margin-top:16px; font-size:0.85rem; color:var(--muted);">
+						Didn't get it?
+						<button type="button" id="resendOtpBtn" style="background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;">Resend code</button>
+						<span id="resendCooldown"></span>
+					</p>
+				</div>
+		</div>
+	</div>
+	
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
     </div>
 
-    <!-- Auto-fill referral code from URL (?ref=REF1042) -->
+    
+	<script src="otp.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
         const urlParams = new URLSearchParams(window.location.search);
@@ -971,10 +996,11 @@
 
         const data = await response.json();
 
-        if (response.ok) {
-        showToast('Account created! Redirecting to login… 🎉', 'success', 3000);
-        setTimeout(() => { window.location.replace('login.html'); }, 2500);
-        } else {
+       if (response.ok) {
+            showToast('Account created! Check your email for a verification code.', 'success', 3000);
+            openOtpModal(email);
+        } 
+		else {
         showToast(data.message || 'Sign up failed. Please try again.', 'error');
         btn.textContent = 'Create Account';
         btn.classList.remove('btn-loading');
