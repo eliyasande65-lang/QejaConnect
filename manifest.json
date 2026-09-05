@@ -2,7 +2,7 @@
   "name": "QejaConnect",
   "short_name": "QejaConnect",
   "description": "Secure your house easily — linking tenants with property owners.",
-  "start_url": "/QejaConnect/welcome.html",
+  "start_url": "/QejaConnect/index.html",
   "scope": "/QejaConnect/",
   "display": "standalone",
   "orientation": "portrait",
