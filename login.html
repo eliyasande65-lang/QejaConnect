@@ -49,390 +49,443 @@
     <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+		* {
+		box-sizing: border-box;
+		margin: 0;
+		padding: 0;
+		}
 
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
-            color: #222;
-            min-height: 100vh;
-        }
+		body {
+		font-family: Arial, sans-serif;
+		background: #f4f4f4;
+		color: #222;
+		min-height: 100vh;
+		}
 
-        /* ── HEADER (matches landlords.html) ── */
-        header {
-            background: #1a1535;
-            padding: 15px 30px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            color: white;
-        }
+		/* ── HEADER (matches landlords.html) ── */
+		header {
+		background: #1a1535;
+		padding: 15px 30px;
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		flex-wrap: wrap;
+		color: white;
+		}
 
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+		.logo-area {
+		display: flex;
+		align-items: center;
+		gap: 15px;
+		}
 
-        #logo {
-            width: 60px;
-            height: 60px;
-            border-radius: 12px;
-        }
+		#logo {
+		width: 60px;
+		height: 60px;
+		border-radius: 12px;
+		}
 
-        .logo-area h2 {
-            font-size: 1.2rem;
-        }
+		.logo-area h2 {
+		font-size: 1.2rem;
+		}
 
-        header a {
-            color: white;
-            text-decoration: none;
-            font-weight: bold;
-        }
+		header a {
+		color: white;
+		text-decoration: none;
+		font-weight: bold;
+		}
 
-        .page {
-            width: 100%;
-            max-width: 460px;
-            margin: 0 auto;
-            padding: 48px 16px 64px;
-        }
+		.page {
+		width: 100%;
+		max-width: 460px;
+		margin: 0 auto;
+		padding: 48px 16px 64px;
+		}
 
-        .page-heading {
-            text-align: center;
-            margin-bottom: 25px;
-        }
+		.page-heading {
+		text-align: center;
+		margin-bottom: 25px;
+		}
 
-        .logo-mark {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 56px;
-            height: 56px;
-            background: #1a1535;
-            border-radius: 12px;
-            font-size: 26px;
-            margin-bottom: 14px;
-        }
+		.logo-mark {
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		width: 56px;
+		height: 56px;
+		background: #1a1535;
+		border-radius: 12px;
+		font-size: 26px;
+		margin-bottom: 14px;
+		}
 
-        .page-heading h1 {
-            color: #1a1535;
-            font-size: 1.7rem;
-            margin: 0 0 6px;
-        }
+		.page-heading h1 {
+		color: #1a1535;
+		font-size: 1.7rem;
+		margin: 0 0 6px;
+		}
 
-        .page-heading p {
-            color: #666;
-            font-size: 14px;
-        }
+		.page-heading p {
+		color: #666;
+		font-size: 14px;
+		}
 
-        .card {
-            background: white;
-            border-radius: 15px;
-            padding: 30px 28px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-        }
+		.card {
+		background: white;
+		border-radius: 15px;
+		padding: 30px 28px;
+		box-shadow: 0 0 10px rgba(0,0,0,0.1);
+		}
 
-        .section-label {
-            font-size: 0.72rem;
-            font-weight: bold;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            color: #1a1535;
-            margin: 24px 0 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+		.section-label {
+		font-size: 0.72rem;
+		font-weight: bold;
+		letter-spacing: 0.08em;
+		text-transform: uppercase;
+		color: #1a1535;
+		margin: 24px 0 12px;
+		display: flex;
+		align-items: center;
+		gap: 8px;
+		}
 
-            .section-label:first-child {
-                margin-top: 0;
-            }
+		.section-label:first-child {
+		margin-top: 0;
+		}
 
-            .section-label::after {
-                content: '';
-                flex: 1;
-                height: 1px;
-                background: #eee;
-            }
+		.section-label::after {
+		content: '';
+		flex: 1;
+		height: 1px;
+		background: #eee;
+		}
 
-        .field {
-            margin-top: 12px;
-        }
+		.field {
+		margin-top: 12px;
+		}
 
-            .field label {
-                display: block;
-                font-size: 0.78rem;
-                font-weight: bold;
-                color: #555;
-                margin-bottom: 6px;
-            }
+		.field label {
+		display: block;
+		font-size: 0.78rem;
+		font-weight: bold;
+		color: #555;
+		margin-bottom: 6px;
+		}
 
-        input {
-            width: 100%;
-            padding: 12px 14px;
-            background: #f9f9fb;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            color: #222;
-            font-family: Arial, sans-serif;
-            font-size: 0.95rem;
-            outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s;
-        }
+		input {
+		width: 100%;
+		padding: 12px 14px;
+		background: #f9f9fb;
+		border: 1px solid #ccc;
+		border-radius: 10px;
+		color: #222;
+		font-family: Arial, sans-serif;
+		font-size: 0.95rem;
+		outline: none;
+		transition: border-color 0.2s, box-shadow 0.2s;
+		}
 
-            input::placeholder {
-                color: #999;
-            }
+		input::placeholder {
+		color: #999;
+		}
 
-            input:focus {
-                border-color: #1a1535;
-                box-shadow: 0 0 0 3px rgba(26,21,53,0.12);
-            }
+		input:focus {
+		border-color: #1a1535;
+		box-shadow: 0 0 0 3px rgba(26,21,53,0.12);
+		}
 
-        button {
-            width: auto;
-            margin-top: 0;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 10px;
-            background: #1a1535;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            font-family: Arial, sans-serif;
-            transition: 0.2s;
-        }
+		button {
+		width: auto;
+		margin-top: 0;
+		padding: 12px 20px;
+		border: none;
+		border-radius: 10px;
+		background: #1a1535;
+		color: white;
+		font-weight: bold;
+		cursor: pointer;
+		font-family: Arial, sans-serif;
+		transition: 0.2s;
+		}
 
-            button:hover {
-                background: darkviolet;
-            }
+		button:hover {
+		background: darkviolet;
+		}
 
-        .submit-btn {
-            width: 100%;
-            margin-top: 22px;
-            padding: 14px;
-            font-size: 1rem;
-        }
+		.submit-btn {
+		width: 100%;
+		margin-top: 22px;
+		padding: 14px;
+		font-size: 1rem;
+		}
 
-            .submit-btn.btn-loading {
-                opacity: 0.65;
-                pointer-events: none;
-            }
+		.submit-btn.btn-loading {
+		opacity: 0.65;
+		pointer-events: none;
+		}
 
-        .divider {
-            text-align: center;
-            color: #999;
-            font-size: 0.8rem;
-            margin: 20px 0 0;
-            position: relative;
-        }
+		.divider {
+		text-align: center;
+		color: #999;
+		font-size: 0.8rem;
+		margin: 20px 0 0;
+		position: relative;
+		}
 
-            .divider::before, .divider::after {
-                content: '';
-                position: absolute;
-                top: 50%;
-                width: calc(50% - 20px);
-                height: 1px;
-                background: #eee;
-            }
+		.divider::before, .divider::after {
+		content: '';
+		position: absolute;
+		top: 50%;
+		width: calc(50% - 20px);
+		height: 1px;
+		background: #eee;
+		}
 
-            .divider::before {
-                left: 0;
-            }
+		.divider::before {
+		left: 0;
+		}
 
-            .divider::after {
-                right: 0;
-            }
+		.divider::after {
+		right: 0;
+		}
 
-        #fingerprint-btn {
-            width: 100%;
-            margin-top: 14px;
-            padding: 13px 16px;
-            background: white;
-            border: 1.5px solid #1a1535;
-            border-radius: 10px;
-            color: #1a1535;
-            font-family: Arial, sans-serif;
-            font-size: 0.95rem;
-            font-weight: bold;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
+		#fingerprint-btn {
+		width: 100%;
+		margin-top: 14px;
+		padding: 13px 16px;
+		background: white;
+		border: 1.5px solid #1a1535;
+		border-radius: 10px;
+		color: #1a1535;
+		font-family: Arial, sans-serif;
+		font-size: 0.95rem;
+		font-weight: bold;
+		cursor: pointer;
+		display: none;
+		align-items: center;
+		justify-content: center;
+		gap: 10px;
+		}
 
-            #fingerprint-btn:hover {
-                background: #eef2ff;
-            }
+		#fingerprint-btn:hover {
+		background: #eef2ff;
+		}
 
-        #fprint {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-        }
+		#fprint {
+		width: 26px;
+		height: 26px;
+		border-radius: 50%;
+		}
 
-        .signup-link {
-            text-align: center;
-            margin-top: 20px;
-            font-size: 0.88rem;
-            color: #666;
-        }
+		.signup-link {
+		text-align: center;
+		margin-top: 20px;
+		font-size: 0.88rem;
+		color: #666;
+		}
 
-            .signup-link a {
-                color: #1a1535;
-                text-decoration: none;
-                font-weight: bold;
-            }
+		.signup-link a {
+		color: #1a1535;
+		text-decoration: none;
+		font-weight: bold;
+		}
 
-                .signup-link a:hover {
-                    text-decoration: underline;
-                }
+		.signup-link a:hover {
+		text-decoration: underline;
+		}
 
-        #fp-modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.55);
-            z-index: 100;
-            justify-content: center;
-            align-items: center;
-        }
+		#fp-modal-overlay {
+		display: none;
+		position: fixed;
+		inset: 0;
+		background: rgba(0,0,0,0.55);
+		z-index: 100;
+		justify-content: center;
+		align-items: center;
+		}
 
-            #fp-modal-overlay.active {
-                display: flex;
-            }
+		#fp-modal-overlay.active {
+		display: flex;
+		}
 
-        #fp-modal {
-            background: white;
-            border-radius: 15px;
-            padding: 30px 26px;
-            max-width: 340px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 0 20px rgba(0,0,0,0.25);
-        }
+		#fp-modal {
+		background: white;
+		border-radius: 15px;
+		padding: 30px 26px;
+		max-width: 340px;
+		width: 90%;
+		text-align: center;
+		box-shadow: 0 0 20px rgba(0,0,0,0.25);
+		}
 
-            #fp-modal .modal-icon {
-                font-size: 38px;
-                margin-bottom: 12px;
-            }
+		#fp-modal .modal-icon {
+		font-size: 38px;
+		margin-bottom: 12px;
+		}
 
-            #fp-modal p {
-                color: #1a1535;
-                font-size: 1rem;
-                font-weight: bold;
-                margin-bottom: 8px;
-                line-height: 1.5;
-            }
+		#fp-modal p {
+		color: #1a1535;
+		font-size: 1rem;
+		font-weight: bold;
+		margin-bottom: 8px;
+		line-height: 1.5;
+		}
 
-            #fp-modal small {
-                color: #777;
-                font-size: 0.82rem;
-                line-height: 1.6;
-                display: block;
-            }
+		#fp-modal small {
+		color: #777;
+		font-size: 0.82rem;
+		line-height: 1.6;
+		display: block;
+		}
 
-        .fp-modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 22px;
-        }
+		.fp-modal-buttons {
+		display: flex;
+		gap: 10px;
+		margin-top: 22px;
+		}
 
-            .fp-modal-buttons button {
-                flex: 1;
-                padding: 12px;
-            }
+		.fp-modal-buttons button {
+		flex: 1;
+		padding: 12px;
+		}
 
-        #fp-no-btn {
-            background: white;
-            color: #666;
-            border: 1px solid #ccc;
-        }
+		#fp-no-btn {
+		background: white;
+		color: #666;
+		border: 1px solid #ccc;
+		}
 
-            #fp-no-btn:hover {
-                background: #f2f2f2;
-            }
+		#fp-no-btn:hover {
+		background: #f2f2f2;
+		}
 
-        /* Toast */
-        #toast {
-            position: fixed;
-            bottom: 28px;
-            left: 50%;
-            transform: translateX(-50%) translateY(100px);
-            background: white;
-            border-left: 4px solid #1a1535;
-            color: #222;
-            padding: 13px 20px;
-            border-radius: 10px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            z-index: 999;
-            max-width: 360px;
-            width: 90%;
-            opacity: 0;
-            pointer-events: none;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-        }
+		#forgot-modal-overlay {
+		display: none;
+		position: fixed;
+		inset: 0;
+		background: rgba(0,0,0,0.55);
+		z-index: 100;
+		justify-content: center;
+		align-items: center;
+		}
 
-            #toast.show {
-                transform: translateX(-50%) translateY(0);
-                opacity: 1;
-            }
+		#forgot-modal-overlay.active {
+		display: flex;
+		}
 
-            #toast.success {
-                border-left-color: #10b981;
-            }
+		#forgot-modal {
+		background: white;
+		border-radius: 15px;
+		padding: 30px 26px;
+		max-width: 360px;
+		width: 90%;
+		text-align: center;
+		box-shadow: 0 0 20px rgba(0,0,0,0.25);
+		}
 
-            #toast.error {
-                border-left-color: #ef4444;
-            }
+		#forgot-modal .modal-icon {
+		font-size: 38px;
+		margin-bottom: 12px;
+		}
 
-            #toast.info {
-                border-left-color: #1a1535;
-            }
+		#forgot-modal p {
+		color: #1a1535;
+		font-size: 1rem;
+		font-weight: bold;
+		margin-bottom: 8px;
+		line-height: 1.5;
+		}
 
-        #toast-icon {
-            font-size: 18px;
-            flex-shrink: 0;
-        }
+		#forgot-modal small {
+		color: #777;
+		font-size: 0.82rem;
+		line-height: 1.6;
+		display: block;
+		}
 
-        #toast-msg {
-            line-height: 1.4;
-        }
+		.secondary-btn {
+		background: white;
+		color: #666;
+		border: 1px solid #ccc;
+		}
 
-        /* Footer */
-        footer {
-            background: #1a1a1a;
-            color: white;
-            text-align: center;
-            padding: 30px;
-        }
+		.secondary-btn:hover {
+		background: #f2f2f2;
+		}
+		/* Toast */
+		#toast {
+		position: fixed;
+		bottom: 28px;
+		left: 50%;
+		transform: translateX(-50%) translateY(100px);
+		background: white;
+		border-left: 4px solid #1a1535;
+		color: #222;
+		padding: 13px 20px;
+		border-radius: 10px;
+		font-size: 0.9rem;
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+		z-index: 999;
+		max-width: 360px;
+		width: 90%;
+		opacity: 0;
+		pointer-events: none;
+		transition: transform 0.3s ease, opacity 0.3s ease;
+		}
 
-            footer p {
-                font-size: 0.85rem;
-                line-height: 1.9;
-                color: #ccc;
-            }
+		#toast.show {
+		transform: translateX(-50%) translateY(0);
+		opacity: 1;
+		}
 
-            footer strong {
-                color: #b9a6ff;
-            }
+		#toast.success {
+		border-left-color: #10b981;
+		}
 
-        @media (max-width: 480px) {
-            .card {
-                padding: 22px 18px;
-            }
-        }
-    </style>
+		#toast.error {
+		border-left-color: #ef4444;
+		}
+
+		#toast.info {
+		border-left-color: #1a1535;
+		}
+
+		#toast-icon {
+		font-size: 18px;
+		flex-shrink: 0;
+		}
+
+		#toast-msg {
+		line-height: 1.4;
+		}
+
+		/* Footer */
+		footer {
+		background: #1a1a1a;
+		color: white;
+		text-align: center;
+		padding: 30px;
+		}
+
+		footer p {
+		font-size: 0.85rem;
+		line-height: 1.9;
+		color: #ccc;
+		}
+
+		footer strong {
+		color: #b9a6ff;
+		}
+
+		@media (max-width: 480px) {
+		.card {
+		padding: 22px 18px;
+		}
+		}
+	</style>
 </head>
 
 <body>
@@ -464,11 +517,13 @@
                     <input type="email" name="email" placeholder="you@gmail.com" required>
                 </div>
 
-                <div class="field">
-                    <label>Password</label>
-                    <input type="password" name="password" placeholder="Your password" required>
-                </div>
-
+				<div class="field">
+					<label>Password</label>
+					<input type="password" name="password" placeholder="Your password" required="">
+						<div style="text-align:right; margin-top:6px;">
+							<button type="button" id="openForgotBtn" style="background:none;border:none;color:#1a1535;font-weight:bold;font-size:0.82rem;cursor:pointer;padding:0;">Forgot password?</button>
+						</div>
+					</div>
                 <button type="submit" class="submit-btn" id="login-btn">Login</button>
 
             </form>
@@ -507,6 +562,52 @@
         </div>
     </div>
 
+	<!-- Forgot password modal -->
+	<div id="forgot-modal-overlay">
+		<div id="forgot-modal">
+			<div class="modal-icon">🔒</div>
+			<p id="forgotTitle">Reset your password</p>
+			<small id="forgotSubtitle">Enter your email and we'll send you a code.</small>
+
+			<!-- Step 1: email -->
+			<div id="forgotStepEmail">
+				<div class="field" style="text-align:left; margin-top:18px;">
+					<label>Email Address</label>
+					<input type="email" id="forgotEmail" placeholder="you@gmail.com">
+                </div>
+				<div class="fp-modal-buttons">
+					<button id="forgotSendBtn">Send code</button>
+					<button id="forgotCancelBtn1" class="secondary-btn">Cancel</button>
+				</div>
+			</div>
+
+			<!-- Step 2: code + new password -->
+			<div id="forgotStepReset" style="display:none;">
+				<div class="field" style="text-align:left; margin-top:18px;">
+					<label>Verification Code</label>
+					<input type="text" id="forgotOtp" maxlength="6" inputmode="numeric" pattern="[0-9]*"
+                           placeholder="••••••" style="text-align:center; letter-spacing:6px; font-weight:bold;">
+					</div>
+				<div class="field" style="text-align:left;">
+					<label>New Password</label>
+					<input type="password" id="forgotNewPassword" placeholder="New password">
+                </div>
+				<div class="field" style="text-align:left;">
+					<label>Confirm New Password</label>
+					<input type="password" id="forgotConfirmPassword" placeholder="Repeat new password">
+                </div>
+				<div class="fp-modal-buttons">
+					<button id="forgotResetBtn">Reset password</button>
+					<button id="forgotCancelBtn2" class="secondary-btn">Cancel</button>
+				</div>
+				<p style="margin-top:14px; font-size:0.82rem; color:#777;">
+					Didn't get the code?
+					<button id="forgotResendBtn" style="background:none;border:none;color:#1a1535;font-weight:bold;text-decoration:underline;cursor:pointer;padding:0;">Resend</button>
+					<span id="forgotResendCooldown"></span>
+				</p>
+			</div>
+		</div>
+	</div>
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
@@ -579,139 +680,278 @@
         const alreadyRegistered = localStorage.getItem('webauthn_user_id');
 
         if (!alreadyRegistered && window.PublicKeyCredential) {
-        setTimeout(() => {
-        window._pendingUser = data;
-        document.getElementById('fp-modal-overlay').classList.add('active');
-        }, 1200);
-        } else {
-        setTimeout(() => redirectUser(data.role), 1500);
-        }
-        } else {
-        showToast(data.message || 'Invalid email or password', 'error');
-        btn.textContent = 'Login';
-        btn.classList.remove('btn-loading');
-        }
-        } catch (error) {
-        console.error(error);
-        showToast('Server error. Please try again later.', 'error');
-        btn.textContent = 'Login';
-        btn.classList.remove('btn-loading');
-        }
-        });
+		setTimeout(() => {
+		window._pendingUser = data;
+		document.getElementById('fp-modal-overlay').classList.add('active');
+		}, 1200);
+		} else {
+		setTimeout(() => redirectUser(data.role), 1500);
+		}
+		} else {
+		showToast(data.message || 'Invalid email or password', 'error');
+		btn.textContent = 'Login';
+		btn.classList.remove('btn-loading');
+		}
+		} catch (error) {
+		console.error(error);
+		showToast('Server error. Please try again later.', 'error');
+		btn.textContent = 'Login';
+		btn.classList.remove('btn-loading');
+		}
+		});
 
-        // ── Modal: Yes ──────────────────────────────────────────────
-        document.getElementById('fp-yes-btn').addEventListener('click', async () => {
-        const user = window._pendingUser;
-        document.getElementById('fp-modal-overlay').classList.remove('active');
-        showToast('Setting up fingerprint...', 'info', 10000);
+		// ── Modal: Yes ──────────────────────────────────────────────
+		document.getElementById('fp-yes-btn').addEventListener('click', async () => {
+		const user = window._pendingUser;
+		document.getElementById('fp-modal-overlay').classList.remove('active');
+		showToast('Setting up fingerprint...', 'info', 10000);
 
-        const success = await registerFingerprint(
-        user.user.id,
-        user.user.fullname,
-        user.user.email
-        );
+		const success = await registerFingerprint(
+		user.user.id,
+		user.user.fullname,
+		user.user.email
+		);
 
-        if (success) {
-        showToast('Fingerprint enabled! ✅', 'success');
-        setTimeout(() => redirectUser(user.role), 1500);
-        } else {
-        showToast('Fingerprint setup failed. Redirecting...', 'error');
-        setTimeout(() => redirectUser(user.role), 2500);
-        }
-        });
+		if (success) {
+		showToast('Fingerprint enabled! ✅', 'success');
+		setTimeout(() => redirectUser(user.role), 1500);
+		} else {
+		showToast('Fingerprint setup failed. Redirecting...', 'error');
+		setTimeout(() => redirectUser(user.role), 2500);
+		}
+		});
 
-        // ── Modal: No ───────────────────────────────────────────────
-        document.getElementById('fp-no-btn').addEventListener('click', () => {
-        localStorage.setItem('webauthn_user_id', 'declined');
-        document.getElementById('fp-modal-overlay').classList.remove('active');
-        redirectUser(window._pendingUser.role);
-        });
+		// ── Modal: No ───────────────────────────────────────────────
+		document.getElementById('fp-no-btn').addEventListener('click', () => {
+		localStorage.setItem('webauthn_user_id', 'declined');
+		document.getElementById('fp-modal-overlay').classList.remove('active');
+		redirectUser(window._pendingUser.role);
+		});
 
-        // ── Register fingerprint (returns true/false) ───────────────
-        async function registerFingerprint(userId, userName, userEmail) {
-        try {
-        const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, userName, userEmail })
-        });
+		// ── Register fingerprint (returns true/false) ───────────────
+		async function registerFingerprint(userId, userName, userEmail) {
+		try {
+		const optRes = await fetch(`${API}/auth/webauthn/register/start`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ userId, userName, userEmail })
+		});
 
-        if (!optRes.ok) {
-        const err = await optRes.json();
-        showToast('Server: ' + (err.message || JSON.stringify(err)), 'error', 10000);
-        console.error('Register start failed:', err);
-        return false;
-        }
+		if (!optRes.ok) {
+		const err = await optRes.json();
+		showToast('Server: ' + (err.message || JSON.stringify(err)), 'error', 10000);
+		console.error('Register start failed:', err);
+		return false;
+		}
 
-        const options = await optRes.json();
-        console.log('WebAuthn options received:', options);
+		const options = await optRes.json();
+		console.log('WebAuthn options received:', options);
 
-        const credential = await SimpleWebAuthnBrowser.startRegistration(options);
-        console.log('Credential created:', credential);
+		const credential = await SimpleWebAuthnBrowser.startRegistration(options);
+		console.log('Credential created:', credential);
 
-        const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, credential })
-        });
+		const verifyRes = await fetch(`${API}/auth/webauthn/register/finish`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ userId, credential })
+		});
 
-        const result = await verifyRes.json();
-        console.log('Verify result:', result);
+		const result = await verifyRes.json();
+		console.log('Verify result:', result);
 
-        if (result.success) {
-        localStorage.setItem('webauthn_user_id', String(userId));
-        return true;
-        }
+		if (result.success) {
+		localStorage.setItem('webauthn_user_id', String(userId));
+		return true;
+		}
 
-        showToast('Server rejected credential: ' + (result.message || 'unknown error'), 'error', 10000);
-        return false;
+		showToast('Server rejected credential: ' + (result.message || 'unknown error'), 'error', 10000);
+		return false;
 
-        } catch (err) {
-        showToast(err.name + ': ' + err.message, 'error', 10000);
-        console.error('Fingerprint registration error:', err.name, err.message);
-        return false;
-        }
-        }
+		} catch (err) {
+		showToast(err.name + ': ' + err.message, 'error', 10000);
+		console.error('Fingerprint registration error:', err.name, err.message);
+		return false;
+		}
+		}
 
-        // ── Fingerprint login ───────────────────────────────────────
-        document.getElementById('fingerprint-btn').addEventListener('click', async () => {
-        const userId = localStorage.getItem('webauthn_user_id');
-        if (!userId || userId === 'declined') return;
+		// ── Fingerprint login ───────────────────────────────────────
+		document.getElementById('fingerprint-btn').addEventListener('click', async () => {
+		const userId = localStorage.getItem('webauthn_user_id');
+		if (!userId || userId === 'declined') return;
 
-        showToast('Scanning fingerprint...', 'info', 8000);
+		showToast('Scanning fingerprint...', 'info', 8000);
 
-        try {
-        const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId })
-        });
-        const options = await optRes.json();
+		try {
+		const optRes = await fetch(`${API}/auth/webauthn/login/start`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ userId })
+		});
+		const options = await optRes.json();
 
-        const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
+		const credential = await SimpleWebAuthnBrowser.startAuthentication(options);
 
-        const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, credential })
-        });
+		const verifyRes = await fetch(`${API}/auth/webauthn/login/finish`, {
+		method: 'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body: JSON.stringify({ userId, credential })
+		});
 
-        const data = await verifyRes.json();
+		const data = await verifyRes.json();
 
-        if (data.success) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('loggedUser', JSON.stringify(data.user));
-        showToast('Fingerprint verified! 👆', 'success');
-        setTimeout(() => redirectUser(data.role), 1200);
-        } else {
-        showToast(data.message || 'Fingerprint login failed', 'error');
-        }
-        } catch (err) {
-        console.error('Fingerprint login error:', err);
-        showToast('Fingerprint failed. Try your password.', 'error');
-        }
-        });
-    </script>
+		if (data.success) {
+		localStorage.setItem('token', data.token);
+		localStorage.setItem('role', data.role);
+		localStorage.setItem('loggedUser', JSON.stringify(data.user));
+		showToast('Fingerprint verified! 👆', 'success');
+		setTimeout(() => redirectUser(data.role), 1200);
+		} else {
+		showToast(data.message || 'Fingerprint login failed', 'error');
+		}
+		} catch (err) {
+		console.error('Fingerprint login error:', err);
+		showToast('Fingerprint failed. Try your password.', 'error');
+		}
+		});
+
+		// ── Forgot password flow ─────────────────────────────────────
+		let forgotResendTimer   = null;
+		let forgotResendSeconds = 0;
+		let forgotEmailValue    = '';
+
+		function openForgotModal() {
+		document.getElementById('forgotEmail').value = '';
+		document.getElementById('forgotStepEmail').style.display = 'block';
+		document.getElementById('forgotStepReset').style.display = 'none';
+		document.getElementById('forgotTitle').textContent = 'Reset your password';
+		document.getElementById('forgotSubtitle').textContent = "Enter your email and we'll send you a code.";
+		document.getElementById('forgot-modal-overlay').classList.add('active');
+		}
+
+		function closeForgotModal() {
+		document.getElementById('forgot-modal-overlay').classList.remove('active');
+		clearInterval(forgotResendTimer);
+		}
+
+		document.getElementById('openForgotBtn').addEventListener('click', openForgotModal);
+		document.getElementById('forgotCancelBtn1').addEventListener('click', closeForgotModal);
+		document.getElementById('forgotCancelBtn2').addEventListener('click', closeForgotModal);
+		document.getElementById('forgot-modal-overlay').addEventListener('click', (e) => {
+		if (e.target.id === 'forgot-modal-overlay') closeForgotModal();
+		});
+
+		function startForgotResendCooldown(seconds) {
+		forgotResendSeconds = seconds;
+		const btn        = document.getElementById('forgotResendBtn');
+		const cooldownEl = document.getElementById('forgotResendCooldown');
+		btn.disabled = true;
+		clearInterval(forgotResendTimer);
+		forgotResendTimer = setInterval(() => {
+		forgotResendSeconds--;
+		if (forgotResendSeconds <= 0) {
+		clearInterval(forgotResendTimer);
+		btn.disabled = false;
+		cooldownEl.textContent = '';
+		} else {
+		cooldownEl.textContent = `(${forgotResendSeconds}s)`;
+		}
+		}, 1000);
+		}
+
+		document.getElementById('forgotSendBtn').addEventListener('click', async function () {
+		const email = document.getElementById('forgotEmail').value.trim();
+		if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+		showToast('Please enter a valid email address.', 'error');
+		return;
+		}
+
+		this.disabled = true;
+		this.textContent = 'Sending…';
+
+		try {
+		const res  = await fetch(`${API}/auth/forgot-password`, {
+		method:  'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body:    JSON.stringify({ email })
+		});
+		const data = await res.json();
+
+		// Backend always returns a generic message whether or not
+		// the email exists, so this form can't be used to check
+		// which emails are registered.
+		forgotEmailValue = email;
+		showToast(data.message || 'If that email is registered, a code has been sent.', 'success');
+
+		document.getElementById('forgotTitle').textContent = 'Enter your code';
+		document.getElementById('forgotSubtitle').textContent = `We sent a code to ${email} if it's registered.`;
+		document.getElementById('forgotStepEmail').style.display = 'none';
+		document.getElementById('forgotStepReset').style.display = 'block';
+		startForgotResendCooldown(30);
+		} catch (err) {
+		showToast('Network error. Please try again.', 'error');
+		} finally {
+		this.disabled = false;
+		this.textContent = 'Send code';
+		}
+		});
+
+		document.getElementById('forgotResendBtn').addEventListener('click', async function () {
+		if (this.disabled) return;
+		try {
+		await fetch(`${API}/auth/forgot-password`, {
+		method:  'POST',
+		headers: { 'Content-Type': 'application/json' },
+		body:    JSON.stringify({ email: forgotEmailValue })
+		});
+		showToast('New code sent.', 'success');
+		startForgotResendCooldown(30);
+		} catch (err) {
+		showToast('Network error. Please try again.', 'error');
+		}
+		});
+
+		document.getElementById('forgotResetBtn').addEventListener('click', async function () {
+		const otp             = document.getElementById('forgotOtp').value.trim();
+		const newPassword     = document.getElementById('forgotNewPassword').value;
+		const confirmPassword = document.getElementById('forgotConfirmPassword').value;
+
+		if (!/^\d{6}$/.test(otp)) {
+		showToast('Enter the 6-digit code.', 'error');
+		return;
+		}
+		if (newPassword.length < 6) {
+            showToast('Password must be at least 6 characters.', 'error');
+            return;
+            }
+            if (newPassword !== confirmPassword) {
+            showToast('Passwords do not match.', 'error');
+            return;
+            }
+
+            this.disabled = true;
+            this.textContent = 'Resetting…';
+
+            try {
+            const res  = await fetch(`${API}/auth/reset-password`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({ email: forgotEmailValue, otp, new_password: newPassword })
+            });
+            const data = await res.json();
+
+            if (res.ok && data.success) {
+			showToast('Password updated! You can now log in.', 'success', 3000);
+			closeForgotModal();
+			} else {
+			showToast(data.message || 'Incorrect or expired code.', 'error');
+			}
+			} catch (err) {
+			showToast('Network error. Please try again.', 'error');
+			} finally {
+			this.disabled = false;
+			this.textContent = 'Reset password';
+			}
+			});
+	</script>
 </body>
 </html>
