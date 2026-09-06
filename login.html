@@ -529,7 +529,11 @@
             </form>
 
             <div class="divider">or</div>
-
+			<div id="g_id_onload"
+				data-client_id="759761999579-rp1fgd1qmn5681bd363i1i7fin8mo37n.apps.googleusercontent.com"
+				data-callback="handleGoogleSignIn">
+			</div>
+			<div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill"></div>
             <button id="fingerprint-btn">
                 <img id="fprint" src="https://media.tenor.com/qsjdkBafpPwAAAAC/fingerprint-scan.gif" alt="fingerprint">
                 Sign in with Fingerprint
@@ -611,30 +615,28 @@
 
 	<script src="https://accounts.google.com/gsi/client" async defer></script>
 
-	<div id="g_id_onload"
-		data-client_id="759761999579-rp1fgd1qmn5681bd363i1i7fin8mo37n.apps.googleusercontent.com"
-		data-callback="handleGoogleSignIn">
-	</div>
-	<div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill"></div>
-
+	
 	<script>
 	async function handleGoogleSignIn(response) {
-	try {
-		const res = await fetch(`${API}/auth/google`, {
-		method: "POST",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify({ credential: response.credential })
-		});
-		const data = await res.json();
-		if (!data.success) { alert(data.message); return; }
+		try {
+			const res = await fetch(`${API}/auth/google`, {
+			method: "POST",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify({ credential: response.credential })
+			});
+			const data = await res.json();
+			if (!data.success) { showToast(data.message || 'Google sign-in failed', 'error'); return; }
 
-		localStorage.setItem("token", data.token);
-		localStorage.setItem("user", JSON.stringify(data.user));
-		window.location.href = "home.html"; // or wherever tenants land after login
-	} catch (err) {
-		alert("Google sign-in failed. Try again.");
-	}
-	}
+			localStorage.setItem('token', data.token);
+			localStorage.setItem('role', data.role);
+			localStorage.setItem('loggedUser', JSON.stringify(data.user));
+
+			showToast('Signed in with Google 👋', 'success');
+			setTimeout(() => redirectUser(data.role), 1000);
+		} catch (err) {
+			showToast('Google sign-in failed. Try again.', 'error');
+		}
+		}
 	</script>
     <div id="toast">
         <span id="toast-icon"></span>
