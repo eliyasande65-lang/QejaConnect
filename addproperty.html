@@ -411,7 +411,7 @@
         <div class="pay-notice">
             <span class="icon">💳</span>
             <div>
-                Listing fee is charged per units via M-Pesa. Your property stays live on the feed for <strong>30 days</strong>. Payment is collected before upload.
+                Listings are free. Your property stays live on the feed for <strong>30 days</strong>. Upload now.
             </div>
         </div>
 
@@ -484,11 +484,11 @@
             const unit=document.getElementById('units').value;
             const units=unit*95;
             document.querySelector('.amount-badge').innerHTML=`Ksh. ${units}`;
-            document.getElementById('submitBtn').innerHTML=`💳Pay Ksh ${units} and upload`;
+            document.getElementById('submitBtn').innerHTML=`Publish & Upload`;
             localStorage.setItem('rooms', units);
         });
 
-        document.getElementById('submitBtn').textContent = '💳 Pay & Upload'; 
+        document.getElementById('submitBtn').textContent = 'Publish & Upload'; 
     </script>
     
     <script>
@@ -511,7 +511,7 @@
         let pendingFormData = null;
 
         //  Form submit > validate > open modal
-        document.getElementById("propertyForm").addEventListener("submit", function (e) {
+        document.getElementById("propertyForm").addEventListener("submit", async function (e) {
         e.preventDefault();
 
         const loggedUser = JSON.parse(localStorage.getItem("loggedUser"));
@@ -553,7 +553,8 @@
         document.getElementById("phoneInput").value = cleaned;
         }
 
-        openModal();
+        // No payment required — upload directly
+        await doUpload(null);
         });
 
         // ── Modal open/close ────────────────────────────────────────────
@@ -706,8 +707,10 @@
         <span style="color:#94a3b8;font-size:14px;">Uploading your property…</span>
         </div>`;
 
-        // Attach transaction ID so backend can verify/log payment
+        // Attach transaction ID so backend can verify/log payment (only if provided)
+        if (transactionId) {
         pendingFormData.append("mpesa_transaction_id", transactionId);
+        }
         // Expiry: 30 days from now (ISO string, backend should also compute this)
         const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
         pendingFormData.append("listing_expires_at", expiresAt);
@@ -734,13 +737,13 @@
         } else {
         status.innerHTML = `<p class="error-text">❌ ${data.message || "Upload failed."}</p>`;
         submitBtn.disabled = false;
-        submitBtn.textContent = "💳 Pay Ksh 195 & Upload";
+        submitBtn.textContent = "Publish & Upload";
         }
 
         } catch (err) {
         status.innerHTML = `<p class="error-text">❌ Server error. Contact support with your M-Pesa ref.</p>`;
         submitBtn.disabled = false;
-        submitBtn.textContent = "💳 Pay Ksh 195 & Upload";
+        submitBtn.textContent = "Publish & Upload";
         }
         }
 
