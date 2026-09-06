@@ -1,0 +1,780 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta viewport="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+    <link rel="icon" type="image/x-icon" href="/QejaConnect/favicon.ico">
+    <link rel="icon" type="image/png" sizes="192x192" href="/QejaConnect/logo-192.png">
+    <link rel="icon" type="image/png" sizes="512x512" href="/QejaConnect/logo-512.png">
+    <!-- Theme colour -->
+    <meta name="theme-color" content="#1a1535">
+
+    <!-- SEO & Search appearance -->
+    <meta name="description" content="Qeja Connect links tenants with verified landlords in Kenya. Find accommodation easily — browse listings, chat with landlords, and secure your next home.">
+    <meta name="keywords" content="rental Kenya, find house Kenya, tenant landlord platform, accommodation Kenya, QejaConnect">
+    <meta name="author" content="QejaConnect Kenya">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph (controls how it looks on Google + social shares) -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Qeja Connect — Find Rental Accommodation in Kenya">
+    <meta property="og:description" content="Qeja Connect links tenants with verified landlords. Browse listings, chat directly, and secure your home with ease.">
+    <meta property="og:url" content="https://eliyasande65-lang.github.io/QejaConnect/welcome.html">
+    <meta property="og:image" content="https://eliyasande65-lang.github.io/QejaConnect/logo-512.png">
+    <meta property="og:site_name" content="Qeja Connect">
+    <meta property="og:locale" content="en_KE">
+    <!-- iOS home-screen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="QejaConnect">
+    <link rel="apple-touch-icon" href="logo-192.png">
+    <link rel="icon" href="favicon.ico">
+    <!--thebypass-->
+    <script>
+        (function() {
+        var token = localStorage.getItem('token');
+        var role  = localStorage.getItem('role');
+        if (token && role) {
+        window.location.replace(role === 'landlord' ? 'hostdashboard.html' : 'home.html');
+        }
+        })();
+    </script>
+    <!-- Register Service Worker + Request Notification Permission -->
+    <script>
+        if ('serviceWorker' in navigator) {
+        window.addEventListener('load', async () => {
+        const reg = await navigator.serviceWorker.register('/QejaConnect/sw.js');
+        console.log('SW registered:', reg.scope);
+        setTimeout(async () => {
+        if ('Notification' in window && Notification.permission === 'default') {
+        const permission = await Notification.requestPermission();
+        console.log('Notification permission:', permission);
+        }
+        }, 4000);
+        });
+        }
+    </script>
+
+    <meta charset="utf-8" />
+    <title>welcome</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #222;
+            min-height: 100vh;
+        }
+
+        /* ── HEADER (matches landlords.html) ── */
+        header {
+            background: #1a1535;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+        }
+
+        .logo-area h2 {
+            font-size: 1.2rem;
+        }
+
+        nav {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+            nav a, .nav-btn {
+                color: white;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+        button {
+            width: auto;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            background: #1a1535;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            transition: 0.2s;
+        }
+
+            button:hover {
+                background: darkviolet;
+            }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+            .btn-ghost:hover {
+                background: rgba(255,255,255,0.12);
+            }
+
+        /* ── HERO ── */
+        .hero {
+            background: #1a1535;
+            color: white;
+            text-align: center;
+            padding: 70px 20px 60px;
+        }
+
+        .hero-eyebrow {
+            display: inline-block;
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 20px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            margin-bottom: 18px;
+        }
+
+        .hero-title {
+            font-size: clamp(1.9rem, 5vw, 3rem);
+            margin-bottom: 14px;
+        }
+
+        .hero-sub {
+            max-width: 560px;
+            margin: 0 auto 34px;
+            color: #d8d5e6;
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .hero-cta {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-bottom: 44px;
+        }
+
+            .hero-cta button {
+                padding: 13px 28px;
+                font-size: 1rem;
+            }
+
+        #install-btn {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        .hero-stats {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .hero-stat {
+            text-align: center;
+        }
+
+        .hero-stat-num {
+            font-size: 1.6rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .hero-stat-label {
+            font-size: 0.72rem;
+            color: #b9b4cf;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            margin-top: 6px;
+        }
+
+        .hero-divider {
+            width: 1px;
+            background: rgba(255,255,255,0.2);
+        }
+
+        /* ── PAGE HEADING (matches landlords.html) ── */
+        .page-heading {
+            max-width: 1100px;
+            margin: 45px auto 5px;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+            .page-heading h1 {
+                color: #1a1535;
+                font-size: 1.8rem;
+                margin: 0 0 6px;
+            }
+
+            .page-heading p {
+                color: #666;
+                margin: 0 auto;
+                font-size: 14px;
+                max-width: 480px;
+            }
+
+        /* ── HOW IT WORKS GRID (styled like landlord-grid / profile cards) ── */
+        .how-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px,1fr));
+            gap: 25px;
+            padding: 25px 20px 10px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .step-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .step-num {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 14px;
+            background: #1a1535;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1rem;
+        }
+
+        .step-text {
+            font-size: 0.92rem;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        /* ── ABOUT CARD ── */
+        .about-card {
+            background: white;
+            border-radius: 15px;
+            padding: 35px;
+            max-width: 1200px;
+            margin: 30px auto 40px;
+            display: flex;
+            gap: 35px;
+            align-items: center;
+            flex-wrap: wrap;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .about-img-wrap {
+            flex: 0 0 140px;
+            text-align: center;
+        }
+
+        .about-logo {
+            width: 110px;
+            height: 110px;
+            border-radius: 15px;
+            object-fit: cover;
+        }
+
+        .about-brand-name {
+            display: block;
+            font-weight: bold;
+            color: #1a1535;
+            margin-top: 10px;
+        }
+
+        .about-brand-tag {
+            display: block;
+            font-size: 0.8rem;
+            color: #777;
+            font-style: italic;
+        }
+
+        .about-text {
+            flex: 1;
+            min-width: 260px;
+        }
+
+        .about-title {
+            color: #1a1535;
+            font-size: 1.5rem;
+            margin-bottom: 12px;
+        }
+
+        .about-body {
+            color: #555;
+            line-height: 1.7;
+            font-size: 0.95rem;
+        }
+
+        /* ── SIGN-UP SECTION ── */
+        .signup-section {
+            text-align: center;
+            padding: 50px 20px 60px;
+            background: white;
+            border-top: 1px solid #e6e6e6;
+        }
+
+        .signup-inner {
+            max-width: 520px;
+            margin: 0 auto;
+        }
+
+            .signup-inner h2 {
+                color: #1a1535;
+                font-size: 1.6rem;
+                margin-bottom: 10px;
+            }
+
+            .signup-inner p {
+                color: #666;
+                font-size: 0.95rem;
+                line-height: 1.6;
+            }
+
+        .signup-cta {
+            display: flex;
+            gap: 14px;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin-top: 26px;
+        }
+
+            .signup-cta button {
+                padding: 12px 28px;
+            }
+
+        .btn-outline {
+            background: white;
+            color: #1a1535;
+            border: 1.5px solid #1a1535;
+        }
+
+            .btn-outline:hover {
+                background: #eef2ff;
+            }
+
+        /* ── POPUP ── */
+        .popup-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+            .popup-overlay.open {
+                display: flex;
+            }
+
+        .popup1 {
+            background: white;
+            padding: 32px 28px;
+            border-radius: 15px;
+            text-align: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.25);
+            max-width: 360px;
+            width: 90%;
+        }
+
+            .popup1 h2 {
+                color: #1a1535;
+                font-size: 1.4rem;
+                margin-bottom: 6px;
+            }
+
+        .popup-sub {
+            font-size: 0.85rem;
+            color: #777;
+            margin-bottom: 22px;
+        }
+
+        .popup-choices {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .popup-choice {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 18px 10px;
+            border: 1.5px solid #ddd;
+            border-radius: 12px;
+            cursor: pointer;
+            background: #f9f9fb;
+            font-family: Arial, sans-serif;
+            width: 100%;
+        }
+
+            .popup-choice:hover {
+                border-color: #1a1535;
+                background: #eef2ff;
+            }
+
+        .popup-choice-icon {
+            font-size: 1.9rem;
+            line-height: 1;
+        }
+
+        .popup-choice-label {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #1a1535;
+        }
+
+        .popup-choice-desc {
+            font-size: 0.72rem;
+            color: #777;
+            text-align: center;
+        }
+
+        .popup-close-btn {
+            background: none;
+            border: none;
+            font-size: 0.85rem;
+            color: #888;
+            cursor: pointer;
+            text-decoration: underline;
+            padding: 0;
+            width: auto;
+        }
+
+            .popup-close-btn:hover {
+                background: none;
+                color: #1a1535;
+            }
+
+        /* ── BANNER ── */
+        .bar-fill {
+            width: 100%;
+            padding: 14px 20px;
+            background: #1a1a1a;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+        }
+
+        .bar-text {
+            font-size: 0.75rem;
+            font-weight: bold;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            color: #bbb;
+        }
+
+        .bar-badge {
+            background: #1a1535;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 0.72rem;
+            font-weight: bold;
+            color: white;
+        }
+
+        /* ── FOOTER (matches landlords.html) ── */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+        .foot-logo {
+            width: 52px;
+            height: 52px;
+            border-radius: 12px;
+            object-fit: cover;
+            margin: 0 auto 12px;
+            display: block;
+        }
+
+        footer h3 {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+
+        footer p {
+            font-size: 0.85rem;
+            line-height: 1.9;
+            color: #ccc;
+        }
+
+        footer a {
+            color: #b9a6ff;
+            text-decoration: none;
+        }
+
+            footer a:hover {
+                text-decoration: underline;
+            }
+
+        @media (max-width: 640px) {
+            header {
+                padding: 12px 16px;
+            }
+
+            .about-card {
+                padding: 24px;
+            }
+
+            .about-img-wrap {
+                flex: 0 0 auto;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- HEADER -->
+    <header>
+        <div class="logo-area">
+            <img id="logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect logo">
+            <h2>Qeja Connect</h2>
+        </div>
+        <nav>
+            <button id="login" class="btn-ghost">Sign in</button>
+            <button id="signup" onclick="openPopup()">Get started</button>
+        </nav>
+    </header>
+
+    <!-- HERO -->
+    <section class="hero">
+        <span class="hero-eyebrow">Kenya's Rental Platform</span>
+        <h1 class="hero-title">Find your home, effortlessly.</h1>
+        <p class="hero-sub">Qeja Connect links tenants with verified landlords — making it simple to search, connect, and secure accommodation with clarity and trust.</p>
+        <div class="hero-cta">
+            <button onclick="openPopup()" style="background:white;color:#1a1535;">Create account</button>
+            <button id="install-btn">⤓ Install App</button>
+        </div>
+        <div class="hero-stats">
+            <div class="hero-stat">
+                <div class="hero-stat-num">100%</div>
+                <div class="hero-stat-label">Verified listings</div>
+            </div>
+            <div class="hero-divider"></div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">Free</div>
+                <div class="hero-stat-label">To join</div>
+            </div>
+            <div class="hero-divider"></div>
+            <div class="hero-stat">
+                <div class="hero-stat-num">24/7</div>
+                <div class="hero-stat-label">Chat support</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <div class="page-heading">
+        <h1>Up and running in minutes</h1>
+        <p>Whether you're looking for a place or listing one, the process is simple and straightforward.</p>
+    </div>
+
+    <div class="how-grid">
+        <div class="step-card">
+            <div class="step-num">1</div>
+            <p class="step-text">Tenants create an account and browse verified listings near their preferred location.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">2</div>
+            <p class="step-text">Landlords or property owners register as a host and list their available properties.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">3</div>
+            <p class="step-text">Fill in your geographical details accurately so we can match you with the right people.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">4</div>
+            <p class="step-text">Hosts track their dashboard for booking requests and respond to tenant inquiries via chat.</p>
+        </div>
+        <div class="step-card">
+            <div class="step-num">5</div>
+            <p class="step-text">Communicate politely and promptly — hosts should check their dashboard regularly.</p>
+        </div>
+    </div>
+
+    <!-- ABOUT -->
+    <div class="about-card">
+        <div class="about-img-wrap">
+            <img class="about-logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect">
+            <span class="about-brand-name">QejaConnect</span>
+            <span class="about-brand-tag">Secure your house easily</span>
+        </div>
+        <div class="about-text">
+            <h3 class="about-title">What is Qeja Connect?</h3>
+            <p class="about-body">Qeja Connect is an online platform created to link tenants with property owners, making it easier to find accommodation with clarity, trust, and convenience. We believe everyone deserves a safe, straightforward path to finding their next home.</p>
+        </div>
+    </div>
+
+    <!-- SIGN UP CTA -->
+    <div class="signup-section">
+        <div class="signup-inner">
+            <h2>Seems cool? Join today.</h2>
+            <p>Create your free account in under two minutes and start browsing or listing properties right away.</p>
+            <div class="signup-cta">
+                <button id="login2" class="btn-outline">Sign in</button>
+                <button onclick="openPopup()">Create account</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- POPUP OVERLAY -->
+    <div class="popup-overlay" id="popupOverlay" onclick="closePopupOverlay(event)">
+        <div class="popup1" id="popup">
+            <h2>Sign up as</h2>
+            <p class="popup-sub">Choose the account type that fits you.</p>
+            <div class="popup-choices">
+                <button class="popup-choice" id="tenant">
+                    <span class="popup-choice-icon">🏠</span>
+                    <span class="popup-choice-label">Tenant</span>
+                    <span class="popup-choice-desc">Looking for a place to rent</span>
+                </button>
+                <button class="popup-choice" id="host">
+                    <span class="popup-choice-icon">🏢</span>
+                    <span class="popup-choice-label">Host / Landlord</span>
+                    <span class="popup-choice-desc">Listing a property</span>
+                </button>
+            </div>
+            <button class="popup-close-btn" onclick="closePopup()">Cancel</button>
+        </div>
+    </div>
+
+    <!-- BANNER -->
+    <div class="bar-fill">
+        <span class="bar-text">Powered by</span>
+        <span class="bar-badge">QC</span>
+    </div>
+
+    <!-- FOOTER -->
+    <footer>
+        <img class="foot-logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect">
+        <h3>Qeja Connect</h3>
+        <p>Developed by QejaConnect_Kenya ltd.</p>
+        <p>qejaconnect@outlook.com &nbsp;·&nbsp; +254 714 104 737</p>
+        <p style="margin-top:12px;"><a href="https://eliyasande65-lang.github.io/QejaConnect/privacy_policy.html">Privacy Policy</a></p>
+        <p style="margin-top:16px;">
+            <a href="https://www.facebook.com/profile.php?id=61590181066724" target="_blank" rel="noopener"
+               style="display:inline-flex;align-items:center;gap:8px;color:#b9a6ff;font-size:0.92rem;font-weight:bold;text-decoration:none;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="#b9a6ff">
+                    <path d="M24 12.073C24 5.405 18.627 0 12 0S0 5.405 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.413c0-3.025 1.791-4.697 4.533-4.697 1.312 0 2.686.235 2.686.235v2.97h-1.513c-1.491 0-1.956.93-1.956 1.884v2.25h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z" />
+                </svg>
+                Follow us on Facebook @qejaconnect
+            </a>
+        </p>
+    </footer>
+
+    <script>
+        function openPopup() {
+        document.getElementById("popup").style.display = "block";
+        }
+
+        function closePopup() {
+        document.getElementById("popup").style.display = "none";
+        }
+
+        document.getElementById('tenant').onclick = () =>
+        window.location.href = "tenant.html";
+
+        document.getElementById('host').onclick = () =>
+        window.location.href = "host.html";
+
+        document.getElementById('login').onclick = () =>
+        window.location.href = "login.html";
+    </script>
+
+    <!-- Install prompt logic -->
+    <script>
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        document.getElementById('install-btn').style.display = 'inline-block';
+        });
+
+        document.getElementById('install-btn').addEventListener('click', async () => {
+        if (!deferredPrompt) return;
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+        document.getElementById('install-btn').style.display = 'none';
+        }
+        deferredPrompt = null;
+        });
+
+        // Hide the button if already installed
+        window.addEventListener('appinstalled', () => {
+        document.getElementById('install-btn').style.display = 'none';
+        deferredPrompt = null;
+        });
+    </script>
+
+    <script>
+        // Second sign-in button (in CTA section)
+        document.getElementById('login2').onclick = () => window.location.href = "login.html";
+
+        // Close popup by clicking overlay background
+        function closePopupOverlay(e) {
+        if (e.target === document.getElementById('popupOverlay')) closePopup();
+        }
+
+        // openPopup/closePopup now also toggle the overlay
+        window.openPopup = function() {
+        document.getElementById('popupOverlay').classList.add('open');
+        document.getElementById('popup').style.display = 'block';
+        };
+        window.closePopup = function() {
+        document.getElementById('popupOverlay').classList.remove('open');
+        document.getElementById('popup').style.display = 'none';
+        };
+    </script>
+
+</body>
+</html>
