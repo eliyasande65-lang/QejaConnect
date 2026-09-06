@@ -45,7 +45,7 @@
         }
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Tenant Login</title>
     <script src="https://unpkg.com/@simplewebauthn/browser/dist/bundle/index.umd.min.js"></script>
 
     <style>
@@ -495,7 +495,7 @@
             <img id="logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect logo">
             <h2>Qeja Connect</h2>
         </div>
-        <a href="index.html">🏠 Home</a>
+        <a href="welcome.html">🏠 Home</a>
     </header>
 
     <div class="page">
@@ -608,6 +608,34 @@
 			</div>
 		</div>
 	</div>
+
+	<script src="https://accounts.google.com/gsi/client" async defer></script>
+
+	<div id="g_id_onload"
+		data-client_id="759761999579-rp1fgd1qmn5681bd363i1i7fin8mo37n.apps.googleusercontent.com"
+		data-callback="handleGoogleSignIn">
+	</div>
+	<div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill"></div>
+
+	<script>
+	async function handleGoogleSignIn(response) {
+	try {
+		const res = await fetch(`${API}/auth/google`, {
+		method: "POST",
+		headers: { "Content-Type": "application/json" },
+		body: JSON.stringify({ credential: response.credential })
+		});
+		const data = await res.json();
+		if (!data.success) { alert(data.message); return; }
+
+		localStorage.setItem("token", data.token);
+		localStorage.setItem("user", JSON.stringify(data.user));
+		window.location.href = "home.html"; // or wherever tenants land after login
+	} catch (err) {
+		alert("Google sign-in failed. Try again.");
+	}
+	}
+	</script>
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
