@@ -1048,6 +1048,21 @@
         <img id="lbImg" src="" alt="Photo">
     </div>
 
+    <div id="emailModal" style="display:none;position:fixed;inset:0;z-index:250;background:rgba(0,0,0,.75);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:20px;">
+        <div style="background:var(--surface);border:1px solid var(--border-hi);border-radius:14px;padding:24px;width:100%;max-width:420px;">
+            <h3 style="font-family:var(--head);font-size:17px;margin-bottom:4px;">Email Landlord</h3>
+            <p id="emailModalTo" style="font-family:var(--mono);font-size:12px;color:var(--muted);margin-bottom:16px;"></p>
+            <input type="hidden" id="emailModalId">
+            <input type="text" id="emailSubject" placeholder="Subject"
+                style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;margin-bottom:10px;">
+            <textarea id="emailBody" placeholder="Message…" rows="6"
+                style="width:100%;background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13px;color:var(--text);outline:none;resize:vertical;margin-bottom:14px;font-family:var(--body);"></textarea>
+            <div style="display:flex;gap:10px;">
+                <button class="btn-reject" style="flex:1" onclick="closeEmailModal()">Cancel</button>
+                <button class="btn-approve" id="emailSendBtn" style="flex:1" onclick="sendLandlordEmail()">Send</button>
+            </div>
+        </div>
+    </div>
     <div id="toast"></div>
 
     <script>
@@ -1215,11 +1230,11 @@
         <button class="btn-reject" ${isFixed ? 'disabled' : ''} onclick="verifyLandlord(${l.id},'reject',this)">
         ${l.verified === -1 || l.verified === '-1' ? '✕ Rejected' : '❌ Reject'}
         </button>
-        <a class="btn-email"
-        href="mailto:${l.email}?subject=QejaConnect%20Support&body=Hello%20${encodeURIComponent(l.fullname || '')},%0D%0A%0D%0A"
-        style="flex:1;display:flex;align-items:center;justify-content:center;text-decoration:none;padding:10px;border-radius:8px;font-family:var(--head);font-size:13px;font-weight:700;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);">
+        <button class="btn-email"
+        onclick="openEmailModal(${l.id}, '${escH(l.fullname || '')}', '${escH(l.email || '')}')"
+        style="flex:1;display:flex;align-items:center;justify-content:center;padding:10px;border-radius:8px;font-family:var(--head);font-size:13px;font-weight:700;background:rgba(124,58,237,.15);color:#a78bfa;border:1px solid rgba(124,58,237,.3);cursor:pointer;">
         ✉ Email
-        </a>
+        </button>
         </div>
         </div>`;
         }
@@ -1230,6 +1245,43 @@
         return `<div class="detail-row"><span class="detail-key">${k}</span><span class="${valClass}">${escH(String(v))}</span></div>`;
         }
 
+        function openEmailModal(id, name, email) {
+            document.getElementById('emailModalId').value = id;
+            document.getElementById('emailModalTo').textContent = `${name} <${email}>`;
+            document.getElementById('emailSubject').value = 'QejaConnect Support';
+            document.getElementById('emailBody').value = `Hello ${name},\n\n`;
+            document.getElementById('emailModal').style.display = 'flex';
+        }
+
+        function closeEmailModal() {
+            document.getElementById('emailModal').style.display = 'none';
+        }
+
+        async function sendLandlordEmail() {
+            const id      = document.getElementById('emailModalId').value;
+            const subject = document.getElementById('emailSubject').value.trim();
+            const message = document.getElementById('emailBody').value.trim();
+            if (!subject || !message) { showToast('Subject and message required', 'err'); return; }
+
+            const btn = document.getElementById('emailSendBtn');
+            btn.disabled = true; btn.textContent = 'Sending…';
+
+            try {
+                const res = await fetch(`${API}/admin/users/landlord/${id}/email`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json', 'x-admin-secret': adminSecret },
+                    body: JSON.stringify({ subject, message })
+                });
+                const data = await res.json();
+                if (!data.success) throw new Error(data.message);
+                showToast('✅ ' + data.message, 'ok');
+                closeEmailModal();
+            } catch (err) {
+                showToast('Error: ' + err.message, 'err');
+            } finally {
+                btn.disabled = false; btn.textContent = 'Send';
+            }
+        }
         async function verifyLandlord(id, action, btn) {
         const card       = document.getElementById('card-' + id);
         const approveBtn = card ? card.querySelector('.btn-approve') : null;
