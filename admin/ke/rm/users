@@ -97,7 +97,7 @@
   Calls DELETE /admin/accounts/:role/:id with the reason, which deletes the
   account, emails the user, and gives them an appeal link.
 
-  Wire it up by calling openDeleteModal(role, id, fullname) from any
+  Wire it up by calli openDeleteModal(role, id, fullname) from any
   "Delete" button, e.g.:
     <button onclick="openDeleteModal('tenant', 42, 'Jane Wanjiru')">Delete</button>
 -->
