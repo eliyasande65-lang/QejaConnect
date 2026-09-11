@@ -73,6 +73,22 @@
 </head>
 <body>
 
+<div id="adminAuthOverlay" class="da-overlay hidden">
+  <div class="da-modal">
+    <h3>Admin sign-in</h3>
+    <p class="da-sub">Enter the admin secret to load and manage accounts.</p>
+
+    <label for="adminSecretInput">Admin secret</label>
+    <input id="adminSecretInput" type="password" placeholder="Admin secret" autocomplete="off">
+
+    <div id="adminAuthError" class="da-error hidden"></div>
+
+    <div class="da-actions">
+      <button id="adminAuthSubmitBtn" class="da-btn da-btn-danger" type="button" style="flex:1;">Continue</button>
+    </div>
+  </div>
+</div>
+
 <div class="page-wrap">
   <h1>Accounts</h1>
   <p class="page-sub">Manage tenant and landlord accounts.</p>
@@ -97,7 +113,7 @@
   Calls DELETE /admin/accounts/:role/:id with the reason, which deletes the
   account, emails the user, and gives them an appeal link.
 
-  Wire it up by cal openDeleteModal(role, id, fullname) from any
+  Wire it up by calling openDeleteModal(role, id, fullname) from any
   "Delete" button, e.g.:
     <button onclick="openDeleteModal('tenant', 42, 'Jane Wanjiru')">Delete</button>
 -->
@@ -138,6 +154,11 @@
   .da-modal h3 { margin: 0 0 6px; font-size: 19px; color: #1E2A22; }
   .da-sub { margin: 0 0 18px; font-size: 13.5px; line-height: 1.5; color: #6B6558; }
   .da-modal label { display: block; font-size: 12.5px; color: #6B6558; margin-bottom: 6px; }
+  .da-modal input[type="password"],
+  .da-modal input[type="text"] {
+    width: 100%; font-size: 14px; line-height: 1.5;
+    padding: 10px 12px; border: 1px solid #ccc; box-sizing: border-box;
+  }
   .da-modal textarea {
     width: 100%; min-height: 100px; font-size: 14px; line-height: 1.5;
     padding: 10px 12px; border: 1px solid #ccc; resize: vertical; box-sizing: border-box;
@@ -162,6 +183,56 @@
   // other admin fetch calls already use.
   const ADMIN_API_BASE = "https://qeja-backend-azkf.onrender.com";
   function getAdminSecret() { return localStorage.getItem("adminSecret"); }
+  function setAdminSecret(v) { localStorage.setItem("adminSecret", v); }
+
+  // =========================
+  // ADMIN AUTH GATE
+  // Nothing fetches until a secret is present. If the backend ever comes
+  // back 403 (wrong/expired secret), we clear it and prompt again instead
+  // of silently failing.
+  // =========================
+  function showAdminAuthGate(message) {
+    const overlay = document.getElementById("adminAuthOverlay");
+    const errorBox = document.getElementById("adminAuthError");
+    if (message) {
+      errorBox.textContent = message;
+      errorBox.classList.remove("hidden");
+    } else {
+      errorBox.classList.add("hidden");
+    }
+    document.getElementById("adminSecretInput").value = "";
+    overlay.classList.remove("hidden");
+    document.getElementById("adminSecretInput").focus();
+  }
+
+  function hideAdminAuthGate() {
+    document.getElementById("adminAuthOverlay").classList.add("hidden");
+  }
+
+  function submitAdminSecret() {
+    const value = document.getElementById("adminSecretInput").value.trim();
+    if (!value) {
+      document.getElementById("adminAuthError").textContent = "Enter the admin secret to continue.";
+      document.getElementById("adminAuthError").classList.remove("hidden");
+      return;
+    }
+    setAdminSecret(value);
+    hideAdminAuthGate();
+    fetchAccounts();
+  }
+
+  document.getElementById("adminAuthSubmitBtn").addEventListener("click", submitAdminSecret);
+  document.getElementById("adminSecretInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter") submitAdminSecret();
+  });
+
+  document.addEventListener("DOMContentLoaded", () => {
+    if (getAdminSecret()) {
+      fetchAccounts();
+    } else {
+      showAdminAuthGate();
+    }
+  });
 
   // =========================
   // FETCH + RENDER ACCOUNTS (backend-driven)
@@ -208,6 +279,13 @@
         fetch(`${ADMIN_API_BASE}/admin/landlords?limit=100&all=1`, { headers }),
       ]);
 
+      if (tenantsRes.status === 403 || landlordsRes.status === 403) {
+        localStorage.removeItem("adminSecret");
+        tbody.innerHTML = `<tr><td colspan="4" class="da-status">Sign in to load accounts.</td></tr>`;
+        showAdminAuthGate("That admin secret was rejected. Try again.");
+        return;
+      }
+
       const tenantsData   = await tenantsRes.json();
       const landlordsData = await landlordsRes.json();
 
@@ -231,9 +309,6 @@
       tbody.innerHTML = `<tr><td colspan="4" class="da-status is-error">${escapeHtml(err.message || "Couldn't load accounts.")}</td></tr>`;
     }
   }
-
-  document.addEventListener("DOMContentLoaded", fetchAccounts);
-
   let daPending = null; // { role, id, fullname }
 
   function openDeleteModal(role, id, fullname) {
@@ -284,6 +359,14 @@
           body: JSON.stringify({ reason }),
         }
       );
+
+      if (res.status === 403) {
+        localStorage.removeItem("adminSecret");
+        closeDeleteModal();
+        showAdminAuthGate("That admin secret was rejected. Try again.");
+        return;
+      }
+
       const data = await res.json();
 
       if (!res.ok || !data.success) {
