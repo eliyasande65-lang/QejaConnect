@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin — Accounts</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: #F7F6F2;
+    color: #1E2A22;
+    margin: 0;
+    padding: 40px 20px;
+  }
+  .page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+  }
+  h1 {
+    font-size: 22px;
+    margin-bottom: 4px;
+  }
+  .page-sub {
+    color: #6B6558;
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #E4E1D8;
+  }
+  th, td {
+    text-align: left;
+    padding: 12px 14px;
+    font-size: 14px;
+    border-bottom: 1px solid #E4E1D8;
+  }
+  th {
+    background: #EFEDE6;
+    font-weight: 600;
+    color: #4B4638;
+  }
+  tr:last-child td { border-bottom: none; }
+  .role-tag {
+    display: inline-block;
+    font-size: 11.5px;
+    padding: 2px 8px;
+    border-radius: 3px;
+    background: #E7EFE9;
+    color: #2F5B3F;
+    text-transform: capitalize;
+  }
+  .del-link-btn {
+    background: none;
+    border: none;
+    color: #A8331D;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 0;
+  }
+  .del-link-btn:hover { text-decoration: underline; }
+  .da-status {
+    text-align: center !important;
+    color: #6B6558;
+    padding: 24px !important;
+  }
+  .da-status.is-error { color: #A8331D; }
+</style>
+</head>
+<body>
+
+<div class="page-wrap">
+  <h1>Accounts</h1>
+  <p class="page-sub">Manage tenant and landlord accounts.</p>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Role</th>
+        <th>Email</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="accountsTableBody">
+      <tr><td colspan="4" class="da-status">Loading accounts…</td></tr>
+    </tbody>
+  </table>
+</div>
+
+<!--
+  ADMIN: DELETE ACCOUNT MODAL
+  Calls DELETE /admin/accounts/:role/:id with the reason, which deletes the
+  account, emails the user, and gives them an appeal link.
+
+  Wire it up by calling openDeleteModal(role, id, fullname) from any
+  "Delete" button, e.g.:
+    <button onclick="openDeleteModal('tenant', 42, 'Jane Wanjiru')">Delete</button>
+-->
+
+<div id="deleteAccountOverlay" class="da-overlay hidden">
+  <div class="da-modal">
+    <h3 id="daTitle">Delete account</h3>
+    <p id="daSubtitle" class="da-sub">This permanently removes the account and emails the user a reason, plus a link to appeal.</p>
+
+    <label for="daReason">Reason for deletion</label>
+    <textarea id="daReason" placeholder="e.g. Repeated policy violations reported by multiple tenants." maxlength="1000"></textarea>
+
+    <div id="daError" class="da-error hidden"></div>
+
+    <div class="da-actions">
+      <button id="daCancelBtn" class="da-btn da-btn-ghost" type="button">Cancel</button>
+      <button id="daConfirmBtn" class="da-btn da-btn-danger" type="button">Delete account</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .da-overlay {
+    position: fixed; inset: 0;
+    background: rgba(20, 20, 18, 0.55);
+    display: flex; align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 1000;
+    font-family: "Helvetica Neue", Arial, sans-serif;
+  }
+  .da-overlay.hidden { display: none; }
+  .da-modal {
+    background: #fff;
+    width: 100%; max-width: 420px;
+    padding: 24px;
+    border: 1px solid #ddd;
+  }
+  .da-modal h3 { margin: 0 0 6px; font-size: 19px; color: #1E2A22; }
+  .da-sub { margin: 0 0 18px; font-size: 13.5px; line-height: 1.5; color: #6B6558; }
+  .da-modal label { display: block; font-size: 12.5px; color: #6B6558; margin-bottom: 6px; }
+  .da-modal textarea {
+    width: 100%; min-height: 100px; font-size: 14px; line-height: 1.5;
+    padding: 10px 12px; border: 1px solid #ccc; resize: vertical; box-sizing: border-box;
+  }
+  .da-error {
+    margin-top: 10px; padding: 10px 12px; font-size: 13px;
+    background: #FBEDE7; border: 1px solid #B24C2E; color: #8A3A22;
+  }
+  .da-error.hidden { display: none; }
+  .da-actions { display: flex; gap: 10px; margin-top: 18px; }
+  .da-btn {
+    flex: 1; padding: 11px 14px; font-size: 14px; font-weight: 600;
+    border: none; cursor: pointer;
+  }
+  .da-btn-ghost { background: #EFEDE6; color: #333; }
+  .da-btn-danger { background: #A8331D; color: #fff; }
+  .da-btn-danger:disabled { background: #C79187; cursor: not-allowed; }
+</style>
+
+<script>
+  // Point this at your deployed API base and the same admin secret your
+  // other admin fetch calls already use.
+  const ADMIN_API_BASE = "https://qeja-backend-azkf.onrender.com";
+  function getAdminSecret() { return localStorage.getItem("adminSecret"); }
+
+  // =========================
+  // FETCH + RENDER ACCOUNTS (backend-driven)
+  // Pulls from the existing admin endpoints in server.js:
+  //   GET /admin/tenants    -> { success, total, page, limit, tenants: [...] }
+  //   GET /admin/landlords  -> { success, total, page, limit, landlords: [...] }
+  // Both require the same x-admin-secret header as the delete call below.
+  // =========================
+  function escapeHtml(str) {
+    return String(str ?? "").replace(/[&<>"']/g, (c) => ({
+      "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
+    }[c]));
+  }
+
+  function renderAccountsTable(accounts) {
+    const tbody = document.getElementById("accountsTableBody");
+
+    if (!accounts.length) {
+      tbody.innerHTML = `<tr><td colspan="4" class="da-status">No accounts found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = accounts.map((acc) => `
+      <tr data-account-row="${acc.role}-${acc.id}">
+        <td>${escapeHtml(acc.fullname || "—")}</td>
+        <td><span class="role-tag">${escapeHtml(acc.role)}</span></td>
+        <td>${escapeHtml(acc.email || "—")}</td>
+        <td>
+          <button class="del-link-btn" onclick="openDeleteModal('${acc.role}', ${acc.id}, '${escapeHtml(acc.fullname || "").replace(/'/g, "\\'")}')">Delete</button>
+        </td>
+      </tr>
+    `).join("");
+  }
+
+  async function fetchAccounts() {
+    const tbody = document.getElementById("accountsTableBody");
+    tbody.innerHTML = `<tr><td colspan="4" class="da-status">Loading accounts…</td></tr>`;
+
+    const headers = { "x-admin-secret": getAdminSecret() };
+
+    try {
+      const [tenantsRes, landlordsRes] = await Promise.all([
+        fetch(`${ADMIN_API_BASE}/admin/tenants?limit=100`, { headers }),
+        fetch(`${ADMIN_API_BASE}/admin/landlords?limit=100&all=1`, { headers }),
+      ]);
+
+      const tenantsData   = await tenantsRes.json();
+      const landlordsData = await landlordsRes.json();
+
+      if (!tenantsRes.ok || !tenantsData.success) {
+        throw new Error(tenantsData.message || "Couldn't load tenants.");
+      }
+      if (!landlordsRes.ok || !landlordsData.success) {
+        throw new Error(landlordsData.message || "Couldn't load landlords.");
+      }
+
+      const tenants   = (tenantsData.tenants   || []).map((t) => ({ ...t, role: "tenant" }));
+      const landlords = (landlordsData.landlords || []).map((l) => ({ ...l, role: "landlord" }));
+
+      const accounts = [...tenants, ...landlords].sort((a, b) =>
+        new Date(b.created_at || 0) - new Date(a.created_at || 0)
+      );
+
+      renderAccountsTable(accounts);
+    } catch (err) {
+      const tbody = document.getElementById("accountsTableBody");
+      tbody.innerHTML = `<tr><td colspan="4" class="da-status is-error">${escapeHtml(err.message || "Couldn't load accounts.")}</td></tr>`;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", fetchAccounts);
+
+  let daPending = null; // { role, id, fullname }
+
+  function openDeleteModal(role, id, fullname) {
+    daPending = { role, id, fullname };
+    document.getElementById("daTitle").textContent = `Delete ${fullname || "this account"}?`;
+    document.getElementById("daReason").value = "";
+    document.getElementById("daError").classList.add("hidden");
+    document.getElementById("daConfirmBtn").disabled = false;
+    document.getElementById("daConfirmBtn").textContent = "Delete account";
+    document.getElementById("deleteAccountOverlay").classList.remove("hidden");
+  }
+
+  function closeDeleteModal() {
+    document.getElementById("deleteAccountOverlay").classList.add("hidden");
+    daPending = null;
+  }
+
+  document.getElementById("daCancelBtn").addEventListener("click", closeDeleteModal);
+  document.getElementById("deleteAccountOverlay").addEventListener("click", (e) => {
+    if (e.target.id === "deleteAccountOverlay") closeDeleteModal();
+  });
+
+  document.getElementById("daConfirmBtn").addEventListener("click", async () => {
+    if (!daPending) return;
+    const reason = document.getElementById("daReason").value.trim();
+    const errorBox = document.getElementById("daError");
+    errorBox.classList.add("hidden");
+
+    if (!reason) {
+      errorBox.textContent = "Please enter a reason — it's included in the email sent to the user.";
+      errorBox.classList.remove("hidden");
+      return;
+    }
+
+    const btn = document.getElementById("daConfirmBtn");
+    btn.disabled = true;
+    btn.textContent = "Deleting…";
+
+    try {
+      const res = await fetch(
+        `${ADMIN_API_BASE}/admin/accounts/${daPending.role}/${daPending.id}`,
+        {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "x-admin-secret": getAdminSecret(),
+          },
+          body: JSON.stringify({ reason }),
+        }
+      );
+      const data = await res.json();
+
+      if (!res.ok || !data.success) {
+        errorBox.textContent = data.message || "Couldn't delete this account. Try again.";
+        errorBox.classList.remove("hidden");
+        btn.disabled = false;
+        btn.textContent = "Delete account";
+        return;
+      }
+
+      const deletedName = daPending.fullname || "Account";
+      closeDeleteModal();
+      alert(`${deletedName} was deleted and notified by email.`);
+      fetchAccounts(); // refresh the table from the backend
+    } catch (err) {
+      errorBox.textContent = "Couldn't reach the server. Check your connection and try again.";
+      errorBox.classList.remove("hidden");
+      btn.disabled = false;
+      btn.textContent = "Delete account";
+    }
+  });
+</script>
+
+</body>
+</html>
