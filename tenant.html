@@ -1,11 +1,11 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-		<link rel="manifest" href="/QejaConnect/manifest.json">
-    <meta name="theme-color" content="#7c3aed">
+    <link rel="manifest" href="/QejaConnect/manifest.json">
+    <meta name="theme-color" content="#211c33">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="QejaConnect">
     <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
 
@@ -19,35 +19,39 @@
 
     <script>
         if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/QejaConnect/sw.js')
-        .then(reg => console.log('SW registered:', reg.scope))
-        .catch(err => console.error('SW error:', err));
-        });
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/QejaConnect/sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.error('SW error:', err));
+            });
         }
     </script>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tenant Sign Up</title>
+    <title>Tenant Sign Up · QejaConnect</title>
     <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
-            --bg: #f7f5fc;
-            --card: #ffffff;
-            --border: #e6e0f7;
-            --border-focus: #7c3aed;
-            --border-valid: #10b981;
-            --border-invalid: #ef4444;
-            --accent: #7c3aed;
-            --accent-dark: #5b21b6;
-            --accent-light: #ede9fe;
-            --accent-glow: rgba(124, 58, 237, 0.15);
-            --text: #241b3d;
-            --muted: #6b6480;
-            --dim: #faf9fd;
-            --success: #10b981;
-            --warning: #f59e0b;
-            --error: #ef4444;
+            /* Muted, low-glare dark palette. Purple is kept but desaturated
+               and only ever used sparingly against a near-neutral surface. */
+            --bg:            #17141f;
+            --card:          #1f1b2b;
+            --card-raised:   #262135;
+            --border:        #33304a;
+            --border-soft:   #2a2638;
+            --border-focus:  #8f7ee0;
+            --border-valid:  #4fb286;
+            --border-invalid:#d97676;
+            --accent:        #8f7ee0;
+            --accent-dim:    #6f60b8;
+            --accent-text:   #cfc6f5;
+            --text:          #e9e6f2;
+            --muted:         #9490a8;
+            --dim:           #221e30;
+            --success:       #4fb286;
+            --warning:       #d1a35c;
+            --error:         #d97676;
         }
 
         * {
@@ -65,94 +69,115 @@
             flex-direction: column;
             align-items: center;
             padding: 48px 16px 64px;
+            position: relative;
         }
 
-            body::before, body::after {
-                content: '';
-                position: fixed;
-                border-radius: 50%;
-                filter: blur(120px);
-                pointer-events: none;
-                z-index: 0;
-            }
-
-            body::before {
-                width: 500px;
-                height: 500px;
-                background: radial-gradient(circle, rgba(124,58,237,0.10) 0%, transparent 70%);
-                top: -100px;
-                left: -150px;
-            }
-
-            body::after {
-                width: 400px;
-                height: 400px;
-                background: radial-gradient(circle, rgba(167,139,250,0.14) 0%, transparent 70%);
-                bottom: 0;
-                right: -120px;
-            }
+        /* Soft, low-opacity glow — kept subtle so nothing reads "bright" */
+        body::before {
+            content: '';
+            position: fixed;
+            width: 620px;
+            height: 620px;
+            border-radius: 50%;
+            filter: blur(140px);
+            pointer-events: none;
+            z-index: 0;
+            background: radial-gradient(circle, rgba(143,126,224,0.08) 0%, transparent 70%);
+            top: -180px;
+            left: -200px;
+        }
 
         .page {
             width: 100%;
-            max-width: 520px;
+            max-width: 480px;
             position: relative;
             z-index: 1;
         }
 
         .header {
             text-align: center;
-            margin-bottom: 36px;
+            margin-bottom: 32px;
         }
 
         .logo-mark {
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 56px;
-            height: 56px;
-            background: linear-gradient(135deg, #7c3aed, #a78bfa);
-            border-radius: 16px;
-            font-size: 26px;
-            margin-bottom: 16px;
-            box-shadow: 0 8px 32px rgba(124,58,237,0.28);
+            width: 52px;
+            height: 52px;
+            background: var(--card-raised);
+            border: 1px solid var(--border);
+            border-radius: 14px;
+            font-size: 24px;
+            margin-bottom: 18px;
         }
 
         .header h1 {
             font-family: 'DM Serif Display', serif;
-            font-size: clamp(1.8rem, 5vw, 2.4rem);
+            font-size: clamp(1.7rem, 5vw, 2.15rem);
             font-weight: 400;
-            letter-spacing: -0.5px;
+            letter-spacing: -0.3px;
             color: var(--text);
         }
 
         .header p {
             color: var(--muted);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             margin-top: 8px;
             font-weight: 300;
         }
 
         .card {
             background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 20px;
-            padding: 36px 32px;
-            box-shadow: 0 24px 60px rgba(124,58,237,0.08), 0 2px 8px rgba(36,27,61,0.04);
+            border: 1px solid var(--border-soft);
+            border-radius: 18px;
+            padding: 32px 28px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.35);
+        }
+
+        .divider-text {
+            text-align: center;
+            color: var(--muted);
+            font-size: 0.83rem;
+            margin: 4px 0 20px;
+            position: relative;
+        }
+
+            .divider-text span {
+                background: var(--card);
+                padding: 0 12px;
+                position: relative;
+                z-index: 1;
+            }
+
+            .divider-text::before {
+                content: '';
+                position: absolute;
+                top: 50%;
+                left: 0;
+                right: 0;
+                height: 1px;
+                background: var(--border);
+                z-index: 0;
+            }
+
+        .google-btn-wrap {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 18px;
         }
 
         .section-label {
-            font-size: 0.7rem;
-            font-weight: 700;
-            letter-spacing: 0.12em;
-            text-transform: uppercase;
-            color: var(--accent);
-            margin: 28px 0 12px;
+            font-size: 0.72rem;
+            font-weight: 600;
+            color: var(--accent-text);
+            margin: 24px 0 12px;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
-            .section-label:first-child {
+            .section-label:first-of-type {
                 margin-top: 0;
             }
 
@@ -160,7 +185,7 @@
                 content: '';
                 flex: 1;
                 height: 1px;
-                background: var(--border);
+                background: var(--border-soft);
             }
 
         .field {
@@ -171,15 +196,14 @@
             .field label {
                 display: block;
                 font-size: 0.75rem;
-                font-weight: 600;
+                font-weight: 500;
                 color: var(--muted);
                 margin-bottom: 6px;
-                letter-spacing: 0.02em;
             }
 
         input {
             width: 100%;
-            padding: 12px 16px;
+            padding: 12px 15px;
             background: var(--dim);
             border: 1.5px solid var(--border);
             border-radius: 10px;
@@ -188,18 +212,17 @@
             font-size: 0.95rem;
             font-weight: 400;
             outline: none;
-            transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+            transition: border-color 0.2s, box-shadow 0.2s;
             -webkit-appearance: none;
         }
 
             input::placeholder {
-                color: #a9a3bf;
+                color: #6a6580;
             }
 
             input:focus {
                 border-color: var(--border-focus);
-                background: #ffffff;
-                box-shadow: 0 0 0 3px var(--accent-glow);
+                box-shadow: 0 0 0 3px rgba(143,126,224,0.18);
             }
 
             input.valid {
@@ -215,26 +238,25 @@
         }
 
             .pw-wrap input {
-                padding-right: 48px;
+                padding-right: 46px;
             }
 
         .toggle-pw {
             position: absolute;
-            right: 13px;
+            right: 12px;
             top: 50%;
             transform: translateY(-50%);
             background: none;
             border: none;
             cursor: pointer;
-            font-size: 18px;
+            font-size: 16px;
             color: var(--muted);
             line-height: 1;
             padding: 4px;
-            transition: color 0.2s;
         }
 
             .toggle-pw:hover {
-                color: var(--accent);
+                color: var(--accent-text);
             }
 
         .strength-wrap {
@@ -248,7 +270,7 @@
 
         .strength-track {
             height: 4px;
-            background: var(--accent-light);
+            background: var(--border-soft);
             border-radius: 4px;
             overflow: hidden;
         }
@@ -287,14 +309,13 @@
                 padding: 3px 8px;
                 border-radius: 20px;
                 border: 1px solid var(--border);
-                transition: color 0.2s, border-color 0.2s;
                 white-space: nowrap;
             }
 
                 .req-list li.met {
                     color: var(--success);
-                    border-color: rgba(16,185,129,0.3);
-                    background: rgba(16,185,129,0.06);
+                    border-color: rgba(79,178,134,0.35);
+                    background: rgba(79,178,134,0.08);
                 }
 
                 .req-list li::before {
@@ -306,9 +327,8 @@
                     content: '✓';
                 }
 
-        /* ── Terms & Conditions ── */
         .terms-box {
-            margin-top: 24px;
+            margin-top: 22px;
             display: flex;
             align-items: flex-start;
             gap: 10px;
@@ -324,8 +344,8 @@
             }
 
         #termsCheckbox {
-            width: 20px;
-            height: 20px;
+            width: 19px;
+            height: 19px;
             flex-shrink: 0;
             margin-top: 1px;
             accent-color: var(--accent);
@@ -333,7 +353,7 @@
         }
 
         .terms-text {
-            font-size: 0.85rem;
+            font-size: 0.84rem;
             color: var(--muted);
             line-height: 1.5;
         }
@@ -342,8 +362,8 @@
                 background: none;
                 border: none;
                 padding: 0;
-                color: var(--accent);
-                font-weight: 700;
+                color: var(--accent-text);
+                font-weight: 600;
                 text-decoration: underline;
                 cursor: pointer;
                 font-size: inherit;
@@ -352,40 +372,34 @@
 
         .submit-btn {
             width: 100%;
-            margin-top: 28px;
-            padding: 15px;
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
+            margin-top: 26px;
+            padding: 14px;
+            background: var(--accent-dim);
             border: none;
-            border-radius: 12px;
-            color: white;
+            border-radius: 11px;
+            color: #f5f3ff;
             font-family: 'DM Sans', sans-serif;
-            font-size: 1rem;
+            font-size: 0.98rem;
             font-weight: 600;
             cursor: pointer;
-            letter-spacing: 0.02em;
-            transition: opacity 0.2s, transform 0.15s, box-shadow 0.2s;
-            box-shadow: 0 8px 24px rgba(124,58,237,0.30);
-            position: relative;
-            overflow: hidden;
+            transition: background 0.2s, transform 0.15s;
         }
 
             .submit-btn:disabled {
-                opacity: 0.45;
+                opacity: 0.4;
                 cursor: not-allowed;
-                box-shadow: none;
             }
 
             .submit-btn:not(:disabled):hover {
-                transform: translateY(-1px);
-                box-shadow: 0 12px 32px rgba(124,58,237,0.38);
+                background: var(--accent);
             }
 
             .submit-btn:not(:disabled):active {
-                transform: translateY(0);
+                transform: translateY(1px);
             }
 
             .submit-btn.btn-loading {
-                opacity: 0.65;
+                opacity: 0.6;
                 pointer-events: none;
             }
 
@@ -397,21 +411,20 @@
         }
 
             .login-link a {
-                color: var(--accent);
+                color: var(--accent-text);
                 text-decoration: none;
                 font-weight: 600;
             }
 
                 .login-link a:hover {
-                    color: var(--accent-dark);
+                    text-decoration: underline;
                 }
 
         /* ── Terms modal ── */
         .modal-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(36,27,61,0.45);
-            backdrop-filter: blur(2px);
+            background: rgba(10,8,16,0.6);
             display: none;
             align-items: center;
             justify-content: center;
@@ -424,21 +437,23 @@
             }
 
         .modal-card {
-            background: #ffffff;
-            border-radius: 20px;
-            max-width: 620px;
+            background: var(--card);
+            border: 1px solid var(--border-soft);
+            border-radius: 18px;
+            max-width: 600px;
             width: 100%;
             max-height: 85vh;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 24px 80px rgba(36,27,61,0.25);
+            box-shadow: 0 24px 70px rgba(0,0,0,0.5);
             overflow: hidden;
         }
 
         .modal-header {
-            padding: 22px 26px;
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-            color: white;
+            padding: 20px 24px;
+            background: var(--card-raised);
+            border-bottom: 1px solid var(--border-soft);
+            color: var(--text);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -447,37 +462,37 @@
             .modal-header h2 {
                 font-family: 'DM Serif Display', serif;
                 font-weight: 400;
-                font-size: 1.4rem;
+                font-size: 1.3rem;
             }
 
         .modal-close {
-            background: rgba(255,255,255,0.15);
-            border: none;
-            color: white;
-            width: 32px;
-            height: 32px;
+            background: var(--dim);
+            border: 1px solid var(--border);
+            color: var(--muted);
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            font-size: 18px;
+            font-size: 16px;
             cursor: pointer;
             flex-shrink: 0;
         }
 
             .modal-close:hover {
-                background: rgba(255,255,255,0.28);
+                color: var(--text);
             }
 
         .modal-body {
-            padding: 26px;
+            padding: 24px;
             overflow-y: auto;
-            font-size: 0.88rem;
+            font-size: 0.87rem;
             line-height: 1.7;
             color: var(--text);
         }
 
             .modal-body h3 {
-                color: var(--accent-dark);
-                font-size: 0.95rem;
-                margin: 22px 0 8px;
+                color: var(--accent-text);
+                font-size: 0.92rem;
+                margin: 20px 0 8px;
             }
 
                 .modal-body h3:first-child {
@@ -499,40 +514,40 @@
                 }
 
             .modal-body .warn-block {
-                margin-top: 18px;
-                padding: 14px 16px;
-                background: #fef2f2;
-                border: 1px solid #fecaca;
+                margin-top: 16px;
+                padding: 13px 16px;
+                background: rgba(217,118,118,0.08);
+                border: 1px solid rgba(217,118,118,0.3);
                 border-radius: 10px;
-                color: #991b1b;
-                font-size: 0.85rem;
+                color: #e5a3a3;
+                font-size: 0.84rem;
             }
 
         .modal-footer {
-            padding: 16px 26px;
-            border-top: 1px solid var(--border);
+            padding: 16px 24px;
+            border-top: 1px solid var(--border-soft);
             display: flex;
             gap: 12px;
         }
 
             .modal-footer button {
                 flex: 1;
-                padding: 12px;
+                padding: 11px;
                 border-radius: 10px;
                 font-weight: 600;
-                font-size: 0.9rem;
+                font-size: 0.89rem;
                 cursor: pointer;
                 font-family: 'DM Sans', sans-serif;
             }
 
         .modal-agree-btn {
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-            color: white;
+            background: var(--accent-dim);
+            color: #f5f3ff;
             border: none;
         }
 
             .modal-agree-btn:hover {
-                opacity: 0.92;
+                background: var(--accent);
             }
 
         .modal-cancel-btn {
@@ -542,7 +557,7 @@
         }
 
             .modal-cancel-btn:hover {
-                background: var(--accent-light);
+                color: var(--text);
             }
 
         #toast {
@@ -550,7 +565,7 @@
             bottom: 28px;
             left: 50%;
             transform: translateX(-50%) translateY(100px);
-            background: #ffffff;
+            background: var(--card-raised);
             border: 1px solid var(--border);
             color: var(--text);
             padding: 13px 20px;
@@ -559,7 +574,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            box-shadow: 0 8px 40px rgba(36,27,61,0.18);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
             z-index: 999;
             max-width: 360px;
             width: 90%;
@@ -573,24 +588,13 @@
                 opacity: 1;
             }
 
-            #toast.success {
-                border-left: 4px solid var(--success);
-            }
-
-            #toast.error {
-                border-left: 4px solid var(--error);
-            }
-
-            #toast.warning {
-                border-left: 4px solid var(--warning);
-            }
-
-            #toast.info {
-                border-left: 4px solid var(--accent);
-            }
+            #toast.success { border-left: 3px solid var(--success); }
+            #toast.error   { border-left: 3px solid var(--error); }
+            #toast.warning { border-left: 3px solid var(--warning); }
+            #toast.info    { border-left: 3px solid var(--accent); }
 
         #toast-icon {
-            font-size: 18px;
+            font-size: 17px;
             flex-shrink: 0;
         }
 
@@ -600,20 +604,20 @@
 
         .foot {
             text-align: center;
-            margin-top: 32px;
+            margin-top: 30px;
             color: var(--muted);
-            font-size: 0.8rem;
-            line-height: 2;
+            font-size: 0.78rem;
+            line-height: 1.9;
         }
 
             .foot strong {
-                color: var(--accent);
-                font-weight: 700;
+                color: var(--accent-text);
+                font-weight: 600;
             }
 
         @media (max-width: 520px) {
             .card {
-                padding: 24px 18px;
+                padding: 22px 18px;
             }
 
             .modal-card {
@@ -637,15 +641,15 @@
                 data-client_id="759761999579-rp1fgd1qmn5681bd363i1i7fin8mo37n.apps.googleusercontent.com"
                 data-callback="handleGoogleSignIn">
             </div>
-            <div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill" style="display:flex;justify-content:center;margin-bottom:20px;"></div>
-
-            <div style="text-align:center;color:var(--muted);font-size:0.85rem;margin-bottom:20px;position:relative;">
-                <span style="background:var(--card);padding:0 12px;position:relative;z-index:1;">or sign up with email</span>
-                <div style="position:absolute;top:50%;left:0;right:0;height:1px;background:var(--border);z-index:0;"></div>
+            <div class="google-btn-wrap">
+                <div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill" data-theme="filled_black"></div>
             </div>
+
+            <div class="divider-text"><span>or sign up with email</span></div>
+
             <form id="signupForm" onsubmit="return false">
 
-                <div class="section-label">👤 Account Details</div>
+                <div class="section-label">Account details</div>
 
                 <div class="field">
                     <label>Full Name</label>
@@ -662,20 +666,20 @@
                     <input type="tel" name="phone" id="phone" placeholder="e.g. 0712345678" required>
                 </div>
 
-                <div class="section-label">🎁 Referral (Optional)</div>
+                <div class="section-label">Referral (optional)</div>
 
                 <div class="field">
                     <label>Referral Code</label>
                     <input type="text" name="referral_code" id="referral_code" placeholder="e.g. REF1042">
                 </div>
 
-                <div class="section-label">🔒 Set Password</div>
+                <div class="section-label">Set password</div>
 
                 <div class="field">
                     <label>Password</label>
                     <div class="pw-wrap">
                         <input type="password" name="password" id="password" placeholder="Create a strong password" required>
-                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁️</button>
+                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁</button>
                     </div>
                     <div class="strength-wrap" id="strengthWrap">
                         <div class="strength-track">
@@ -696,11 +700,10 @@
                     <label>Confirm Password</label>
                     <div class="pw-wrap">
                         <input type="password" name="confirm" id="confirm" placeholder="Repeat your password" required>
-                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password">👁️</button>
+                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password">👁</button>
                     </div>
                 </div>
 
-                <!-- ── Terms & Conditions gate ── -->
                 <div class="terms-box" id="termsBox">
                     <input type="checkbox" id="termsCheckbox">
                     <div class="terms-text">
@@ -714,13 +717,13 @@
 
             </form>
 
-            <p class="login-link">Already have an account? <a href="login.html">Login</a></p>
+            <p class="login-link">Already have an account? <a href="login.html">Log in</a></p>
         </div>
 
         <div class="foot">
             <strong>QejaConnect Kenya Ltd.</strong><br>
             qejaconnect@outlook.com &nbsp;·&nbsp; +254 714 104 737 &nbsp;·&nbsp; +254 712 034 43<br>
-            <em>Regulated by the Communication Authority of Kenya</em>
+            Regulated by the Communication Authority of Kenya
         </div>
 
     </div>
@@ -783,95 +786,95 @@
         </div>
     </div>
 
-	<!-- ── OTP verification modal ── -->
-	<div class="modal-overlay" id="otpModal">
-		<div class="modal-card" style="max-width:420px;">
-			<div class="modal-header">
-				<h2>Verify your email</h2>
-				<button class="modal-close" id="closeOtpModal" aria-label="Close">✕</button>
-			</div>
-			<div class="modal-body" style="text-align:center;">
-				<p style="color:var(--muted); margin-bottom:18px;">
-					We sent a 6-digit code to <strong id="otpEmailDisplay"></strong>. Enter it below to verify your account.
-				</p>
-				<input type="text" id="otpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*"
-					   placeholder="••••••"
-					   style="text-align:center; font-size:1.4rem; letter-spacing:8px; font-weight:600;">
-					<button type="button" class="submit-btn" id="verifyOtpBtn" style="margin-top:18px;">Verify</button>
-					<p style="margin-top:16px; font-size:0.85rem; color:var(--muted);">
-						Didn't get it?
-						<button type="button" id="resendOtpBtn" style="background:none;border:none;color:var(--accent);font-weight:700;text-decoration:underline;cursor:pointer;">Resend code</button>
-						<span id="resendCooldown"></span>
-					</p>
-				</div>
-		</div>
-	</div>
-	
+    <!-- ── OTP verification modal ── -->
+    <div class="modal-overlay" id="otpModal">
+        <div class="modal-card" style="max-width:400px;">
+            <div class="modal-header">
+                <h2>Verify your email</h2>
+                <button class="modal-close" id="closeOtpModal" aria-label="Close">✕</button>
+            </div>
+            <div class="modal-body" style="text-align:center;">
+                <p style="color:var(--muted); margin-bottom:18px;">
+                    We sent a 6-digit code to <strong id="otpEmailDisplay" style="color:var(--text);"></strong>. Enter it below to verify your account.
+                </p>
+                <input type="text" id="otpInput" maxlength="6" inputmode="numeric" pattern="[0-9]*"
+                       placeholder="••••••"
+                       style="text-align:center; font-size:1.35rem; letter-spacing:8px; font-weight:600;">
+                <button type="button" class="submit-btn" id="verifyOtpBtn" style="margin-top:18px;">Verify</button>
+                <p style="margin-top:16px; font-size:0.85rem; color:var(--muted);">
+                    Didn't get it?
+                    <button type="button" id="resendOtpBtn" style="background:none;border:none;color:var(--accent-text);font-weight:600;text-decoration:underline;cursor:pointer;">Resend code</button>
+                    <span id="resendCooldown"></span>
+                </p>
+            </div>
+        </div>
+    </div>
+
     <script src="https://accounts.google.com/gsi/client" async defer></script>
 
-	<div id="g_id_onload"
-		data-client_id="759761999579-rp1fgd1qmn5681bd363i1i7fin8mo37n.apps.googleusercontent.com"
-		data-callback="handleGoogleSignIn">
-	</div>
-	<div class="g_id_signin" data-type="standard" data-size="large" data-shape="pill"></div>
+    <script>
+        async function handleGoogleSignIn(response) {
+            try {
+                // Matches backend route POST /login/google, which expects { idToken }
+                const res = await fetch(`${API}/login/google`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ idToken: response.credential })
+                });
+                const data = await res.json();
+                if (!data.success) { showToast(data.message || 'Google sign-in failed', 'error'); return; }
 
-	<script>
-	async function handleGoogleSignIn(response) {
-		try {
-			const res = await fetch(`${API}/auth/google`, {
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify({ credential: response.credential })
-			});
-			const data = await res.json();
-			if (!data.success) { showToast(data.message || 'Google sign-in failed', 'error'); return; }
+                localStorage.setItem('token', data.token);
+                localStorage.setItem('role', data.role);
+                localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-			localStorage.setItem('token', data.token);
-			localStorage.setItem('role', data.role);
-			localStorage.setItem('loggedUser', JSON.stringify(data.user));
+                showToast('Signed in with Google 👋', 'success');
+                setTimeout(() => redirectUser(data.role), 1000);
+            } catch (err) {
+                showToast('Google sign-in failed. Try again.', 'error');
+            }
+        }
 
-			showToast('Signed in with Google 👋', 'success');
-			setTimeout(() => redirectUser(data.role), 1000);
-		} catch (err) {
-			showToast('Google sign-in failed. Try again.', 'error');
-		}
-		}
-	</script>
+        function redirectUser(role) {
+            window.location.href = role === 'landlord' ? 'landlord-dashboard.html' : 'welcome.html';
+        }
+    </script>
+
     <div id="toast">
         <span id="toast-icon"></span>
         <span id="toast-msg"></span>
     </div>
 
-    
-	<script src="otp.js"></script>
+    <script src="otp.js"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        const refCode   = urlParams.get('ref');
-        if (refCode) {
-        document.getElementById('referral_code').value = refCode.toUpperCase();
-        }
+            const urlParams = new URLSearchParams(window.location.search);
+            const refCode = urlParams.get('ref');
+            if (refCode) {
+                document.getElementById('referral_code').value = refCode.toUpperCase();
+            }
         });
     </script>
 
     <script>
+        // Backend base URL — matches the QejaConnect Render deployment.
         const API = 'https://qeja-backend-azkf.onrender.com';
 
         // ── Toast ──────────────────────────────────────────────────
         let toastTimer;
         function showToast(message, type = 'info', duration = 3500) {
-        const toast = document.getElementById('toast');
-        const icon  = document.getElementById('toast-icon');
-        const msg   = document.getElementById('toast-msg');
-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
-        toast.className = '';
-        toast.classList.add(type);
-        icon.textContent = icons[type] || 'ℹ️';
-        msg.textContent  = message;
-        void toast.offsetWidth;
-        toast.classList.add('show');
-        clearTimeout(toastTimer);
-        toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
+            const toast = document.getElementById('toast');
+            const icon  = document.getElementById('toast-icon');
+            const msg   = document.getElementById('toast-msg');
+            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+            toast.className = '';
+            toast.classList.add(type);
+            icon.textContent = icons[type] || 'ℹ️';
+            msg.textContent  = message;
+            void toast.offsetWidth;
+            toast.classList.add('show');
+            clearTimeout(toastTimer);
+            toastTimer = setTimeout(() => toast.classList.remove('show'), duration);
         }
 
         // ── Terms modal + checkbox gating ───────────────────────────
@@ -881,176 +884,182 @@
         const signupBtn     = document.getElementById('signup-btn');
 
         function updateSubmitState() {
-        signupBtn.disabled = !termsCheckbox.checked;
-        if (termsCheckbox.checked) termsBox.classList.remove('invalid');
+            signupBtn.disabled = !termsCheckbox.checked;
+            if (termsCheckbox.checked) termsBox.classList.remove('invalid');
         }
 
         function openTermsModal() {
-        termsModal.classList.add('show');
-        document.getElementById('termsScrollBody').scrollTop = 0;
+            termsModal.classList.add('show');
+            document.getElementById('termsScrollBody').scrollTop = 0;
         }
         function closeTermsModal() {
-        termsModal.classList.remove('show');
+            termsModal.classList.remove('show');
         }
 
         document.getElementById('openTermsBtn').addEventListener('click', openTermsModal);
         document.getElementById('closeTermsModal').addEventListener('click', closeTermsModal);
         document.getElementById('declineTermsBtn').addEventListener('click', closeTermsModal);
         document.getElementById('agreeTermsBtn').addEventListener('click', () => {
-        termsCheckbox.checked = true;
-        updateSubmitState();
-        closeTermsModal();
+            termsCheckbox.checked = true;
+            updateSubmitState();
+            closeTermsModal();
         });
         termsModal.addEventListener('click', (e) => {
-        if (e.target === termsModal) closeTermsModal();
+            if (e.target === termsModal) closeTermsModal();
         });
         termsCheckbox.addEventListener('change', updateSubmitState);
 
         // ── Password toggle ────────────────────────────────────────
         document.getElementById('togglePw').addEventListener('click', function () {
-        const pw = document.getElementById('password');
-        const showing = pw.type === 'text';
-        pw.type = showing ? 'password' : 'text';
-        this.textContent = showing ? '👁️' : '🙈';
+            const pw = document.getElementById('password');
+            const showing = pw.type === 'text';
+            pw.type = showing ? 'password' : 'text';
+            this.textContent = showing ? '👁' : '🙈';
         });
 
         document.getElementById('toggleConfirm').addEventListener('click', function () {
-        const cf = document.getElementById('confirm');
-        const showing = cf.type === 'text';
-        cf.type = showing ? 'password' : 'text';
-        this.textContent = showing ? '👁️' : '🙈';
+            const cf = document.getElementById('confirm');
+            const showing = cf.type === 'text';
+            cf.type = showing ? 'password' : 'text';
+            this.textContent = showing ? '👁' : '🙈';
         });
 
         // ── Password strength ──────────────────────────────────────
         const rules = {
-        len:   v => v.length >= 8,
-        upper: v => /[A-Z]/.test(v),
-        lower: v => /[a-z]/.test(v),
-        num:   v => /[0-9]/.test(v),
-        sym:   v => /[^A-Za-z0-9]/.test(v),
+            len:   v => v.length >= 8,
+            upper: v => /[A-Z]/.test(v),
+            lower: v => /[a-z]/.test(v),
+            num:   v => /[0-9]/.test(v),
+            sym:   v => /[^A-Za-z0-9]/.test(v),
         };
 
         const strengthLabels = ['', 'Weak', 'Fair', 'Good', 'Strong', 'Very strong'];
-        const strengthColors = ['', '#ef4444', '#f59e0b', '#a78bfa', '#10b981', '#059669'];
+        const strengthColors = ['', '#d97676', '#d1a35c', '#8f7ee0', '#4fb286', '#3a9c72'];
 
         function checkStrength(val) {
-        return Object.values(rules).filter(fn => fn(val)).length;
+            return Object.values(rules).filter(fn => fn(val)).length;
         }
 
         document.getElementById('password').addEventListener('input', function () {
-        const val   = this.value;
-        const wrap  = document.getElementById('strengthWrap');
-        const fill  = document.getElementById('strengthFill');
-        const label = document.getElementById('strengthLabel');
-        const list  = document.getElementById('reqList');
+            const val   = this.value;
+            const wrap  = document.getElementById('strengthWrap');
+            const fill  = document.getElementById('strengthFill');
+            const label = document.getElementById('strengthLabel');
+            const list  = document.getElementById('reqList');
 
-        if (val.length === 0) {
-        wrap.classList.remove('visible');
-        list.classList.remove('visible');
-        this.classList.remove('valid', 'invalid');
-        return;
-        }
+            if (val.length === 0) {
+                wrap.classList.remove('visible');
+                list.classList.remove('visible');
+                this.classList.remove('valid', 'invalid');
+                return;
+            }
 
-        wrap.classList.add('visible');
-        list.classList.add('visible');
+            wrap.classList.add('visible');
+            list.classList.add('visible');
 
-        const score = checkStrength(val);
-        fill.style.width      = (score / 5 * 100) + '%';
-        fill.style.background = strengthColors[score];
-        label.textContent     = strengthLabels[score];
-        label.style.color     = strengthColors[score];
+            const score = checkStrength(val);
+            fill.style.width      = (score / 5 * 100) + '%';
+            fill.style.background = strengthColors[score];
+            label.textContent     = strengthLabels[score];
+            label.style.color     = strengthColors[score];
 
-        Object.entries(rules).forEach(([key, fn]) => {
-        const li = document.getElementById('req-' + key);
-        if (fn(val)) { li.classList.add('met'); li.classList.remove('unmet'); }
-        else         { li.classList.add('unmet'); li.classList.remove('met'); }
-        });
+            Object.entries(rules).forEach(([key, fn]) => {
+                const li = document.getElementById('req-' + key);
+                if (fn(val)) { li.classList.add('met'); li.classList.remove('unmet'); }
+                else         { li.classList.add('unmet'); li.classList.remove('met'); }
+            });
 
-        this.classList.toggle('valid',   score === 5);
-        this.classList.toggle('invalid', score < 5 && val.length > 0);
+            this.classList.toggle('valid',   score === 5);
+            this.classList.toggle('invalid', score < 5 && val.length > 0);
         });
 
         // ── Confirm match ──────────────────────────────────────────
         document.getElementById('confirm').addEventListener('input', function () {
-        const pw = document.getElementById('password').value;
-        this.classList.toggle('valid',   this.value === pw && this.value.length > 0);
-        this.classList.toggle('invalid', this.value !== pw && this.value.length > 0);
+            const pw = document.getElementById('password').value;
+            this.classList.toggle('valid',   this.value === pw && this.value.length > 0);
+            this.classList.toggle('invalid', this.value !== pw && this.value.length > 0);
         });
 
         // ── Submit ─────────────────────────────────────────────────
         document.getElementById('signupForm').addEventListener('submit', async function (e) {
-        e.preventDefault();
+            e.preventDefault();
 
-        const fullname      = document.getElementById('fullname').value.trim();
-        const email         = document.getElementById('email').value.trim();
-        const password      = document.getElementById('password').value;
-        const confirm       = document.getElementById('confirm').value;
-        const phone         = document.getElementById('phone').value.trim();
-        const referral_code = document.getElementById('referral_code').value.trim();
+            const fullname      = document.getElementById('fullname').value.trim();
+            const email         = document.getElementById('email').value.trim();
+            const password      = document.getElementById('password').value;
+            const confirm       = document.getElementById('confirm').value;
+            const phone         = document.getElementById('phone').value.trim();
+            const referral_code = document.getElementById('referral_code').value.trim();
 
-        if (!fullname) { showToast('Please enter your full name.', 'warning'); return; }
+            if (!fullname) { showToast('Please enter your full name.', 'warning'); return; }
 
-        if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        showToast('Please enter a valid email address.', 'warning'); return;
-        }
+            if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                showToast('Please enter a valid email address.', 'warning'); return;
+            }
 
-        if (!phone || !/^(\+254|0)[71]\d{8}$/.test(phone)) {
-        showToast('Please enter a valid Kenyan phone number.', 'warning'); return;
-        }
+            // Matches backend's /^(\+254|0)[71]\d{8}$/ check in /signup
+            if (!phone || !/^(\+254|0)[71]\d{8}$/.test(phone)) {
+                showToast('Please enter a valid Kenyan phone number.', 'warning'); return;
+            }
 
-        const score = checkStrength(password);
-        if (score < 4) {
-        showToast('Password is too weak. Please meet all requirements.', 'warning', 4500);
-        document.getElementById('reqList').classList.add('visible');
-        document.getElementById('strengthWrap').classList.add('visible');
-        return;
-        }
+            const score = checkStrength(password);
+            if (score < 4) {
+                showToast('Password is too weak. Please meet all requirements.', 'warning', 4500);
+                document.getElementById('reqList').classList.add('visible');
+                document.getElementById('strengthWrap').classList.add('visible');
+                return;
+            }
 
-        if (password !== confirm) {
-        showToast('Passwords do not match.', 'error');
-        document.getElementById('confirm').classList.add('invalid');
-        return;
-        }
+            if (password !== confirm) {
+                showToast('Passwords do not match.', 'error');
+                document.getElementById('confirm').classList.add('invalid');
+                return;
+            }
 
-        // Defense-in-depth: button is disabled without this, but a
-        // direct form submit (e.g. pressing Enter) could still bypass it.
-        if (!termsCheckbox.checked) {
-        termsBox.classList.add('invalid');
-        showToast('Please accept the Terms & Conditions to continue.', 'warning');
-        return;
-        }
+            // Defense-in-depth: button is disabled without this, but a
+            // direct form submit (e.g. pressing Enter) could still bypass it.
+            if (!termsCheckbox.checked) {
+                termsBox.classList.add('invalid');
+                showToast('Please accept the Terms & Conditions to continue.', 'warning');
+                return;
+            }
 
-        const btn = document.getElementById('signup-btn');
-        btn.textContent = 'Creating account…';
-        btn.classList.add('btn-loading');
+            const btn = document.getElementById('signup-btn');
+            btn.textContent = 'Creating account…';
+            btn.classList.add('btn-loading');
 
-        try {
-        const response = await fetch(`${API}/signup`, {
-        method:  'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body:    JSON.stringify({
-        fullname, email, phone, password, referral_code,
-        terms_accepted: true
-        })
-        });
+            try {
+                // Matches backend route POST /signup (signupSchema: fullname,
+                // email, phone, password, referral_code)
+                const response = await fetch(`${API}/signup`, {
+                    method:  'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body:    JSON.stringify({
+                        fullname, email, phone, password, referral_code,
+                        terms_accepted: true
+                    })
+                });
 
-        const data = await response.json();
+                const data = await response.json();
 
-       if (response.ok) {
-            showToast('Account created! Check your email for a verification code.', 'success', 3000);
-            openOtpModal(email);
-        } 
-		else {
-        showToast(data.message || 'Sign up failed. Please try again.', 'error');
-        btn.textContent = 'Create Account';
-        btn.classList.remove('btn-loading');
-        }
-        } catch (err) {
-        console.error(err);
-        showToast('Server error. Please try again later.', 'error');
-        btn.textContent = 'Create Account';
-        btn.classList.remove('btn-loading');
-        }
+                if (response.ok) {
+                    showToast('Account created! Check your email for a verification code.', 'success', 3000);
+                    if (typeof openOtpModal === 'function') {
+                        openOtpModal(email);
+                    } else {
+                        setTimeout(() => { window.location.href = 'login.html'; }, 1200);
+                    }
+                } else {
+                    showToast(data.message || 'Sign up failed. Please try again.', 'error');
+                    btn.textContent = 'Create Account';
+                    btn.classList.remove('btn-loading');
+                }
+            } catch (err) {
+                console.error(err);
+                showToast('Server error. Please try again later.', 'error');
+                btn.textContent = 'Create Account';
+                btn.classList.remove('btn-loading');
+            }
         });
     </script>
 </body>
