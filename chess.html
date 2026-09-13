@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>Strategos Chess</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <h1>♞ Strategos Chess</h1>
+  <button id="soundToggleBtn" class="icon-btn" title="Toggle sound">🔊</button>
+</header>
+
+<main class="layout">
+
+  <!-- LEFT PANEL: game setup -->
+  <section class="panel setup-panel">
+    <h2>Game Setup</h2>
+
+    <div class="field-group">
+      <label>Mode</label>
+      <div class="btn-row" id="modeButtons">
+        <button class="mode-btn active" data-mode="ai">Vs Computer</button>
+        <button class="mode-btn" data-mode="local">Two Players</button>
+        <button class="mode-btn" data-mode="online">Online</button>
+      </div>
+    </div>
+
+    <div class="field-group" id="aiOptions">
+      <label>Difficulty</label>
+      <select id="levelSelect">
+        <option value="2">Beginner</option>
+        <option value="3" selected>Intermediate</option>
+        <option value="4">Advanced</option>
+        <option value="5">Expert</option>
+      </select>
+
+      <label style="margin-top:10px;">Play As</label>
+      <div class="btn-row">
+        <button class="side-btn active" data-side="w">White</button>
+        <button class="side-btn" data-side="b">Black</button>
+      </div>
+    </div>
+
+    <div class="field-group hidden" id="onlineOptions">
+      <div class="online-block">
+        <button id="hostBtn" class="full-btn">Host New Game</button>
+        <div id="hostInfo" class="hidden">
+          <p>Share this code with your opponent:</p>
+          <div class="code-row">
+            <input type="text" id="hostCodeDisplay" readonly>
+            <button id="copyCodeBtn" class="icon-btn">📋</button>
+          </div>
+          <p class="hint">Waiting for opponent to connect…</p>
+        </div>
+      </div>
+      <div class="online-block">
+        <p class="or-divider">— or —</p>
+        <input type="text" id="joinCodeInput" placeholder="Enter opponent's code">
+        <button id="joinBtn" class="full-btn">Join Game</button>
+      </div>
+      <p id="onlineStatus" class="hint"></p>
+    </div>
+
+    <div class="field-group">
+      <button id="newGameBtn" class="full-btn primary">New Game</button>
+      <div class="btn-row">
+        <button id="undoBtn" class="half-btn">Undo</button>
+        <button id="flipBtn" class="half-btn">Flip Board</button>
+      </div>
+      <button id="resignBtn" class="full-btn danger">Resign</button>
+    </div>
+  </section>
+
+  <!-- CENTER: board -->
+  <section class="board-area">
+    <div class="status-bar" id="statusBar">White to move</div>
+    <div class="board-wrapper">
+      <div class="board" id="board"></div>
+      <div class="thinking-indicator hidden" id="thinkingIndicator">Computer is thinking…</div>
+    </div>
+    <div class="captured-row">
+      <div class="captured" id="capturedByWhite"></div>
+      <div class="captured" id="capturedByBlack"></div>
+    </div>
+  </section>
+
+  <!-- RIGHT PANEL: history -->
+  <section class="panel history-panel">
+    <h2>Move History</h2>
+    <div class="history-list" id="historyList"></div>
+    <button id="liveBtn" class="full-btn hidden" id="returnLiveBtn">Return to Live Position</button>
+  </section>
+
+</main>
+
+<!-- Promotion modal -->
+<div class="modal-overlay hidden" id="promoModal">
+  <div class="modal promo-modal">
+    <p>Promote pawn to:</p>
+    <div class="promo-choices" id="promoChoices"></div>
+  </div>
+</div>
+
+<!-- Game over modal -->
+<div class="modal-overlay hidden" id="gameOverModal">
+  <div class="modal gameover-modal">
+    <h2 id="gameOverTitle">Checkmate!</h2>
+    <p id="gameOverSubtitle"></p>
+    <button id="gameOverCloseBtn" class="full-btn primary">Close</button>
+  </div>
+</div>
+
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="engine.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
