@@ -12,7 +12,7 @@
     <!-- Theme colour -->
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8279216495095610"
      crossorigin="anonymous"></script>
-    <meta name="theme-color" content="#17141f">
+    <meta name="theme-color" content="#1a1535">
 
     <!-- SEO & Search appearance -->
     <meta name="description" content="Qeja Connect links tenants with verified landlords in Kenya. Find accommodation easily — browse listings, chat with landlords, and secure your next home.">
@@ -66,19 +66,20 @@
 
     <style>
         :root {
-            /* Same low-glare dark palette as the signup/login pages */
-            --bg:            #17141f;
-            --card:          #1f1b2b;
-            --card-raised:   #262135;
-            --header:        #1b1728;
-            --border:        #33304a;
-            --border-soft:   #2a2638;
-            --accent:        #8f7ee0;
-            --accent-dim:    #6f60b8;
-            --accent-text:   #cfc6f5;
-            --text:          #e9e6f2;
-            --muted:         #9490a8;
-            --dim:           #221e30;
+            /* Deep indigo-purple palette */
+            --bg:            #1a1535;
+            --card:          #221b47;
+            --card-raised:   #2c2258;
+            --header:        #1e1840;
+            --border:        #3e3470;
+            --border-soft:   #332a5e;
+            --accent:        #a78bfa;
+            --accent-dim:    #7c5cf0;
+            --accent-grad:   linear-gradient(135deg, #8b6ff2 0%, #b79bff 100%);
+            --accent-text:   #dccdfc;
+            --text:          #f2eefc;
+            --muted:         #aba3cf;
+            --dim:           #221b47;
         }
 
         * {
@@ -96,11 +97,34 @@
             background: var(--bg);
             color: var(--text);
             min-height: 100vh;
+            font-size: 17px;
         }
 
         h1, h2, h3 {
             font-family: 'DM Serif Display', serif;
             font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+
+        /* ── SCROLL REVEAL ── */
+        .reveal {
+            opacity: 0;
+            transform: translateY(26px);
+            transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+                        transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+            .reveal.in-view {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+        @media (prefers-reduced-motion: reduce) {
+            .reveal {
+                opacity: 1;
+                transform: none;
+                transition: none;
+            }
         }
 
         /* ── HEADER ── */
@@ -131,8 +155,8 @@
         }
 
         .logo-area h2 {
-            font-size: 1.1rem;
-            font-weight: 500;
+            font-size: 1.25rem;
+            font-weight: 600;
             font-family: 'DM Sans', sans-serif;
         }
 
@@ -145,20 +169,26 @@
 
         button {
             width: auto;
-            padding: 11px 20px;
+            padding: 12px 22px;
             border: none;
             border-radius: 10px;
-            background: var(--accent-dim);
+            background: var(--accent-grad);
             color: #f5f3ff;
             font-weight: 600;
             cursor: pointer;
             font-family: 'DM Sans', sans-serif;
-            font-size: 0.92rem;
-            transition: background 0.2s;
+            font-size: 0.97rem;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
         }
 
             button:hover {
-                background: var(--accent);
+                filter: brightness(1.08);
+                transform: translateY(-2px);
+                box-shadow: 0 10px 24px rgba(124, 92, 240, 0.35);
+            }
+
+            button:active {
+                transform: translateY(0);
             }
 
         .btn-ghost {
@@ -194,23 +224,24 @@
             height: 100%;
             object-fit: cover;
             opacity: 0;
-            animation: slideCycle 28s infinite;
+            animation: slideCycle 32s cubic-bezier(0.45, 0, 0.2, 1) infinite;
         }
 
-            .hero-slide:nth-child(1) { animation-delay: 0s;   }
-            .hero-slide:nth-child(2) { animation-delay: -4s;  }
-            .hero-slide:nth-child(3) { animation-delay: -8s;  }
-            .hero-slide:nth-child(4) { animation-delay: -12s; }
-            .hero-slide:nth-child(5) { animation-delay: -16s; }
-            .hero-slide:nth-child(6) { animation-delay: -20s; }
-            .hero-slide:nth-child(7) { animation-delay: -24s; }
+            .hero-slide:nth-child(1) { animation-delay: 0s;      }
+            .hero-slide:nth-child(2) { animation-delay: -4.57s;  }
+            .hero-slide:nth-child(3) { animation-delay: -9.14s;  }
+            .hero-slide:nth-child(4) { animation-delay: -13.71s; }
+            .hero-slide:nth-child(5) { animation-delay: -18.28s; }
+            .hero-slide:nth-child(6) { animation-delay: -22.85s; }
+            .hero-slide:nth-child(7) { animation-delay: -27.42s; }
 
+        /* Slow Ken-Burns pan + zoom, crossfading between slides */
         @keyframes slideCycle {
-            0%     { opacity: 0; transform: scale(1.06); }
-            2%     { opacity: 1; }
-            11%    { opacity: 1; transform: scale(1.13); }
-            14.28% { opacity: 0; transform: scale(1.13); }
-            100%   { opacity: 0; }
+            0%      { opacity: 0;   transform: scale(1.04) translate(0, 0); }
+            2.5%    { opacity: 1; }
+            11%     { opacity: 1;   transform: scale(1.14) translate(-1.2%, -0.8%); }
+            14.28%  { opacity: 0;   transform: scale(1.16) translate(-1.6%, -1%); }
+            100%    { opacity: 0; }
         }
 
         .hero::before {
@@ -219,7 +250,36 @@
             inset: 0;
             z-index: -1;
             background:
-                linear-gradient(180deg, rgba(15,12,22,0.75) 0%, rgba(15,12,22,0.6) 45%, rgba(15,12,22,0.92) 100%);
+                linear-gradient(180deg, rgba(20,15,45,0.78) 0%, rgba(26,21,53,0.62) 45%, rgba(15,10,32,0.94) 100%);
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 15%, rgba(167,139,250,0.22), transparent 60%);
+        }
+
+        .hero-eyebrow, .hero-title, .hero-sub, .hero-cta, .hero-stats {
+            animation: heroRise 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
+        }
+
+        .hero-title  { animation-delay: 0.08s; }
+        .hero-sub    { animation-delay: 0.16s; }
+        .hero-cta    { animation-delay: 0.24s; }
+        .hero-stats  { animation-delay: 0.32s; }
+
+        @keyframes heroRise {
+            from { opacity: 0; transform: translateY(18px); }
+            to   { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .hero-eyebrow, .hero-title, .hero-sub, .hero-cta, .hero-stats {
+                animation: none;
+            }
         }
 
         .hero-eyebrow {
@@ -236,17 +296,17 @@
         }
 
         .hero-title {
-            font-size: clamp(1.9rem, 5vw, 3rem);
-            margin-bottom: 14px;
-            line-height: 1.15;
+            font-size: clamp(2.2rem, 6vw, 3.6rem);
+            margin-bottom: 16px;
+            line-height: 1.12;
         }
 
         .hero-sub {
-            max-width: 560px;
+            max-width: 600px;
             margin: 0 auto 34px;
-            color: #cfc9dd;
-            font-size: 1rem;
-            line-height: 1.6;
+            color: #d6d0ea;
+            font-size: 1.12rem;
+            line-height: 1.65;
         }
 
         .hero-cta {
@@ -290,18 +350,18 @@
         }
 
         .hero-stat-num {
-            font-size: 1.5rem;
+            font-size: 1.75rem;
             font-weight: 600;
             line-height: 1;
             font-family: 'DM Serif Display', serif;
         }
 
         .hero-stat-label {
-            font-size: 0.7rem;
-            color: #b3addf;
+            font-size: 0.75rem;
+            color: #c0b8e6;
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            margin-top: 6px;
+            margin-top: 7px;
         }
 
         .hero-divider {
@@ -320,18 +380,30 @@
         .photo-strip {
             display: flex;
             width: max-content;
-            gap: 14px;
-            animation: scrollStrip 34s linear infinite;
+            gap: 16px;
+            animation: scrollStrip 40s linear infinite;
         }
 
+            .photo-strip-wrap:hover .photo-strip {
+                animation-play-state: paused;
+            }
+
         .photo-strip img {
-            width: 190px;
-            height: 120px;
+            width: 200px;
+            height: 128px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 14px;
             border: 1px solid var(--border-soft);
             flex-shrink: 0;
+            transition: transform 0.4s ease, filter 0.4s ease;
+            filter: saturate(0.94);
         }
+
+            .photo-strip img:hover {
+                transform: scale(1.045) translateY(-3px);
+                filter: saturate(1.08);
+                box-shadow: 0 14px 30px rgba(0,0,0,0.35);
+            }
 
         @keyframes scrollStrip {
             0%   { transform: translateX(0); }
@@ -348,15 +420,15 @@
 
             .page-heading h1 {
                 color: var(--text);
-                font-size: 1.7rem;
-                margin: 0 0 8px;
+                font-size: 2rem;
+                margin: 0 0 10px;
             }
 
             .page-heading p {
                 color: var(--muted);
                 margin: 0 auto;
-                font-size: 14px;
-                max-width: 480px;
+                font-size: 15.5px;
+                max-width: 500px;
             }
 
         /* ── HOW IT WORKS GRID ── */
@@ -373,28 +445,35 @@
             background: var(--card);
             border: 1px solid var(--border-soft);
             border-radius: 15px;
-            padding: 24px;
+            padding: 26px;
             text-align: center;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
         }
 
+            .step-card:hover {
+                transform: translateY(-5px);
+                border-color: var(--accent-dim);
+                box-shadow: 0 16px 34px rgba(0,0,0,0.28);
+            }
+
         .step-num {
-            width: 38px;
-            height: 38px;
+            width: 40px;
+            height: 40px;
             margin: 0 auto 14px;
-            background: var(--accent-dim);
+            background: var(--accent-grad);
             color: #f5f3ff;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 1rem;
         }
 
         .step-text {
-            font-size: 0.9rem;
+            font-size: 0.97rem;
             color: var(--muted);
-            line-height: 1.6;
+            line-height: 1.65;
         }
 
         /* ── ABOUT CARD ── */
@@ -444,14 +523,14 @@
 
         .about-title {
             color: var(--text);
-            font-size: 1.4rem;
+            font-size: 1.6rem;
             margin-bottom: 12px;
         }
 
         .about-body {
             color: var(--muted);
-            line-height: 1.7;
-            font-size: 0.94rem;
+            line-height: 1.75;
+            font-size: 1rem;
         }
 
         /* ── SIGN-UP SECTION ── */
@@ -469,14 +548,14 @@
 
             .signup-inner h2 {
                 color: var(--text);
-                font-size: 1.55rem;
+                font-size: 1.8rem;
                 margin-bottom: 10px;
             }
 
             .signup-inner p {
                 color: var(--muted);
-                font-size: 0.95rem;
-                line-height: 1.6;
+                font-size: 1.02rem;
+                line-height: 1.65;
             }
 
         .signup-cta {
@@ -603,7 +682,7 @@
         .bar-fill {
             width: 100%;
             padding: 13px 20px;
-            background: #100e18;
+            background: #14102c;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -629,7 +708,7 @@
 
         /* ── FOOTER ── */
         footer {
-            background: #100e18;
+            background: #14102c;
             color: var(--text);
             text-align: center;
             padding: 32px 20px;
@@ -770,36 +849,36 @@
     </div>
 
     <!-- HOW IT WORKS -->
-    <div class="page-heading">
+    <div class="page-heading reveal">
         <h1>Up and running in minutes</h1>
         <p>Whether you're looking for a place or listing one, the process is simple and straightforward.</p>
     </div>
 
     <div class="how-grid">
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-num">1</div>
             <p class="step-text">Tenants create an account and browse verified listings near their preferred location.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-num">2</div>
             <p class="step-text">Landlords or property owners register as a host and list their available properties.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-num">3</div>
             <p class="step-text">Fill in your geographical details accurately so we can match you with the right people.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-num">4</div>
             <p class="step-text">Hosts track their dashboard for booking requests and respond to tenant inquiries via chat.</p>
         </div>
-        <div class="step-card">
+        <div class="step-card reveal">
             <div class="step-num">5</div>
             <p class="step-text">Communicate politely and promptly — hosts should check their dashboard regularly.</p>
         </div>
     </div>
 
     <!-- ABOUT -->
-    <div class="about-card">
+    <div class="about-card reveal">
         <div class="about-img-wrap">
             <img class="about-logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect">
             <span class="about-brand-name">QejaConnect</span>
@@ -813,7 +892,7 @@
 
     <!-- SIGN UP CTA -->
     <div class="signup-section">
-        <div class="signup-inner">
+        <div class="signup-inner reveal">
             <h2>Seems cool? Join today.</h2>
             <p>Create your free account in under two minutes and start browsing or listing properties right away.</p>
             <div class="signup-cta">
@@ -932,6 +1011,34 @@
             document.getElementById('popupOverlay').classList.remove('open');
             document.getElementById('popup').style.display = 'none';
         };
+    </script>
+
+    <!-- Scroll-reveal for sections as they enter the viewport -->
+    <script>
+        (function() {
+            const items = document.querySelectorAll('.reveal');
+            items.forEach((el, i) => {
+                if (el.classList.contains('step-card')) {
+                    el.style.transitionDelay = (i % 5) * 0.08 + 's';
+                }
+            });
+
+            if (!('IntersectionObserver' in window)) {
+                items.forEach(el => el.classList.add('in-view'));
+                return;
+            }
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+            items.forEach(el => observer.observe(el));
+        })();
     </script>
 
 </body>
