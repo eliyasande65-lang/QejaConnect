@@ -2,43 +2,43 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 
   <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/welcome.html</loc>
+    <loc>https://qejaconnect.co.ke/index.html</loc>
     <priority>1.0</priority>
-    <changefreq>weekly</changefreq>
+    <changefreq>daily</changefreq>
   </url>
 
   <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/login.html</loc>
-    <priority>0.8</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-
-  <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/tenant.html</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-
-  <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/host.html</loc>
-    <priority>0.7</priority>
-    <changefreq>monthly</changefreq>
-  </url>
-
-  <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/landlords.html</loc>
+    <loc>https://qejaconnect.co.ke/login.html</loc>
     <priority>0.8</priority>
     <changefreq>weekly</changefreq>
   </url>
 
   <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/contact.html</loc>
+    <loc>https://qejaconnect.co.ke/tenant.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://qejaconnect.co.ke/host.html</loc>
+    <priority>0.7</priority>
+    <changefreq>monthly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://qejaconnect.co.ke/landlords.html</loc>
+    <priority>0.8</priority>
+    <changefreq>weekly</changefreq>
+  </url>
+
+  <url>
+    <loc>https://qejaconnect.co.ke/contact.html</loc>
     <priority>0.5</priority>
     <changefreq>monthly</changefreq>
   </url>
 
   <url>
-    <loc>https://eliyasande65-lang.github.io/QejaConnect/privacy_policy.html</loc>
+    <loc>https://qejaconnect.co.ke/privacy_policy.html</loc>
     <priority>0.3</priority>
     <changefreq>yearly</changefreq>
   </url>
