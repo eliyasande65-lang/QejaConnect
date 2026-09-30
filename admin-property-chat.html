@@ -225,7 +225,8 @@
         const adminSecret = localStorage.getItem("admin_secret");
 
         if (!adminSecret) {
-        window.location.href = "admin-login.html";
+            alert("Invalid token");
+        //window.location.href = "admin-login.html";
         }
 
         function adminHeaders() {
