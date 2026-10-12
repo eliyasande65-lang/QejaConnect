@@ -1,0 +1,1925 @@
+From 5949dfe736142d87b57c7f82b40d34cb1d4b866d Mon Sep 17 00:00:00 2001
+From: Claude <noreply@anthropic.com>
+Date: Mon, 12 Oct 2026 20:32:17 +0300
+Subject: [PATCH] Replace emojis with inline SVG icons on all non-admin pages
+
+Adds icons.svg sprite + icons.css, swaps emojis in HTML and JS templates,
+and caches the new assets in the service worker (v4). home.html and admin
+pages are untouched.
+
+Co-Authored-By: Claude Sonnet 5.5 <noreply@anthropic.com>
+Claude-Session: https://claude.ai/code/session_01G5GShAncmBMHdeSvWhLBcA
+---
+ addproperty.html       | 34 +++++++++++----------
+ app.js                 |  2 +-
+ bookings.html          | 29 +++++++++---------
+ chess.html             |  7 +++--
+ contact.html           |  3 +-
+ host.html              | 31 ++++++++++---------
+ hostdashboard.html     | 21 +++++++------
+ icons.css              |  3 ++
+ icons.svg              | 51 +++++++++++++++++++++++++++++++
+ index.html             |  5 +--
+ landlord-profile.html  |  7 +++--
+ landlord_payments.html | 51 ++++++++++++++++---------------
+ landlord_tenants.html  | 69 +++++++++++++++++++++---------------------
+ landlords.html         |  7 +++--
+ login.html             | 21 +++++++------
+ my-groups.html         |  3 +-
+ mymessages.html        | 15 ++++-----
+ myprofile.html         | 17 ++++++-----
+ mytenancy.html         | 51 ++++++++++++++++---------------
+ notification.html      | 19 ++++++------
+ property-group.html    |  7 +++--
+ refer-earn.html        | 17 ++++++-----
+ sw.js                  | 12 +++++---
+ tenant.html            | 17 ++++++-----
+ terms.html             |  3 +-
+ welcome.html           |  5 +--
+ 26 files changed, 293 insertions(+), 214 deletions(-)
+ create mode 100644 icons.css
+ create mode 100644 icons.svg
+
+diff --git a/addproperty.html b/addproperty.html
+index 6cc888d..448c6cc 100644
+--- a/addproperty.html
++++ b/addproperty.html
+@@ -399,17 +399,18 @@
+             justify-content: center;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+ 
+     <div class="container">
+ 
+-        <h1>🏠 Add Property</h1>
++        <h1><svg class="qi"><use href="icons.svg#home"/></svg> Add Property</h1>
+ 
+         <!-- Payment notice -->
+         <div class="pay-notice">
+-            <span class="icon">💳</span>
++            <span class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></span>
+             <div>
+                 Listings are free. Your property stays live on the feed for <strong>30 days</strong>. Upload now.
+             </div>
+@@ -421,7 +422,7 @@
+             <input type="text" id="units" placeholder="How many units are available" required>
+             <input type="text" id="price" placeholder="Price e.g Ksh 7000/month" required>
+             <input type="text" id="location" placeholder="Location" required>
+-            <input type="url" id="maps_url" placeholder="📍 Google Maps URL (optional)">
++            <input type="url" id="maps_url" placeholder=" Google Maps URL (optional)">
+ 
+             <select id="type">
+                 <option>Apartment</option>
+@@ -431,7 +432,7 @@
+             </select>
+ 
+             <label for="image" class="upload-label" id="uploadLabel">
+-                📷 Choose Property Image
++                <svg class="qi"><use href="icons.svg#camera"/></svg> Choose Property Image
+             </label>
+             <input type="file" id="image" accept="image/*" required>
+ 
+@@ -443,7 +444,7 @@
+ 
+         </form>
+         <div class="customalert">
+-            <h3 style="color:red">⚠️ Only landlords are allowed to list products</h3>
++            <h3 style="color:red"><svg class="qi"><use href="icons.svg#alert"/></svg> Only landlords are allowed to list products</h3>
+             <a href="home.html"><button style="width:60px;background:indigo; border:none;color:red">Ok</button></a>
+         </div>
+     </div>
+@@ -452,13 +453,13 @@
+ 
+     <div class="modal-overlay" id="mpesaModal">
+         <div class="modal">
+-            <div class="mpesa-logo">📲</div>
++            <div class="mpesa-logo"><svg class="qi"><use href="icons.svg#smartphone"/></svg></div>
+             <h2>M-Pesa Payment</h2>
+             <div class="amount-badge"></div>
+             <p class="sub">Enter your Safaricom number. An STK push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
+ 
+             <div class="phone-wrapper">
+-                <div class="phone-prefix">🇰🇪 +254</div>
++                <div class="phone-prefix"><svg class="qi"><use href="icons.svg#flag-ke"/></svg> +254</div>
+                 <input type="tel" id="phoneInput" placeholder="712 345 678" maxlength="9" inputmode="numeric">
+             </div>
+ 
+@@ -499,10 +500,11 @@
+         document.getElementById("image").addEventListener("change", function () {
+         const label = document.getElementById("uploadLabel");
+         if (this.files[0]) {
+-        label.textContent = "🟢 " + this.files[0].name;
++        label.innerHTML = "<svg class='qi qi-green'><use href='icons.svg#dot'/></svg> ";
++        label.appendChild(document.createTextNode(this.files[0].name));
+         label.classList.add("has-file");
+         } else {
+-        label.textContent = "📷 Choose Property Image";
++        label.innerHTML = "<svg class='qi'><use href='icons.svg#camera'/></svg> Choose Property Image";
+         label.classList.remove("has-file");
+         }
+         });
+@@ -629,7 +631,7 @@
+ 
+         const checkoutRequestId = stkData.CheckoutRequestID;
+ 
+-        // 2️⃣ Poll for payment confirmation
++        // 2. Poll for payment confirmation
+         statusEl.innerHTML = `<div class="spinner"></div><p style="color:#94a3b8;font-size:13px;">Waiting for payment confirmation…</p>`;
+         await pollPayment(checkoutRequestId, token);
+ 
+@@ -662,10 +664,10 @@
+         const data = await res.json();
+ 
+         if (data.success && data.status === "completed") {
+-        // ✅ Payment confirmed — proceed to upload
++        //  Payment confirmed — proceed to upload
+         setStep(3);
+         document.getElementById("mpesaStatus").innerHTML =
+-        `<p style="color:#4ade80;font-weight:600;">✅ Payment confirmed!</p>`;
++        `<p style="color:#4ade80;font-weight:600;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Payment confirmed!</p>`;
+ 
+         await sleep(800);
+         closeModal();
+@@ -725,9 +727,9 @@
+         const data = await res.json();
+ 
+         if (data.success) {
+-        status.innerHTML = `<p class="success-text">✅ Property uploaded! Redirecting…</p>`;
++        status.innerHTML = `<p class="success-text"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Property uploaded! Redirecting…</p>`;
+         document.getElementById("propertyForm").reset();
+-        document.getElementById("uploadLabel").textContent = "📷 Choose Property Image";
++        document.getElementById("uploadLabel").innerHTML = "<svg class='qi'><use href='icons.svg#camera'/></svg> Choose Property Image";
+         document.getElementById("uploadLabel").classList.remove("has-file");
+ 
+         setTimeout(() => {
+@@ -735,13 +737,13 @@
+         "hostdashboard.html";
+         }, 1800);
+         } else {
+-        status.innerHTML = `<p class="error-text">❌ ${data.message || "Upload failed."}</p>`;
++        status.innerHTML = `<p class="error-text"><svg class="qi"><use href="icons.svg#x-circle"/></svg> ${data.message || "Upload failed."}</p>`;
+         submitBtn.disabled = false;
+         submitBtn.textContent = "Publish & Upload";
+         }
+ 
+         } catch (err) {
+-        status.innerHTML = `<p class="error-text">❌ Server error. Contact support with your M-Pesa ref.</p>`;
++        status.innerHTML = `<p class="error-text"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Server error. Contact support with your M-Pesa ref.</p>`;
+         submitBtn.disabled = false;
+         submitBtn.textContent = "Publish & Upload";
+         }
+diff --git a/app.js b/app.js
+index 327c613..91f1b4c 100644
+--- a/app.js
++++ b/app.js
+@@ -242,7 +242,7 @@
+   };
+   document.getElementById('soundToggleBtn').addEventListener('click', function () {
+     soundEnabled = !soundEnabled;
+-    this.textContent = soundEnabled ? '🔊' : '🔇';
++    this.innerHTML = soundEnabled ? '<svg class="qi"><use href="icons.svg#volume-on"/></svg>' : '<svg class="qi"><use href="icons.svg#volume-off"/></svg>';
+     if (soundEnabled) ensureAudio();
+   });
+ 
+diff --git a/bookings.html b/bookings.html
+index f0cc605..fdb6dcc 100644
+--- a/bookings.html
++++ b/bookings.html
+@@ -404,6 +404,7 @@
+                 }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -419,15 +420,15 @@
+     </header>
+ 
+     <div class="page">
+-        <h1 class="page-title">🏠 My Bookings</h1>
++        <h1 class="page-title"><svg class="qi"><use href="icons.svg#home"/></svg> My Bookings</h1>
+         <p class="page-sub">Track all your property booking requests and their status.</p>
+ 
+         <div class="tabs">
+             <div class="tab active" onclick="filterBookings('all', this)">All</div>
+-            <div class="tab" onclick="filterBookings('pending', this)">⏳ Pending</div>
+-            <div class="tab" onclick="filterBookings('approved', this)">✅ Approved</div>
+-            <div class="tab" onclick="filterBookings('active', this)">🔑 Active</div>
+-            <div class="tab" onclick="filterBookings('rejected', this)">❌ Rejected</div>
++            <div class="tab" onclick="filterBookings('pending', this)"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending</div>
++            <div class="tab" onclick="filterBookings('approved', this)"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approved</div>
++            <div class="tab" onclick="filterBookings('active', this)"><svg class="qi"><use href="icons.svg#key"/></svg> Active</div>
++            <div class="tab" onclick="filterBookings('rejected', this)"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected</div>
+         </div>
+ 
+         <div id="bookingsContainer">
+@@ -469,7 +470,7 @@
+         function renderBookings(list) {
+         const c = document.getElementById('bookingsContainer');
+         if (!list.length) {
+-        c.innerHTML = `<div class="empty"><div class="icon">📭</div><h3>No bookings yet</h3><p>Go back to <a href="home.html">Home</a> and tap "Book Property" on any listing.</p></div>`;
++        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>No bookings yet</h3><p>Go back to <a href="home.html">Home</a> and tap "Book Property" on any listing.</p></div>`;
+         return;
+         }
+ 
+@@ -479,7 +480,7 @@
+         const active = list.filter(b => b.status === 'approved' || b.status === 'active');
+         if (active.length) {
+         html += `<div class="approved-banner">
+-        <div class="icon">🎉</div>
++        <div class="icon"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
+         <div>
+         <h4>You have an active tenancy!</h4>
+         <p>Your landlord has approved your booking. Proceed to pay rent.</p>
+@@ -492,7 +493,7 @@
+         const statusClass = `status-${b.status || 'pending'}`;
+         const statusLabel = (b.status || 'pending').toUpperCase();
+         const approvedActions = (b.status === 'approved' || b.status === 'active')
+-        ? `<button class="btn btn-success" onclick="window.location.href='mytenancy.html'">💳 Pay Rent</button>`
++        ? `<button class="btn btn-success" onclick="window.location.href='mytenancy.html'"><svg class="qi"><use href="icons.svg#card"/></svg> Pay Rent</button>`
+         : '';
+         const cancelBtn = (b.status === 'pending')
+         ? `<button class="btn btn-danger" onclick="cancelBooking(${b.id})">Cancel</button>`
+@@ -504,19 +505,19 @@
+         <div class="booking-body">
+         <h3>${b.title || 'Property'}</h3>
+         <div class="booking-meta">
+-        <span>📍 ${b.location || '—'}</span>
+-        <span>🏠 ${b.type || 'Rental'}</span>
+-        <span>📅 Booked: ${formatDate(b.created_at)}</span>
++        <span><svg class="qi"><use href="icons.svg#pin"/></svg> ${b.location || '—'}</span>
++        <span><svg class="qi"><use href="icons.svg#home"/></svg> ${b.type || 'Rental'}</span>
++        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> Booked: ${formatDate(b.created_at)}</span>
+         </div>
+         <div class="booking-price">Ksh ${b.price || '—'} / month</div>
+         <div>
+         <span class="status-pill ${statusClass}">${statusLabel}</span>
+-        ${b.status === 'approved' ? '<span style="font-size:12px;color:#065f46;margin-left:10px;">✅ Landlord approved — start paying rent</span>' : ''}
++        ${b.status === 'approved' ? '<span style="font-size:12px;color:#065f46;margin-left:10px;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Landlord approved — start paying rent</span>' : ''}
+         ${b.status === 'rejected' ? '<span style="font-size:12px;color:#991b1b;margin-left:10px;">The landlord has declined this request.</span>' : ''}
+         ${b.status === 'pending'  ? '<span style="font-size:12px;color:#92400e;margin-left:10px;">Waiting for landlord approval…</span>' : ''}
+         </div>
+         <div class="booking-body-extra" style="margin-top:10px;font-size:13px;color:var(--muted);">
+-        ${b.landlord_name ? `<div>🧑‍💼 Landlord: <strong>${b.landlord_name}</strong></div>` : ''}
++        ${b.landlord_name ? `<div><svg class="qi"><use href="icons.svg#briefcase"/></svg> Landlord: <strong>${b.landlord_name}</strong></div>` : ''}
+         ${b.description   ? `<div style="margin-top:6px;">${b.description.slice(0,120)}…</div>` : ''}
+         </div>
+         <div class="booking-actions">
+@@ -561,7 +562,7 @@
+ 
+         function showError(msg) {
+         document.getElementById('bookingsContainer').innerHTML =
+-        `<div class="empty"><div class="icon">⚠️</div><h3>${msg}</h3></div>`;
++        `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>${msg}</h3></div>`;
+         }
+ 
+         window.onload = function () {
+diff --git a/chess.html b/chess.html
+index 0d09c19..d053398 100644
+--- a/chess.html
++++ b/chess.html
+@@ -5,12 +5,13 @@
+ <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+ <title>Strategos Chess</title>
+ <link rel="stylesheet" href="style.css">
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+ <header class="topbar">
+-  <h1>♞ Strategos Chess</h1>
+-  <button id="soundToggleBtn" class="icon-btn" title="Toggle sound">🔊</button>
++  <h1><svg class="qi"><use href="icons.svg#knight"/></svg> Strategos Chess</h1>
++  <button id="soundToggleBtn" class="icon-btn" title="Toggle sound"><svg class="qi"><use href="icons.svg#volume-on"/></svg></button>
+ </header>
+ 
+ <main class="layout">
+@@ -51,7 +52,7 @@
+           <p>Share this code with your opponent:</p>
+           <div class="code-row">
+             <input type="text" id="hostCodeDisplay" readonly>
+-            <button id="copyCodeBtn" class="icon-btn">📋</button>
++            <button id="copyCodeBtn" class="icon-btn"><svg class="qi"><use href="icons.svg#clipboard"/></svg></button>
+           </div>
+           <p class="hint">Waiting for opponent to connect…</p>
+         </div>
+diff --git a/contact.html b/contact.html
+index 1cf4620..a843a75 100644
+--- a/contact.html
++++ b/contact.html
+@@ -160,6 +160,7 @@
+             padding: 30px;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -176,7 +177,7 @@
+             <a href="landlords.html">Landlords</a>
+             <a href="contact.html">Contact</a>
+             <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
+-                🚪 Log out
++                <svg class="qi"><use href="icons.svg#logout"/></svg> Log out
+             </a>
+         </nav>
+     </header>
+diff --git a/host.html b/host.html
+index f35ea90..1f014fb 100644
+--- a/host.html
++++ b/host.html
+@@ -722,13 +722,14 @@
+                 font-weight: 700;
+             }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+     <div class="page">
+ 
+         <div class="header">
+-            <div class="logo-mark">🏠</div>
++            <div class="logo-mark" style="color:#fff"><svg class="qi"><use href="icons.svg#home"/></svg></div>
+             <h1>Host / Landlord Sign Up</h1>
+             <p>List your property and connect with tenants across Kenya</p>
+         </div>
+@@ -737,7 +738,7 @@
+             <form id="signupForm">
+ 
+                 <!-- Personal Info -->
+-                <div class="section-label">👤 Personal Information</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#user"/></svg> Personal Information</div>
+ 
+                 <div class="field">
+                     <label>Full Name</label>
+@@ -766,7 +767,7 @@
+                     </div>
+                 </div>
+ 
+-                <div class="section-label">🎁 Referral (Optional)</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#gift"/></svg> Referral (Optional)</div>
+ 
+                 <div class="field">
+                     <label>Referral Code</label>
+@@ -774,7 +775,7 @@
+                 </div>
+ 
+                 <!-- Property Info -->
+-                <div class="section-label">🏢 Property Details</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#building"/></svg> Property Details</div>
+ 
+                 <div class="row row-2">
+                     <div class="field">
+@@ -817,33 +818,33 @@
+                 </div>
+ 
+                 <!-- Uploads -->
+-                <div class="section-label">📸 Profile Picture</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#camera"/></svg> Profile Picture</div>
+ 
+                 <label class="upload-btn" id="uploadLabel" for="profile_pic">
+-                    <span class="upload-icon">📷</span>
++                    <span class="upload-icon"><svg class="qi"><use href="icons.svg#camera"/></svg></span>
+                     <span class="upload-name" id="fileNameDisplay">Click to choose a photo…</span>
+                 </label>
+                 <input type="file" id="profile_pic" accept="image/*">
+ 
+-                <div class="section-label">🪪 Identity Verification</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#id-card"/></svg> Identity Verification</div>
+ 
+                 <div class="id-box">
+                     <p class="id-box-note">Upload a clear photo of your National ID (front side). Used only by our team to verify your identity — never shared publicly.</p>
+                     <label class="upload-btn" id="idUploadLabel" for="id_photo">
+-                        <span class="upload-icon">🪪</span>
++                        <span class="upload-icon"><svg class="qi"><use href="icons.svg#id-card"/></svg></span>
+                         <span class="upload-name" id="idFileNameDisplay">Click to choose ID photo…</span>
+                     </label>
+                     <input type="file" id="id_photo" accept="image/*">
+                 </div>
+ 
+                 <!-- Password -->
+-                <div class="section-label">🔒 Set Password</div>
++                <div class="section-label"><svg class="qi"><use href="icons.svg#lock"/></svg> Set Password</div>
+ 
+                 <div class="field">
+                     <label>Password</label>
+                     <div class="pw-wrap">
+                         <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password">
+-                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility">👁️</button>
++                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
+                     </div>
+                     <div class="strength-wrap" id="strengthWrap">
+                         <div class="strength-track">
+@@ -864,7 +865,7 @@
+                     <label>Confirm Password</label>
+                     <div class="pw-wrap">
+                         <input type="password" id="confirm" placeholder="Repeat your password" autocomplete="new-password">
+-                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Toggle confirm password visibility">👁️</button>
++                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Toggle confirm password visibility"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
+                     </div>
+                 </div>
+ 
+@@ -994,10 +995,10 @@
+         const toast = document.getElementById('toast');
+         const icon  = document.getElementById('toast-icon');
+         const msg   = document.getElementById('toast-msg');
+-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
++        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
+         toast.className = '';
+         toast.classList.add(type);
+-        icon.textContent = icons[type] || 'ℹ️';
++        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+         msg.textContent  = message;
+         void toast.offsetWidth;
+         toast.classList.add('show');
+@@ -1067,14 +1068,14 @@
+         const pw = document.getElementById('password');
+         const isText = pw.type === 'text';
+         pw.type = isText ? 'password' : 'text';
+-        this.textContent = isText ? '👁️' : '🙈';
++        this.innerHTML = isText ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
+         });
+ 
+         document.getElementById('toggleConfirm').addEventListener('click', function () {
+         const cf = document.getElementById('confirm');
+         const isText = cf.type === 'text';
+         cf.type = isText ? 'password' : 'text';
+-        this.textContent = isText ? '👁️' : '🙈';
++        this.innerHTML = isText ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
+         });
+ 
+         // ── Password strength ───────────────────────────────────────────────────
+diff --git a/hostdashboard.html b/hostdashboard.html
+index a548261..b7c0bcc 100644
+--- a/hostdashboard.html
++++ b/hostdashboard.html
+@@ -339,6 +339,7 @@
+                 display: block;
+             }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -367,7 +368,7 @@
+ 
+     <!-- ── TENANT-ONLY ACTIONS ── -->
+     <div id="tenantActions" style="display:none;">
+-        <button class="add" onclick="location.href='bookings.html'">📋 Track My Booking</button>
++        <button class="add" onclick="location.href='bookings.html'"><svg class="qi"><use href="icons.svg#clipboard"/></svg> Track My Booking</button>
+     </div>
+ 
+     <!-- FIX: wrapped so this whole section (heading + cards) can be
+@@ -491,7 +492,7 @@
+         <div class="card" onclick="openChat(${chat.conversation_id}, '${escapeAttr(chat.fullname)}')">
+         <h3>${chat.fullname}</h3>
+         <p>${chat.email}</p>
+-        ${chat.last_message ? `<div class="last-msg">💬 ${chat.last_message}</div>` : ""}
++        ${chat.last_message ? `<div class="last-msg"><svg class="qi"><use href="icons.svg#message"/></svg> ${chat.last_message}</div>` : ""}
+         <button class="open-btn">Open Chat →</button>
+         </div>
+         `).join("");
+@@ -525,7 +526,7 @@
+         <div class="card" onclick="openTenantChat(${chat.conversation_id}, '${escapeAttr(chat.fullname)}')">
+         <h3>${chat.fullname}</h3>
+         <p>${chat.email}</p>
+-        ${chat.last_message ? `<div class="last-msg">💬 ${chat.last_message}</div>` : ""}
++        ${chat.last_message ? `<div class="last-msg"><svg class="qi"><use href="icons.svg#message"/></svg> ${chat.last_message}</div>` : ""}
+         <button class="open-btn">Open Chat →</button>
+         </div>
+         `).join("");
+@@ -644,7 +645,7 @@
+         const renewData = await renewRes.json();
+ 
+         if (renewData.success) {
+-        alert("✅ Payment received and listing renewed! It's live on Home again.");
++        alert(" Payment received and listing renewed! It's live on Home again.");
+         loadMyProperties();
+         } else {
+         alert(renewData.message || "Payment received but renewal failed. Please contact support.");
+@@ -714,17 +715,17 @@
+         const unitCount = p.units || 1;
+ 
+         const badge = isExpired
+-        ? `<span class="inactive-badge">⛔ Inactive</span>`
++        ? `<span class="inactive-badge"><svg class="qi"><use href="icons.svg#ban"/></svg> Inactive</span>`
+         : `<span class="pub-badge">✓ Published</span>`;
+ 
+         const expiryLine = expiry
+         ? isExpired
+-        ? `<div class="prop-expires">⛔ Expired: ${expiry.toLocaleDateString()}<div class="prop-hidden-note">Hidden from Home until renewed</div></div>`
+-        : `<div class="prop-expires">🗓 Expires: ${expiry.toLocaleDateString()}</div>`
++        ? `<div class="prop-expires"><svg class="qi"><use href="icons.svg#ban"/></svg> Expired: ${expiry.toLocaleDateString()}<div class="prop-hidden-note">Hidden from Home until renewed</div></div>`
++        : `<div class="prop-expires"><svg class="qi"><use href="icons.svg#calendar"/></svg> Expires: ${expiry.toLocaleDateString()}</div>`
+         : "";
+ 
+         const relistBtn = isExpired
+-        ? `<br><button class="relist-btn" onclick="renewProperty(${p.id}, ${unitCount}, this)">🔄 Renew Listing (KSh ${95 * unitCount})</button>`
++        ? `<br><button class="relist-btn" onclick="renewProperty(${p.id}, ${unitCount}, this)"><svg class="qi"><use href="icons.svg#refresh"/></svg> Renew Listing (KSh ${95 * unitCount})</button>`
+         : "";
+ 
+         return `
+@@ -732,8 +733,8 @@
+         ${badge}
+         <h3>${p.title}</h3>
+         <div class="prop-meta">
+-        <div class="prop-row">💰 <strong class="prop-price">${p.price}</strong></div>
+-        <div class="prop-row">📍 ${p.location}</div>
++        <div class="prop-row"><svg class="qi"><use href="icons.svg#coins"/></svg> <strong class="prop-price">${p.price}</strong></div>
++        <div class="prop-row"><svg class="qi"><use href="icons.svg#pin"/></svg> ${p.location}</div>
+         </div>
+         <span class="prop-type">${p.type}</span>
+         ${expiryLine}
+diff --git a/icons.css b/icons.css
+new file mode 100644
+index 0000000..ef42cfe
+--- /dev/null
++++ b/icons.css
+@@ -0,0 +1,3 @@
++/* QejaConnect inline SVG icons (sprite: icons.svg) */
++.qi{width:1.15em;height:1.15em;vertical-align:-0.2em;flex-shrink:0;display:inline-block;overflow:visible}
++.qi-red{color:#ef4444}.qi-green{color:#22c55e}
+diff --git a/icons.svg b/icons.svg
+new file mode 100644
+index 0000000..86e2489
+--- /dev/null
++++ b/icons.svg
+@@ -0,0 +1,51 @@
++<svg xmlns="http://www.w3.org/2000/svg" style="display:none">
++<symbol id="home" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10.5 12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/></symbol>
++<symbol id="houses" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12.5 8 7l6 5.5V20H2zM14 10.5 18 7l4 3.5V20h-8M6 20v-4h4v4"/></symbol>
++<symbol id="building" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="3" width="16" height="18" rx="1"/><path d="M9 7h2M13 7h2M9 11h2M13 11h2M9 15h2M13 15h2M10 21v-3h4v3"/></symbol>
++<symbol id="key" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="15" r="4"/><path d="m11 12 9-9M16 7l3 3M14 9l2 2"/></symbol>
++<symbol id="lock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></symbol>
++<symbol id="shield" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/></symbol>
++<symbol id="verified" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3 4 6v6c0 5 3.5 8 8 9 4.5-1 8-4 8-9V6z"/><path d="m8.5 12 2.5 2.5 4.5-5"/></symbol>
++<symbol id="camera" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 8h3l2-3h6l2 3h3a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9a1 1 0 0 1 1-1z"/><circle cx="12" cy="13" r="3.5"/></symbol>
++<symbol id="check-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m8 12.5 3 3 5-6"/></symbol>
++<symbol id="x-circle" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m9 9 6 6M15 9l-6 6"/></symbol>
++<symbol id="alert" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 4 2.8 17.5A2 2 0 0 0 4.5 20.5h15a2 2 0 0 0 1.7-3L13.7 4a2 2 0 0 0-3.4 0z"/><path d="M12 9.5v4M12 17h.01"/></symbol>
++<symbol id="hourglass" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h12M6 21h12M7 3v4l5 5-5 5v4M17 3v4l-5 5 5 5v4"/></symbol>
++<symbol id="pin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></symbol>
++<symbol id="calendar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></symbol>
++<symbol id="message" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H9l-5 4V6a1 1 0 0 1 1-1z"/></symbol>
++<symbol id="card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="5" width="19" height="14" rx="2"/><path d="M2.5 10h19M6 15h4"/></symbol>
++<symbol id="money" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2.5" y="6" width="19" height="12" rx="2"/><circle cx="12" cy="12" r="2.5"/><path d="M6 12h.01M18 12h.01"/></symbol>
++<symbol id="coins" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="6"/><path d="M15.5 9.7A6 6 0 1 1 9.7 15.5M9 6.5v5M7.3 8h3.4"/></symbol>
++<symbol id="bank" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5 12 4l9 5.5zM5.5 11v7M9.8 11v7M14.2 11v7M18.5 11v7M3 21h18"/></symbol>
++<symbol id="phone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></symbol>
++<symbol id="smartphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="7" y="2.5" width="10" height="19" rx="2"/><path d="M11 18.5h2"/></symbol>
++<symbol id="mail" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3.5 7 8.5 6 8.5-6"/></symbol>
++<symbol id="inbox" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13l3-8h12l3 8v6a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1z"/><path d="M3 13h5l1 3h6l1-3h5"/></symbol>
++<symbol id="sparkles" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 3l1.8 5.2L18 10l-5.2 1.8L11 17l-1.8-5.2L4 10l5.2-1.8zM19 15v5M16.5 17.5h5"/></symbol>
++<symbol id="clipboard" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="4" width="14" height="17" rx="2"/><path d="M9 3h6v3H9zM9 12h6M9 16h4"/></symbol>
++<symbol id="megaphone" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 10v4h3l8 5V5L6 10z"/><path d="M17.5 9a4 4 0 0 1 0 6"/></symbol>
++<symbol id="user" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0"/></symbol>
++<symbol id="briefcase" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2M3 13h18"/></symbol>
++<symbol id="id-card" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><circle cx="9" cy="11" r="2"/><path d="M6 16c.5-1.5 1.5-2 3-2s2.5.5 3 2M14.5 10h4M14.5 14h3"/></symbol>
++<symbol id="eye" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></symbol>
++<symbol id="eye-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3l18 18M10.6 5.1A9.7 9.7 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.2 4M6.5 6.6C3.7 8.4 2 12 2 12s3.5 7 10 7c1.7 0 3.2-.4 4.5-1M9.9 9.9a3 3 0 0 0 4.2 4.2"/></symbol>
++<symbol id="edit" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h4L19 9a2.8 2.8 0 0 0-4-4L4 16z"/><path d="m13.5 6.5 4 4"/></symbol>
++<symbol id="trash" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16M9 7V4h6v3M6 7l1 13h10l1-13M10 11v6M14 11v6"/></symbol>
++<symbol id="send" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 3 10 14M21 3l-7 18-4-7-7-4z"/></symbol>
++<symbol id="file" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h8l5 5v13H6z"/><path d="M14 3v5h5M9 13h7M9 17h5"/></symbol>
++<symbol id="link" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/></symbol>
++<symbol id="gift" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="8" width="18" height="4" rx="1"/><path d="M5 12v9h14v-9M12 8v13M12 8C9.5 8 8 6.8 8 5.5S9.5 3 12 8zm0 0c2.5 0 4-1.2 4-2.5S14.5 3 12 8z"/></symbol>
++<symbol id="logout" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 4H5a1 1 0 0 0-1 1v14a1 1 0 0 0 1 1h4M16 8l4 4-4 4M20 12H9"/></symbol>
++<symbol id="info" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 11v5M12 8h.01"/></symbol>
++<symbol id="zap" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 4 14h7l-1 8 9-12h-7z"/></symbol>
++<symbol id="refresh" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 11A8 8 0 0 0 5.6 7M4 4v4h4M4 13a8 8 0 0 0 14.4 4M20 20v-4h-4"/></symbol>
++<symbol id="ban" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="m5.6 5.6 12.8 12.8"/></symbol>
++<symbol id="wrench" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a4 4 0 0 0 5 5L21 10a6 6 0 0 1-8 8l-7.5 3-.5-.5 3-7.5a6 6 0 0 1 8-8z"/></symbol>
++<symbol id="volume-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="M16.5 9a4 4 0 0 1 0 6M19 6.5a8 8 0 0 1 0 11"/></symbol>
++<symbol id="volume-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9z"/><path d="m17 9.5 4 5M21 9.5l-4 5"/></symbol>
++<symbol id="dot" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5" fill="currentColor" stroke="none"/></symbol>
++<symbol id="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-8-5-8-11a4.5 4.5 0 0 1 8-2.5A4.5 4.5 0 0 1 20 9c0 6-8 11-8 11z"/></symbol>
++<symbol id="knight" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 21h12M8 21c0-3 1-5 3-7-3 0-5-2-5-4.5L11 4l1.2 2c4 .2 6.8 3 6.8 7 0 3-.7 5.7-1.5 8"/><path d="M12 9h.01"/></symbol>
++<symbol id="flag-ke" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="5" width="20" height="14" rx="2" fill="#fff" stroke="none"/><rect x="2" y="5" width="20" height="4.3" fill="#111" stroke="none"/><rect x="2" y="9.9" width="20" height="4.2" fill="#c8102e" stroke="none"/><rect x="2" y="14.7" width="20" height="4.3" fill="#007a3d" stroke="none"/><ellipse cx="12" cy="12" rx="2" ry="3.4" fill="#c8102e" stroke="#fff" stroke-width="1"/></symbol>
++</svg>
+diff --git a/index.html b/index.html
+index 596f612..b218227 100644
+--- a/index.html
++++ b/index.html
+@@ -774,6 +774,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -909,12 +910,12 @@
+             <p class="popup-sub">Choose the account type that fits you.</p>
+             <div class="popup-choices">
+                 <button class="popup-choice" id="tenant">
+-                    <span class="popup-choice-icon">🏠</span>
++                    <span class="popup-choice-icon"><svg class="qi"><use href="icons.svg#home"/></svg></span>
+                     <span class="popup-choice-label">Tenant</span>
+                     <span class="popup-choice-desc">Looking for a place to rent</span>
+                 </button>
+                 <button class="popup-choice" id="host">
+-                    <span class="popup-choice-icon">🏢</span>
++                    <span class="popup-choice-icon"><svg class="qi"><use href="icons.svg#building"/></svg></span>
+                     <span class="popup-choice-label">Host / Landlord</span>
+                     <span class="popup-choice-desc">Listing a property</span>
+                 </button>
+diff --git a/landlord-profile.html b/landlord-profile.html
+index a637900..c5582b5 100644
+--- a/landlord-profile.html
++++ b/landlord-profile.html
+@@ -223,6 +223,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -259,7 +260,7 @@
+         const toast = document.createElement("div");
+         toast.className = "toast" + (type !== "default" ? " " + type : "");
+ 
+-        const icon = type === "error" ? "⚠️" : (type === "success" ? "✅" : "ℹ️");
++        const icon = type === "error" ? "<svg class='qi'><use href='icons.svg#alert'/></svg>" : (type === "success" ? "<svg class='qi'><use href='icons.svg#check-circle'/></svg>" : "<svg class='qi'><use href='icons.svg#info'/></svg>");
+         toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
+ 
+         container.appendChild(toast);
+@@ -308,7 +309,7 @@
+         <div class="top-banner">
+         <img src="${img}">
+         <h2>${l.fullname}</h2>
+-        <p>✔ Verified Host</p>
++        <p><svg class="qi"><use href="icons.svg#verified"/></svg> Verified Host</p>
+         </div>
+ 
+         <div class="content">
+@@ -323,7 +324,7 @@
+         ${l.description ? `<div class="info-card"><b>About:</b> ${l.description}</div>` : ""}
+ 
+         <button class="action-btn" onclick='startChat(${l.id}, ${JSON.stringify(l.fullname)})'>
+-        💬 Message This Landlord
++        <svg class="qi"><use href="icons.svg#message"/></svg> Message This Landlord
+         </button>
+ 
+         
+diff --git a/landlord_payments.html b/landlord_payments.html
+index 4b4f8cf..b7e4994 100644
+--- a/landlord_payments.html
++++ b/landlord_payments.html
+@@ -797,6 +797,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -810,14 +811,14 @@
+         </div>
+         <div class="header-actions">
+             <button class="withdraw-btn-header" onclick="openWithdrawModal()">
+-                💸 <span class="btn-label">Request Withdrawal</span>
++                <svg class="qi"><use href="icons.svg#money"/></svg> <span class="btn-label">Request Withdrawal</span>
+             </button>
+             <a href="landlord_tenants.html" class="back-btn">← My Tenants</a>
+         </div>
+     </header>
+ 
+     <div class="page">
+-        <h1 class="page-title">💰 Rent Payments</h1>
++        <h1 class="page-title"><svg class="qi"><use href="icons.svg#coins"/></svg> Rent Payments</h1>
+         <p class="page-sub">Track all rent payments from your tenants with M-Pesa references.</p>
+ 
+         <div class="summary-row" id="summaryRow">
+@@ -836,12 +837,12 @@
+         </div>
+ 
+         <div class="payments-section">
+-            <h2>📋 Recent Payments</h2>
++            <h2><svg class="qi"><use href="icons.svg#clipboard"/></svg> Recent Payments</h2>
+             <div id="recentFeed"><div class="loader">Loading payments…</div></div>
+         </div>
+ 
+         <div class="payments-section">
+-            <h2>📅 Payment Schedule</h2>
++            <h2><svg class="qi"><use href="icons.svg#calendar"/></svg> Payment Schedule</h2>
+             <div class="payments-table">
+                 <div class="pt-header">
+                     <div>#</div>
+@@ -856,7 +857,7 @@
+         </div>
+ 
+         <div class="payments-section">
+-            <h2>💸 Withdrawal History</h2>
++            <h2><svg class="qi"><use href="icons.svg#money"/></svg> Withdrawal History</h2>
+             <div id="withdrawalHistory"><div class="loader">Loading…</div></div>
+         </div>
+     </div>
+@@ -865,7 +866,7 @@
+     <div class="modal-overlay" id="withdrawModal">
+         <div class="modal">
+             <button class="modal-close" onclick="closeWithdrawModal()">✕</button>
+-            <h2>💸 Request Withdrawal</h2>
++            <h2><svg class="qi"><use href="icons.svg#money"/></svg> Request Withdrawal</h2>
+             <p class="modal-sub">Submit your M-Pesa payout details. Admin will process within 24 hours.</p>
+ 
+             <div class="modal-balance">
+@@ -873,7 +874,7 @@
+                     <div class="bal-label">Available Balance</div>
+                     <div class="bal-amount" id="modalBalance">Calculating…</div>
+                 </div>
+-                <div style="font-size:2rem;">🏦</div>
++                <div style="font-size:2rem;"><svg class="qi"><use href="icons.svg#bank"/></svg></div>
+             </div>
+ 
+             <div class="form-group">
+@@ -914,7 +915,7 @@
+             <button class="modal-submit" id="wdSubmitBtn" onclick="submitWithdrawal()">
+                 Submit Withdrawal Request
+             </button>
+-            <p class="modal-note">⚠️ Ensure your M-Pesa number is correct. Incorrect details may delay processing.</p>
++            <p class="modal-note"><svg class="qi"><use href="icons.svg#alert"/></svg> Ensure your M-Pesa number is correct. Incorrect details may delay processing.</p>
+         </div>
+     </div>
+ 
+@@ -935,10 +936,10 @@
+         // ── TOAST ──────────────────────────────────────────────
+         function showToast(message, type = 'info', duration = 3500) {
+         const toast = document.getElementById('toast');
+-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
++        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
+         toast.className = '';
+         toast.classList.add(type);
+-        document.getElementById('toast-icon').textContent = icons[type] || 'ℹ️';
++        document.getElementById('toast-icon').innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+         document.getElementById('toast-msg').textContent  = message;
+         void toast.offsetWidth;
+         toast.classList.add('show');
+@@ -1026,7 +1027,7 @@
+         const data = await res.json();
+         const container = document.getElementById('withdrawalHistory');
+         if (!data.success || !data.withdrawals?.length) {
+-        container.innerHTML = `<div class="empty"><div class="icon">💸</div><h3>No withdrawal requests yet.</h3><p>Use the "Request Withdrawal" button above.</p></div>`;
++        container.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#money"/></svg></div><h3>No withdrawal requests yet.</h3><p>Use the "Request Withdrawal" button above.</p></div>`;
+         document.getElementById('sumWithdrawn').textContent = '0';
+         return;
+         }
+@@ -1036,15 +1037,15 @@
+         let html = '';
+         data.withdrawals.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).forEach(w => {
+         const statusClass = w.status === 'paid' ? 'wdp-paid' : w.status === 'rejected' ? 'wdp-rejected' : 'wdp-pending';
+-        const statusLabel = w.status === 'paid' ? '✅ Paid' : w.status === 'rejected' ? '❌ Rejected' : '⏳ Pending';
++        const statusLabel = w.status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg> Paid' : w.status === 'rejected' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending';
+         html += `
+         <div class="withdrawal-card">
+-        <div class="wd-icon">💸</div>
++        <div class="wd-icon"><svg class="qi"><use href="icons.svg#money"/></svg></div>
+         <div class="wd-body">
+         <h4>${w.account_name || 'Withdrawal'} — ${w.method?.toUpperCase() || 'M-PESA'}</h4>
+-        <div class="meta">📱 ${w.phone} &nbsp;|&nbsp; 📅 ${formatDate(w.created_at)}
+-        ${w.note ? ` &nbsp;|&nbsp; 📝 ${w.note}` : ''}</div>
+-        ${w.bank_details ? `<div class="meta" style="margin-top:3px;">🏦 ${w.bank_details}</div>` : ''}
++        <div class="meta"><svg class="qi"><use href="icons.svg#smartphone"/></svg> ${w.phone} &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(w.created_at)}
++        ${w.note ? ` &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#edit"/></svg> ${w.note}` : ''}</div>
++        ${w.bank_details ? `<div class="meta" style="margin-top:3px;"><svg class="qi"><use href="icons.svg#bank"/></svg> ${w.bank_details}</div>` : ''}
+         ${w.admin_note ? `<div class="meta" style="margin-top:3px;color:#7c3aed;">Admin: ${w.admin_note}</div>` : ''}
+         </div>
+         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+@@ -1055,7 +1056,7 @@
+         });
+         container.innerHTML = html;
+         } catch(e) {
+-        document.getElementById('withdrawalHistory').innerHTML = `<div class="empty"><div class="icon">⚠️</div><h3>Failed to load withdrawal history.</h3></div>`;
++        document.getElementById('withdrawalHistory').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>Failed to load withdrawal history.</h3></div>`;
+         }
+         }
+ 
+@@ -1079,11 +1080,11 @@
+         renderRecentFeed(allPayments);
+         renderSchedule(allTenancies, allPayments);
+         } else {
+-        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon">💳</div><h3>No payments recorded yet.</h3></div>`;
++        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></div><h3>No payments recorded yet.</h3></div>`;
+         if (allTenancies.length) renderSchedule(allTenancies, []);
+         }
+         } catch (e) {
+-        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon">⚠️</div><h3>Failed to load payments.</h3></div>`;
++        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>Failed to load payments.</h3></div>`;
+         }
+         }
+ 
+@@ -1122,27 +1123,27 @@
+         function renderRecentFeed(payments) {
+         const feed = document.getElementById('recentFeed');
+         if (!payments.length) {
+-        feed.innerHTML = `<div class="empty"><div class="icon">💳</div><h3>No payments received yet.</h3><p>Payments will appear here once tenants begin paying rent.</p></div>`;
++        feed.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></div><h3>No payments received yet.</h3><p>Payments will appear here once tenants begin paying rent.</p></div>`;
+         return;
+         }
+         const sorted = [...payments].sort((a, b) => new Date(b.paid_at || b.created_at) - new Date(a.paid_at || a.created_at));
+         let html = '';
+         sorted.slice(0, 20).forEach(p => {
+         const status  = p.status === 'confirmed' || p.status === 'paid' ? 'paid' : 'pending';
+-        const emoji   = status === 'paid' ? '✅' : '⏳';
++        const emoji   = status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
+         const confirmed = p.landlord_confirmed;
+         html += `
+         <div class="feed-card">
+         <div class="feed-icon fi-${status}">${emoji}</div>
+         <div class="feed-body">
+         <h4>${p.tenant_name || 'Tenant'} — Month ${p.month_number || (p.month_index + 1) || '?'}</h4>
+-        <div class="meta">📍 ${p.property_title || '—'} &nbsp;|&nbsp; 📅 ${formatDate(p.paid_at || p.created_at)}</div>
++        <div class="meta"><svg class="qi"><use href="icons.svg#pin"/></svg> ${p.property_title || '—'} &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(p.paid_at || p.created_at)}</div>
+         ${p.mpesa_ref ? `<div class="ref">M-Pesa: <strong>${p.mpesa_ref}</strong></div>` : ''}
+         </div>
+         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+         <div class="feed-amount">Ksh ${Number(p.amount).toLocaleString()}</div>
+         ${confirmed
+-        ? `<span class="confirmed-badge">✅ Confirmed</span>`
++        ? `<span class="confirmed-badge"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Confirmed</span>`
+         : `<button class="btn-confirm-pay" onclick="confirmPayment(${p.id})">Confirm Receipt</button>`}
+         </div>
+         </div>`;
+@@ -1153,7 +1154,7 @@
+         function renderSchedule(tenancies, payments) {
+         const body = document.getElementById('scheduleBody');
+         if (!tenancies.length) {
+-        body.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon">📅</div><h3>No active tenancies yet.</h3></div>`;
++        body.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon"><svg class="qi"><use href="icons.svg#calendar"/></svg></div><h3>No active tenancies yet.</h3></div>`;
+         return;
+         }
+         let html = '', row = 0;
+@@ -1184,7 +1185,7 @@
+         ${paid && !confirmed
+         ? `<button class="btn-confirm-pay" onclick="confirmPayment(${paid.id})">Confirm</button>`
+         : paid && confirmed
+-        ? `<span class="confirmed-badge">✅</span>`
++        ? `<span class="confirmed-badge"><svg class="qi"><use href="icons.svg#check-circle"/></svg></span>`
+         : '<span style="color:#ccc;font-size:12px;">—</span>'}
+         </div>
+         </div>`;
+diff --git a/landlord_tenants.html b/landlord_tenants.html
+index 79cdcd8..0938c9b 100644
+--- a/landlord_tenants.html
++++ b/landlord_tenants.html
+@@ -637,6 +637,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -652,7 +653,7 @@
+     </header>
+ 
+     <div class="page">
+-        <h1 class="page-title">🏘️ My Tenants</h1>
++        <h1 class="page-title"><svg class="qi"><use href="icons.svg#houses"/></svg> My Tenants</h1>
+         <p class="page-sub">Manage booking requests, approve tenants, start tenancy sessions, and respond to extension requests.</p>
+ 
+         <div class="stats-row" id="statsRow">
+@@ -665,11 +666,11 @@
+ 
+         <div class="tabs">
+             <div class="tab active" data-tab="all" onclick="selectTab('all', this)">All</div>
+-            <div class="tab" data-tab="pending" onclick="selectTab('pending', this)">⏳ Pending</div>
+-            <div class="tab" data-tab="approved" onclick="selectTab('approved', this)">✅ Approved</div>
+-            <div class="tab" data-tab="active" onclick="selectTab('active', this)">🔑 Active</div>
+-            <div class="tab" data-tab="rejected" onclick="selectTab('rejected', this)">❌ Rejected</div>
+-            <div class="tab" data-tab="extensions" onclick="selectTab('extensions', this)">📆 Extensions <span class="tab-badge" id="extBadge" style="display:none;">0</span></div>
++            <div class="tab" data-tab="pending" onclick="selectTab('pending', this)"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending</div>
++            <div class="tab" data-tab="approved" onclick="selectTab('approved', this)"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approved</div>
++            <div class="tab" data-tab="active" onclick="selectTab('active', this)"><svg class="qi"><use href="icons.svg#key"/></svg> Active</div>
++            <div class="tab" data-tab="rejected" onclick="selectTab('rejected', this)"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected</div>
++            <div class="tab" data-tab="extensions" onclick="selectTab('extensions', this)"><svg class="qi"><use href="icons.svg#calendar"/></svg> Extensions <span class="tab-badge" id="extBadge" style="display:none;">0</span></div>
+         </div>
+ 
+         <div id="tenantsContainer">
+@@ -685,7 +686,7 @@
+     <div class="modal-backdrop" id="sessionModal">
+         <div class="modal">
+             <div class="modal-hd">
+-                <h3>🔑 Start Tenancy Session</h3>
++                <h3><svg class="qi"><use href="icons.svg#key"/></svg> Start Tenancy Session</h3>
+                 <p>Confirm the tenancy details and set the rent amount.</p>
+             </div>
+             <div class="modal-bd">
+@@ -700,12 +701,12 @@
+                     <span class="input-suffix">months</span>
+                 </div>
+                 <div class="modal-notice">
+-                    ℹ️ Once confirmed, the tenant will be notified and their payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
++                    <svg class="qi"><use href="icons.svg#info"/></svg> Once confirmed, the tenant will be notified and their payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
+                 </div>
+             </div>
+             <div class="modal-ft">
+                 <button class="btn-cancel2" onclick="closeModal()">Cancel</button>
+-                <button class="btn-confirm" onclick="confirmSession()">✅ Start Tenancy</button>
++                <button class="btn-confirm" onclick="confirmSession()"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Start Tenancy</button>
+             </div>
+         </div>
+     </div>
+@@ -765,7 +766,7 @@
+         function renderExtensionRequests(list) {
+         const c = document.getElementById('extensionsContainer');
+         if (!list.length) {
+-        c.innerHTML = `<div class="empty"><div class="icon">📆</div><h3>No extension requests yet.</h3></div>`;
++        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#calendar"/></svg></div><h3>No extension requests yet.</h3></div>`;
+         return;
+         }
+ 
+@@ -781,15 +782,15 @@
+         const status      = r.status || 'pending';
+         const initials    = (r.tenant_name || 'T').slice(0, 2).toUpperCase();
+         const spClass     = status === 'approved' ? 'sp-approved' : status === 'declined' ? 'sp-declined' : 'sp-pending';
+-        const emoji       = status === 'approved' ? '✅' : status === 'declined' ? '❌' : '⏳';
++        const emoji       = status === 'approved' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : status === 'declined' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
+         const currentDur  = r.duration_months ?? '—';
+         const newDur      = (typeof r.duration_months === 'number') ? r.duration_months + r.extra_months : null;
+ 
+         let actions = '';
+         if (status === 'pending') {
+         actions = `
+-        <button class="btn btn-approve" onclick="respondExtension(${r.id}, 'approve')">✅ Approve</button>
+-        <button class="btn btn-reject"  onclick="respondExtension(${r.id}, 'decline')">❌ Decline</button>`;
++        <button class="btn btn-approve" onclick="respondExtension(${r.id}, 'approve')"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approve</button>
++        <button class="btn btn-reject"  onclick="respondExtension(${r.id}, 'decline')"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Decline</button>`;
+         }
+ 
+         html += `
+@@ -799,8 +800,8 @@
+         <div class="tenant-info">
+         <h3>${r.tenant_name || 'Tenant'}</h3>
+         <div class="tenant-meta">
+-        <span>📞 ${r.tenant_phone || '—'}</span>
+-        <span>📅 Requested ${formatDate(r.created_at)}</span>
++        <span><svg class="qi"><use href="icons.svg#phone"/></svg> ${r.tenant_phone || '—'}</span>
++        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> Requested ${formatDate(r.created_at)}</span>
+         </div>
+         </div>
+         <span class="status-pill ${spClass}">${emoji} ${status.toUpperCase()}</span>
+@@ -813,7 +814,7 @@
+         <div class="item"><div class="l">Requested Extra</div><div class="v"><span class="ext-months-pill">+${r.extra_months} month${r.extra_months !== 1 ? 's' : ''}</span></div></div>
+         ${newDur !== null ? `<div class="item"><div class="l">New Total Duration</div><div class="v" style="color:var(--green);">${newDur} mo</div></div>` : ''}
+         </div>
+-        ${r.message ? `<div class="ext-message">💬 "${r.message}"</div>` : ''}
++        ${r.message ? `<div class="ext-message"><svg class="qi"><use href="icons.svg#message"/></svg> "${r.message}"</div>` : ''}
+         <div class="card-actions">${actions}</div>
+         </div>`;
+         });
+@@ -832,7 +833,7 @@
+         });
+         const data = await res.json();
+         if (data.success) {
+-        alert(action === 'approve' ? '✅ Extension approved. The tenant has been notified and their payment schedule updated.' : 'Extension request declined. The tenant has been notified.');
++        alert(action === 'approve' ? ' Extension approved. The tenant has been notified and their payment schedule updated.' : 'Extension request declined. The tenant has been notified.');
+         loadExtensionRequests();
+         loadTenants();
+         } else alert(data.message || 'Failed to respond to request.');
+@@ -849,7 +850,7 @@
+         function renderTenants(list) {
+         const c = document.getElementById('tenantsContainer');
+         if (!list.length) {
+-        c.innerHTML = `<div class="empty"><div class="icon">📭</div><h3>No tenant requests here yet.</h3></div>`;
++        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>No tenant requests here yet.</h3></div>`;
+         return;
+         }
+         let html = '';
+@@ -858,19 +859,19 @@
+         const initials    = (t.tenant_name || 'T').slice(0, 2).toUpperCase();
+         const spClass     = `sp-${status}`;
+         const statusLabel = status.toUpperCase();
+-        const emoji       = status === 'active' ? '🔑' : status === 'approved' ? '✅' : status === 'rejected' ? '❌' : '⏳';
++        const emoji       = status === 'active' ? '<svg class="qi"><use href="icons.svg#key"/></svg>' : status === 'approved' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : status === 'rejected' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
+ 
+         let actions = '';
+         if (status === 'pending') {
+         actions = `
+-        <button class="btn btn-approve" onclick="approveBooking(${t.id}, ${t.tenant_id})">✅ Approve</button>
+-        <button class="btn btn-reject"  onclick="rejectBooking(${t.id})">❌ Reject</button>`;
++        <button class="btn btn-approve" onclick="approveBooking(${t.id}, ${t.tenant_id})"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approve</button>
++        <button class="btn btn-reject"  onclick="rejectBooking(${t.id})"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Reject</button>`;
+         } else if (status === 'approved') {
+         actions = `
+-        <button class="btn btn-start" onclick="openSessionModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">🔑 Start Tenancy Session</button>
+-        <button class="btn btn-view"  onclick="viewPayments(${t.tenant_id})">💳 View Payments</button>`;
++        <button class="btn btn-start" onclick="openSessionModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><svg class="qi"><use href="icons.svg#key"/></svg> Start Tenancy Session</button>
++        <button class="btn btn-view"  onclick="viewPayments(${t.tenant_id})"><svg class="qi"><use href="icons.svg#card"/></svg> View Payments</button>`;
+         } else if (status === 'active') {
+-        actions = `<button class="btn btn-view" onclick="viewPayments(${t.tenant_id})">💳 View Payments</button>`;
++        actions = `<button class="btn btn-view" onclick="viewPayments(${t.tenant_id})"><svg class="qi"><use href="icons.svg#card"/></svg> View Payments</button>`;
+         }
+ 
+         html += `
+@@ -880,9 +881,9 @@
+         <div class="tenant-info">
+         <h3>${t.tenant_name || 'Tenant'}</h3>
+         <div class="tenant-meta">
+-        <span>📞 ${t.tenant_phone || '—'}</span>
+-        <span>📧 ${t.tenant_email || '—'}</span>
+-        <span>📅 ${formatDate(t.created_at)}</span>
++        <span><svg class="qi"><use href="icons.svg#phone"/></svg> ${t.tenant_phone || '—'}</span>
++        <span><svg class="qi"><use href="icons.svg#mail"/></svg> ${t.tenant_email || '—'}</span>
++        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(t.created_at)}</span>
+         </div>
+         </div>
+         <span class="status-pill ${spClass}">${emoji} ${statusLabel}</span>
+@@ -893,7 +894,7 @@
+         <div class="item"><div class="l">Asking Price</div><div class="v">Ksh ${t.price || '—'}/mo</div></div>
+         ${t.rent_amount ? `<div class="item"><div class="l">Set Rent</div><div class="v" style="color:var(--green);">Ksh ${Number(t.rent_amount).toLocaleString()}/mo</div></div>` : ''}
+         </div>
+-        ${t.message ? `<div style="font-size:13px;color:var(--muted);margin-bottom:12px;">💬 "${t.message}"</div>` : ''}
++        ${t.message ? `<div style="font-size:13px;color:var(--muted);margin-bottom:12px;"><svg class="qi"><use href="icons.svg#message"/></svg> "${t.message}"</div>` : ''}
+         <div class="card-actions">${actions}</div>
+         </div>`;
+         });
+@@ -930,7 +931,7 @@
+         });
+         const data = await res.json();
+         if (data.success) {
+-        alert('✅ Booking approved! The tenant has been notified.');
++        alert(' Booking approved! The tenant has been notified.');
+         loadTenants();
+         } else alert(data.message || 'Failed to approve.');
+         } catch { alert('Network error.'); }
+@@ -954,8 +955,8 @@
+         selectedBooking = t;
+         document.getElementById('sessionTenantInfo').innerHTML = `
+         <strong>${t.tenant_name || 'Tenant'}</strong><br>
+-        📍 ${t.property_title || 'Property'} — ${t.location || ''}<br>
+-        📞 ${t.tenant_phone || '—'}`;
++        <svg class="qi"><use href="icons.svg#pin"/></svg> ${t.property_title || 'Property'} — ${t.location || ''}<br>
++        <svg class="qi"><use href="icons.svg#phone"/></svg> ${t.tenant_phone || '—'}`;
+         const today = new Date().toISOString().split('T')[0];
+         document.getElementById('startDate').value = today;
+         document.getElementById('rentAmount').value = t.price || '';
+@@ -992,12 +993,12 @@
+         const data = await res.json();
+         if (data.success) {
+         closeModal();
+-        alert(`🎉 Tenancy session started!\n\nThe tenant has been notified. They can now begin paying rent monthly via M-Pesa.`);
++        alert(` Tenancy session started!\n\nThe tenant has been notified. They can now begin paying rent monthly via M-Pesa.`);
+         loadTenants();
+         } else alert(data.message || 'Failed to start session.');
+         } catch { alert('Network error.'); }
+ 
+-        btn.disabled = false; btn.textContent = '✅ Start Tenancy';
++        btn.disabled = false; btn.innerHTML = '<svg class="qi"><use href="icons.svg#check-circle"/></svg> Start Tenancy';
+         }
+ 
+         function viewPayments(tenantId) {
+@@ -1016,7 +1017,7 @@
+ 
+         function showEmpty(msg) {
+         document.getElementById('tenantsContainer').innerHTML =
+-        `<div class="empty"><div class="icon">📭</div><h3>${msg}</h3></div>`;
++        `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>${msg}</h3></div>`;
+         }
+ 
+         window.onload = function () {
+diff --git a/landlords.html b/landlords.html
+index 813e006..4ec2c91 100644
+--- a/landlords.html
++++ b/landlords.html
+@@ -245,6 +245,7 @@
+             padding: 30px;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -262,10 +263,10 @@
+             <a href="landlords.html">Landlords</a>
+             <a href="contact.html">Contact</a>
+             <a href="hostdashboard.html">Dashboard</a>
+-            <a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>
++            <a href="#" onclick="goToMyGroup(); return false;"><svg class="qi"><use href="icons.svg#message"/></svg> Chat with housemates</a>
+             <a href="myprofile.html">Profile</a>
+             <a href="index.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
+-                🚪 Log out
++                <svg class="qi"><use href="icons.svg#logout"/></svg> Log out
+             </a>
+         </nav>
+ 
+@@ -380,7 +381,7 @@
+ 
+         <h3>${landlord.fullname}</h3>
+ 
+-        <p class="verified">✔ Verified Host</p>
++        <p class="verified"><svg class="qi"><use href="icons.svg#verified"/></svg> Verified Host</p>
+ 
+         <p>${landlord.property_name || "No property listed yet"}</p>
+ 
+diff --git a/login.html b/login.html
+index 35c72af..6a29697 100644
+--- a/login.html
++++ b/login.html
+@@ -528,6 +528,7 @@
+             color: var(--text);
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -537,13 +538,13 @@
+             <img id="logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect logo">
+             <h2>Qeja Connect</h2>
+         </div>
+-        <a href="welcome.html">🏠 Home</a>
++        <a href="welcome.html"><svg class="qi"><use href="icons.svg#home"/></svg> Home</a>
+     </header>
+ 
+     <div class="page">
+ 
+         <div class="page-heading">
+-            <div class="logo-mark">🔑</div>
++            <div class="logo-mark"><svg class="qi"><use href="icons.svg#key"/></svg></div>
+             <h1>Welcome back</h1>
+             <p>Sign in to your QejaConnect account</p>
+         </div>
+@@ -602,7 +603,7 @@
+     <!-- Fingerprint modal -->
+     <div id="fp-modal-overlay">
+         <div id="fp-modal">
+-            <div class="modal-icon">🔐</div>
++            <div class="modal-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
+             <p>Enable fingerprint login?</p>
+             <small>Next time you can sign in with just your fingerprint — no password needed.</small>
+             <div class="fp-modal-buttons">
+@@ -615,7 +616,7 @@
+     <!-- Forgot password modal -->
+     <div id="forgot-modal-overlay">
+         <div id="forgot-modal">
+-            <div class="modal-icon">🔒</div>
++            <div class="modal-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
+             <p id="forgotTitle">Reset your password</p>
+             <small id="forgotSubtitle">Enter your email and we'll send you a code.</small>
+ 
+@@ -677,7 +678,7 @@
+                 localStorage.setItem('role', data.role);
+                 localStorage.setItem('loggedUser', JSON.stringify(data.user));
+ 
+-                showToast('Signed in with Google 👋', 'success');
++                showToast('Signed in with Google ', 'success');
+                 setTimeout(() => redirectUser(data.role), 1000);
+             } catch (err) {
+                 showToast('Google sign-in failed. Try again.', 'error');
+@@ -699,10 +700,10 @@
+             const toast = document.getElementById('toast');
+             const icon  = document.getElementById('toast-icon');
+             const msg   = document.getElementById('toast-msg');
+-            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
++            const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>' };
+             toast.className = '';
+             toast.classList.add(type);
+-            icon.textContent = icons[type] || 'ℹ️';
++            icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+             msg.textContent  = message;
+             void toast.offsetWidth;
+             toast.classList.add('show');
+@@ -753,7 +754,7 @@
+                     localStorage.setItem('role', data.role);
+                     localStorage.setItem('loggedUser', JSON.stringify(data.user));
+ 
+-                    showToast('Login successful! Welcome back 👋', 'success');
++                    showToast('Login successful! Welcome back ', 'success');
+ 
+                     const alreadyRegistered = localStorage.getItem('webauthn_user_id');
+ 
+@@ -797,7 +798,7 @@
+             );
+ 
+             if (success) {
+-                showToast('Fingerprint enabled! ✅', 'success');
++                showToast('Fingerprint enabled! ', 'success');
+                 setTimeout(() => redirectUser(user.role), 1500);
+             } else {
+                 showToast('Fingerprint setup failed. Redirecting...', 'error');
+@@ -888,7 +889,7 @@
+                     localStorage.setItem('token', data.token);
+                     localStorage.setItem('role', data.role);
+                     localStorage.setItem('loggedUser', JSON.stringify(data.user));
+-                    showToast('Fingerprint verified! 👆', 'success');
++                    showToast('Fingerprint verified! ', 'success');
+                     setTimeout(() => redirectUser(data.role), 1200);
+                 } else {
+                     showToast(data.message || 'Fingerprint login failed', 'error');
+diff --git a/my-groups.html b/my-groups.html
+index a12e112..a3b3136 100644
+--- a/my-groups.html
++++ b/my-groups.html
+@@ -213,6 +213,7 @@
+             padding: 30px;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -309,7 +310,7 @@
+         <div class="group-meta">${g.member_count} tenant${g.member_count === 1 ? "" : "s"} · ${g.post_count} message${g.post_count === 1 ? "" : "s"} · ${timeAgo(g.last_activity)}</div>
+         </div>
+         <div class="group-actions">
+-        <button class="rename-btn" onclick="toggleRename(${g.property_id})">✏️ Rename</button>
++        <button class="rename-btn" onclick="toggleRename(${g.property_id})"><svg class="qi"><use href="icons.svg#edit"/></svg> Rename</button>
+         <button class="open-btn" onclick="window.location.href='property-group.html?property_id=${g.property_id}'">Open Chat</button>
+         </div>
+         <div class="rename-row" id="rename-${g.property_id}">
+diff --git a/mymessages.html b/mymessages.html
+index 4ab13c0..edceb35 100644
+--- a/mymessages.html
++++ b/mymessages.html
+@@ -351,6 +351,7 @@
+             font-size: 13px;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -375,7 +376,7 @@
+ 
+         <!-- New message form -->
+         <div class="new-msg-card">
+-            <h3>✉️ Send New Message</h3>
++            <h3><svg class="qi"><use href="icons.svg#mail"/></svg> Send New Message</h3>
+             <textarea id="newMsgBox" placeholder="Type your message to support..."></textarea>
+             <br>
+             <button class="send-btn" id="sendNewBtn" onclick="sendNewMessage()">Send Message</button>
+@@ -421,7 +422,7 @@
+         if (!token || !loggedUser) {
+         list.innerHTML = `
+         <div class="empty-state">
+-        <div class="icon">🔒</div>
++        <div class="icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
+         <p>Please <a href="login.html" style="color:indigo;font-weight:bold;">log in</a> to view your messages.</p>
+         </div>`;
+         return;
+@@ -438,7 +439,7 @@
+         if (!data.messages || data.messages.length === 0) {
+         list.innerHTML = `
+         <div class="empty-state">
+-        <div class="icon">💬</div>
++        <div class="icon"><svg class="qi"><use href="icons.svg#message"/></svg></div>
+         <p>You haven't sent any messages yet.</p>
+         </div>`;
+         return;
+@@ -468,7 +469,7 @@
+         <div class="reply-time">${fmtDate(m.replied_at)}</div>
+         </div>` : `
+         <div class="pending-wrap">
+-        <span class="pending-badge">⏳ Awaiting reply from support</span>
++        <span class="pending-badge"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Awaiting reply from support</span>
+         </div>`}
+         </div>`;
+         }).join('');
+@@ -476,7 +477,7 @@
+         markAllSeen(data.messages);
+ 
+         } catch (err) {
+-        list.innerHTML = `<div class="empty-state"><p>⚠️ ${escH(err.message)}</p></div>`;
++        list.innerHTML = `<div class="empty-state"><p><svg class="qi"><use href="icons.svg#alert"/></svg> ${escH(err.message)}</p></div>`;
+         }
+         }
+ 
+@@ -550,14 +551,14 @@
+         if (!data.success) throw new Error(data.message);
+ 
+         alert.className = 'alert success';
+-        alert.textContent = '✅ Message sent! We\'ll reply soon.';
++        alert.textContent = ' Message sent! We\'ll reply soon.';
+         box.value = '';
+         setTimeout(() => { alert.style.display = 'none'; }, 3000);
+         loadMessages();
+ 
+         } catch (err) {
+         alert.className = 'alert error';
+-        alert.textContent = '⚠️ ' + err.message;
++        alert.textContent = ' ' + err.message;
+         }
+ 
+         btn.disabled = false;
+diff --git a/myprofile.html b/myprofile.html
+index c66c8e6..82bc7cb 100644
+--- a/myprofile.html
++++ b/myprofile.html
+@@ -505,6 +505,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -534,8 +535,8 @@
+             <div class="avatar-section">
+                 <div class="avatar-wrap">
+                     <img id="avatarImg" src="" alt="Profile photo">
+-                    <div class="avatar-uploading" id="avatarUploading">⏳</div>
+-                    <label for="pic-input" class="edit-badge" title="Change photo">✏️</label>
++                    <div class="avatar-uploading" id="avatarUploading"><svg class="qi"><use href="icons.svg#hourglass"/></svg></div>
++                    <label for="pic-input" class="edit-badge" title="Change photo"><svg class="qi"><use href="icons.svg#edit"/></svg></label>
+                 </div>
+                 <input type="file" id="pic-input" accept="image/*">
+                 <div>
+@@ -557,7 +558,7 @@
+             <div class="field-row">
+                 <label>Email address</label>
+                 <div class="value" id="fieldEmail">—</div>
+-                <span class="locked-note">🔒 Cannot be changed</span>
++                <span class="locked-note"><svg class="qi"><use href="icons.svg#lock"/></svg> Cannot be changed</span>
+             </div>
+             <div class="field-row">
+                 <label>User ID</label>
+@@ -638,10 +639,10 @@
+         const toast = document.getElementById('toast');
+         const icon  = document.getElementById('toast-icon');
+         const msg   = document.getElementById('toast-msg');
+-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
++        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
+         toast.className = '';
+         toast.classList.add(type);
+-        icon.textContent = icons[type] || 'ℹ️';
++        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+         msg.textContent  = message;
+         void toast.offsetWidth;
+         toast.classList.add('show');
+@@ -686,7 +687,7 @@
+ 
+         setText('displayName', user.fullname);
+         document.getElementById('displayRole').textContent =
+-        role === 'landlord' ? '🏠 Landlord' : '🧑 Tenant';
++        role === 'landlord' ? '<svg class="qi"><use href="icons.svg#home"/></svg> Landlord' : '<svg class="qi"><use href="icons.svg#user"/></svg> Tenant';
+ 
+         setText('fieldName',  user.fullname);
+         setText('fieldEmail', user.email);
+@@ -754,7 +755,7 @@
+         const updated = { ...user, profile_pic: data.image };
+         localStorage.setItem('loggedUser', JSON.stringify(updated));
+         user = updated;
+-        showToast('Profile photo updated! ✅', 'success');
++        showToast('Profile photo updated! ', 'success');
+         } else {
+         showToast(data.message || 'Upload failed.', 'error');
+         }
+@@ -808,7 +809,7 @@
+         const updated = { ...user, phone };
+         localStorage.setItem('loggedUser', JSON.stringify(updated));
+         user = updated;
+-        showToast('Phone number updated! ✅', 'success');
++        showToast('Phone number updated! ', 'success');
+         } else {
+         showToast(data.message || 'Update failed.', 'error');
+         }
+diff --git a/mytenancy.html b/mytenancy.html
+index 7386008..1803f2f 100644
+--- a/mytenancy.html
++++ b/mytenancy.html
+@@ -763,6 +763,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -778,7 +779,7 @@
+     </header>
+ 
+     <div class="page">
+-        <h1 class="page-title">💳 My Tenancy</h1>
++        <h1 class="page-title"><svg class="qi"><use href="icons.svg#card"/></svg> My Tenancy</h1>
+         <p class="page-sub">Your active tenancy details and monthly rent payments.</p>
+ 
+         <div id="tenancyContent">
+@@ -795,7 +796,7 @@
+     <div class="modal-backdrop" id="extModal">
+         <div class="modal">
+             <div class="modal-header ext-hd">
+-                <h3>📆 Request Tenancy Extension</h3>
++                <h3><svg class="qi"><use href="icons.svg#calendar"/></svg> Request Tenancy Extension</h3>
+                 <p>Send an extension request to your landlord.</p>
+             </div>
+             <div class="modal-body">
+@@ -807,12 +808,12 @@
+                 <label>Message to Landlord (optional)</label>
+                 <textarea id="extMessage" rows="3" placeholder="e.g. I'd like to extend for 6 more months as I'm settling in well…"></textarea>
+                 <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px;font-size:12px;color:#1e40af;line-height:1.6;">
+-                    ℹ️ Your landlord will be notified of your request. They can approve or decline it from their dashboard.
++                    <svg class="qi"><use href="icons.svg#info"/></svg> Your landlord will be notified of your request. They can approve or decline it from their dashboard.
+                 </div>
+             </div>
+             <div class="modal-footer">
+                 <button class="btn-cancel2" onclick="closeExtModal()">Cancel</button>
+-                <button class="btn-confirm indigo" onclick="submitExtensionRequest()">📤 Send Request</button>
++                <button class="btn-confirm indigo" onclick="submitExtensionRequest()"><svg class="qi"><use href="icons.svg#send"/></svg> Send Request</button>
+             </div>
+         </div>
+     </div>
+@@ -913,25 +914,25 @@
+         </div>
+ 
+         <div class="tax-banner">
+-        ℹ️ <strong>Note:</strong> A 4% service tax is added to your monthly rent for every payment.
++        <svg class="qi"><use href="icons.svg#info"/></svg> <strong>Note:</strong> A 4% service tax is added to your monthly rent for every payment.
+         Monthly Rent: <strong>Ksh ${rent.toLocaleString()}</strong> + Tax (4%): <strong>Ksh ${tax.toLocaleString()}</strong>
+         = Total Payable: <strong>Ksh ${total.toLocaleString()}</strong> per month.
+         </div>
+ 
+         <div class="extend-banner">
+         <div class="ext-text">
+-        <h3>📆 Need more time?</h3>
++        <h3><svg class="qi"><use href="icons.svg#calendar"/></svg> Need more time?</h3>
+         <p>Request an extension from your landlord directly here.</p>
+         </div>
+         <button class="btn-extend" onclick="openExtModal()">Request Extension</button>
+         </div>
+ 
+         <div class="section-hd">
+-        <h2>📅 Payment Schedule (${duration} Month${duration !== 1 ? 's' : ''})</h2>
++        <h2><svg class="qi"><use href="icons.svg#calendar"/></svg> Payment Schedule (${duration} Month${duration !== 1 ? 's' : ''})</h2>
+         <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
+-        <span style="color:var(--green);font-weight:600;">✅ ${paidCount} Paid</span>
+-        <span style="color:var(--amber);font-weight:600;">⏳ ${pendingCount} Pending</span>
+-        <span style="color:var(--red);font-weight:600;">🔴 ${overdueCount} Overdue</span>
++        <span style="color:var(--green);font-weight:600;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> ${paidCount} Paid</span>
++        <span style="color:var(--amber);font-weight:600;"><svg class="qi"><use href="icons.svg#hourglass"/></svg> ${pendingCount} Pending</span>
++        <span style="color:var(--red);font-weight:600;"><svg class="qi qi-red"><use href="icons.svg#dot"/></svg> ${overdueCount} Overdue</span>
+         </div>
+         </div>
+ 
+@@ -944,8 +945,8 @@
+         let actionHtml = '';
+         if (m.status === 'paid') {
+         actionHtml = `
+-        <div class="btn-paid-indicator">✅ Paid</div>
+-        <button class="btn btn-pdf" onclick="generateReceipt(${i})">📄 Get Receipt</button>`;
++        <div class="btn-paid-indicator"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Paid</div>
++        <button class="btn btn-pdf" onclick="generateReceipt(${i})"><svg class="qi"><use href="icons.svg#file"/></svg> Get Receipt</button>`;
+         } else {
+         actionHtml = `<button class="btn btn-pay" onclick="openPayModal(${i})">Pay Now — Ksh ${total.toLocaleString()}</button>`;
+         }
+@@ -956,7 +957,7 @@
+         <div class="month-price">Ksh ${total.toLocaleString()}</div>
+         <div class="month-price-tax">Rent Ksh ${rent.toLocaleString()} + 4% tax (Ksh ${tax.toLocaleString()})</div>
+         <div class="month-status ms-${m.status}">
+-        ${m.status === 'paid' ? '✅' : m.status === 'overdue' ? '🔴' : '⏳'} ${m.status.toUpperCase()}
++        ${m.status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : m.status === 'overdue' ? '<svg class="qi qi-red"><use href="icons.svg#dot"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>'} ${m.status.toUpperCase()}
+         </div>
+         <div class="month-due">Due: ${m.dueDate}</div>
+         ${refHtml}
+@@ -991,7 +992,7 @@
+         function showNoTenancy() {
+         document.getElementById('tenancyContent').innerHTML = `
+         <div class="empty">
+-        <div class="icon">🔑</div>
++        <div class="icon"><svg class="qi"><use href="icons.svg#key"/></svg></div>
+         <h3>No active tenancy</h3>
+         <p>You don't have an active tenancy yet. Once your landlord approves your booking and confirms your session, your tenancy details will appear here.</p>
+         <br>
+@@ -1035,7 +1036,7 @@
+         const data = await res.json();
+         if (data.success) {
+         closeExtModal();
+-        alert(`✅ Extension request sent!\n\nYour landlord has been notified of your request for ${months} additional month${months !== 1 ? 's' : ''}. You'll be notified when they respond.`);
++        alert(` Extension request sent!\n\nYour landlord has been notified of your request for ${months} additional month${months !== 1 ? 's' : ''}. You'll be notified when they respond.`);
+         } else {
+         alert(data.message || 'Failed to send request. Please try again.');
+         }
+@@ -1044,7 +1045,7 @@
+         }
+ 
+         btn.disabled    = false;
+-        btn.textContent = '📤 Send Request';
++        btn.innerHTML = '<svg class="qi"><use href="icons.svg#send"/></svg> Send Request';
+         }
+ 
+         // ── PAY MODAL ──
+@@ -1060,7 +1061,7 @@
+         function showPayForm(monthIdx, rent, tax, total) {
+         document.getElementById('modalInner').innerHTML = `
+         <div class="modal-header">
+-        <h3>💚 Pay Rent via M-Pesa</h3>
++        <h3><svg class="qi"><use href="icons.svg#heart"/></svg> Pay Rent via M-Pesa</h3>
+         <p>Month ${window._months[monthIdx].number} — ${window._months[monthIdx].label}</p>
+         </div>
+         <div class="modal-body">
+@@ -1074,13 +1075,13 @@
+         <div class="row total"><span>Total Payable</span><span>Ksh ${total.toLocaleString()}</span></div>
+         </div>
+         <div class="tax-note">
+-        ℹ️ A 4% service tax is added to every rent payment in addition to your monthly rent. This is reflected in the amount charged via M-Pesa and on your receipt.
++        <svg class="qi"><use href="icons.svg#info"/></svg> A 4% service tax is added to every rent payment in addition to your monthly rent. This is reflected in the amount charged via M-Pesa and on your receipt.
+         </div>
+         <label style="margin-top:14px;display:block;">M-Pesa Phone Number</label>
+         <input type="tel" id="payPhone" placeholder="e.g. 0712345678 or 254712345678"
+         value="${loggedUser.phone || ''}" maxlength="13">
+         <p style="font-size:12px;color:var(--muted);">
+-        ⚡ You will receive an M-Pesa STK push on your phone. Enter your M-Pesa PIN to complete payment.
++        <svg class="qi"><use href="icons.svg#zap"/></svg> You will receive an M-Pesa STK push on your phone. Enter your M-Pesa PIN to complete payment.
+         </p>
+         </div>
+         <div class="modal-footer">
+@@ -1103,7 +1104,7 @@
+         <div class="spinner"></div>
+         <h3>STK Push Sent!</h3>
+         <p>Check your phone and enter your M-Pesa PIN to complete payment.</p>
+-        <div class="phone-display">📱 ${phone}</div>
++        <div class="phone-display"><svg class="qi"><use href="icons.svg#smartphone"/></svg> ${phone}</div>
+         <p style="margin-top:8px;font-size:12px;">You'll be charged <strong>Ksh ${total.toLocaleString()}</strong> (Rent Ksh ${rent.toLocaleString()} + 4% tax Ksh ${tax.toLocaleString()}).</p>
+         <p style="margin-top:12px;font-size:12px;">Waiting for payment confirmation…<br>This may take up to 30 seconds.</p>
+         <button class="btn btn-cancel2" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="closeModal()">Cancel</button>
+@@ -1171,13 +1172,13 @@
+         if (mc) {
+         mc.className = 'month-card paid';
+         mc.querySelector('.month-status').className   = 'month-status ms-paid';
+-        mc.querySelector('.month-status').textContent = '✅ PAID';
++        mc.querySelector('.month-status').innerHTML = '<svg class="qi"><use href="icons.svg#check-circle"/></svg> PAID';
+         if (mc.querySelector('.month-ref')) mc.querySelector('.month-ref').textContent = `Ref: ${ref}`;
+         }
+ 
+         document.getElementById('modalInner').innerHTML = `
+         <div class="success-box">
+-        <div class="check">🎉</div>
++        <div class="check"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
+         <h3>Payment Successful!</h3>
+         <p style="color:var(--muted);font-size:13px;">Your rent for Month ${m.number} (${m.label}) has been received.</p>
+         <div class="amount-breakdown" style="text-align:left;">
+@@ -1189,10 +1190,10 @@
+         <div class="ref-label">M-Pesa Reference Number</div>
+         <div>${ref}</div>
+         </div>
+-        <p style="font-size:12px;color:var(--muted);">📩 Reference sent to your landlord for confirmation.</p>
++        <p style="font-size:12px;color:var(--muted);"><svg class="qi"><use href="icons.svg#mail"/></svg> Reference sent to your landlord for confirmation.</p>
+         </div>
+         <div class="success-footer">
+-        <button class="btn-full" style="background:var(--indigo);color:white;" onclick="generateReceipt(${monthIdx}, '${ref}')">📄 Download Receipt</button>
++        <button class="btn-full" style="background:var(--indigo);color:white;" onclick="generateReceipt(${monthIdx}, '${ref}')"><svg class="qi"><use href="icons.svg#file"/></svg> Download Receipt</button>
+         <button class="btn-full" style="background:#f1f5f9;color:var(--text);" onclick="closeModal()">Close</button>
+         </div>`;
+ 
+@@ -1221,7 +1222,7 @@
+         function showPayError(msg) {
+         document.getElementById('modalInner').innerHTML = `
+         <div style="padding:28px;text-align:center;">
+-        <div style="font-size:3rem;margin-bottom:12px;">❌</div>
++        <div style="font-size:3rem;margin-bottom:12px;"><svg class="qi"><use href="icons.svg#x-circle"/></svg></div>
+         <h3 style="color:var(--red);margin-bottom:10px;">Payment Failed</h3>
+         <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">${msg}</p>
+         <div style="display:flex;gap:10px;justify-content:center;">
+diff --git a/notification.html b/notification.html
+index 8874bf4..f95c511 100644
+--- a/notification.html
++++ b/notification.html
+@@ -252,6 +252,7 @@
+                 color: #dc2626;
+             }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -344,12 +345,12 @@
+         const res  = await fetch(`${API_BASE}/updates`);
+         const data = await res.json();
+         if (data.success) {
+-        const iconMap = { announcement: "📢", maintenance: "🛠", alert: "⚠️", feature: "✨", promotion: "🎉" };
++        const iconMap = { announcement: "<svg class='qi'><use href='icons.svg#megaphone'/></svg>", maintenance: "<svg class='qi'><use href='icons.svg#wrench'/></svg>", alert: "<svg class='qi'><use href='icons.svg#alert'/></svg>", feature: "<svg class='qi'><use href='icons.svg#sparkles'/></svg>", promotion: "<svg class='qi'><use href='icons.svg#sparkles'/></svg>" };
+         data.updates.forEach(u => {
+         out.push({
+         id:    `update-${u.id}`,
+         type:  "update",
+-        icon:  iconMap[u.type] || "📢",
++        icon:  iconMap[u.type] || "<svg class='qi'><use href='icons.svg#megaphone'/></svg>",
+         title: u.title,
+         body:  u.body,
+         date:  u.created_at,
+@@ -369,7 +370,7 @@
+         out.push({
+         id:    `support-${m.id}`,
+         type:  "support",
+-        icon:  "📩",
++        icon:  "<svg class='qi'><use href='icons.svg#mail'/></svg>",
+         title: "Support replied to your message",
+         body:  m.reply,
+         date:  m.replied_at,
+@@ -401,7 +402,7 @@
+         out.push({
+         id:      `msg-${m.id}`,
+         type:    "message",
+-        icon:    "💬",
++        icon:    "<svg class='qi'><use href='icons.svg#message'/></svg>",
+         title:   `Message from ${chat.fullname}`,
+         body:    m.message,
+         date:    m.created_at,
+@@ -431,7 +432,7 @@
+         out.push({
+         id:    `booking-${b.id}`,
+         type:  "booking",
+-        icon:  "📋",
++        icon:  "<svg class='qi'><use href='icons.svg#clipboard'/></svg>",
+         title: `New booking interest — ${b.property_title || "Property"}`,
+         body:  `${b.tenant_name || "A tenant"}: "${b.message || ""}"`,
+         date:  b.created_at,
+@@ -442,7 +443,7 @@
+         out.push({
+         id:    `tenancy-${b.tenancy_id}`,
+         type:  "tenancy",
+-        icon:  "✅",
++        icon:  "<svg class='qi'><use href='icons.svg#check-circle'/></svg>",
+         title: `Tenancy approved & started — ${b.property_title || "Property"}`,
+         body:  `${b.tenant_name || "Tenant"}'s tenancy began ${b.start_date ? new Date(b.start_date).toLocaleDateString() : "recently"}.`,
+         date:  b.start_date || b.created_at,
+@@ -462,7 +463,7 @@
+         out.push({
+         id:    `extension-${r.id}`,
+         type:  "tenancy",
+-        icon:  "🗓",
++        icon:  "<svg class='qi'><use href='icons.svg#calendar'/></svg>",
+         title: `Extension request — ${r.property_title || "Property"}`,
+         body:  `${r.tenant_name || "Tenant"} asked for ${r.extra_months} more month${r.extra_months === 1 ? "" : "s"} (status: ${r.status}).`,
+         date:  r.created_at,
+@@ -494,7 +495,7 @@
+         const data = await res.json();
+         if (data.success) {
+         data.bookings.forEach(b => {
+-        const statusIcon = b.status === "approved" ? "✅" : b.status === "rejected" ? "❌" : "📋";
++        const statusIcon = b.status === "approved" ? "<svg class='qi'><use href='icons.svg#check-circle'/></svg>" : b.status === "rejected" ? "<svg class='qi'><use href='icons.svg#x-circle'/></svg>" : "<svg class='qi'><use href='icons.svg#clipboard'/></svg>";
+         const statusText = b.status === "approved" ? "approved" : b.status === "rejected" ? "declined" : "pending";
+         out.push({
+         id:    `booking-${b.id}`,
+@@ -518,7 +519,7 @@
+         out.push({
+         id:    `tenancy-${t.id}`,
+         type:  "tenancy",
+-        icon:  "🏠",
++        icon:  "<svg class='qi'><use href='icons.svg#home'/></svg>",
+         title: `Tenancy active — ${t.property_title}`,
+         body:  `Started ${new Date(t.start_date).toLocaleDateString()} with ${t.landlord_name}.`,
+         date:  t.start_date,
+diff --git a/property-group.html b/property-group.html
+index e61f03a..8267e2b 100644
+--- a/property-group.html
++++ b/property-group.html
+@@ -394,6 +394,7 @@
+             padding: 30px;
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -524,7 +525,7 @@
+         function renderFeed() {
+         const feed = document.getElementById("feed");
+         if (!currentThread.length) {
+-        feed.innerHTML = '<p class="state-msg">No messages yet. Say hello 👋</p>';
++        feed.innerHTML = '<p class="state-msg">No messages yet.</p>';
+         return;
+         }
+         feed.innerHTML = currentThread.map(renderPost).join("");
+@@ -686,8 +687,8 @@
+         const canModerate = postEl.dataset.canModerate === "true";
+ 
+         let html = "";
+-        if (isMine) html += `<button onclick="startEdit(${postId}); closeCtxMenu();">✏️ Edit</button>`;
+-        if (isMine || canModerate) html += `<button class="danger" onclick="deletePost(${postId}); closeCtxMenu();">🗑️ Delete</button>`;
++        if (isMine) html += `<button onclick="startEdit(${postId}); closeCtxMenu();"><svg class="qi"><use href="icons.svg#edit"/></svg> Edit</button>`;
++        if (isMine || canModerate) html += `<button class="danger" onclick="deletePost(${postId}); closeCtxMenu();"><svg class="qi"><use href="icons.svg#trash"/></svg> Delete</button>`;
+         if (!html) return;
+ 
+         ctxMenu.innerHTML = html;
+diff --git a/refer-earn.html b/refer-earn.html
+index 6f43827..1deaa3a 100644
+--- a/refer-earn.html
++++ b/refer-earn.html
+@@ -571,6 +571,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+ 
+@@ -610,15 +611,15 @@
+ 
+         <div class="steps">
+             <div class="step-box">
+-                <div class="icon">🔗</div>
++                <div class="icon"><svg class="qi"><use href="icons.svg#link"/></svg></div>
+                 <p>Share your code or link with friends</p>
+             </div>
+             <div class="step-box">
+-                <div class="icon">🏠</div>
++                <div class="icon"><svg class="qi"><use href="icons.svg#home"/></svg></div>
+                 <p>They sign up & move into a home</p>
+             </div>
+             <div class="step-box">
+-                <div class="icon">💰</div>
++                <div class="icon"><svg class="qi"><use href="icons.svg#coins"/></svg></div>
+                 <p>You earn 1% of their rent monthly</p>
+             </div>
+         </div>
+@@ -707,10 +708,10 @@
+         const toast = document.getElementById('toast');
+         const icon  = document.getElementById('toast-icon');
+         const msg   = document.getElementById('toast-msg');
+-        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
++        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>' };
+         toast.className = '';
+         toast.classList.add(type);
+-        icon.textContent = icons[type] || 'ℹ️';
++        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+         msg.textContent  = message;
+         void toast.offsetWidth;
+         toast.classList.add('show');
+@@ -765,7 +766,7 @@
+         document.getElementById('totalPending').textContent = '—';
+         document.getElementById('totalPaid').textContent    = '—';
+         document.getElementById('earningsCard').innerHTML =
+-        `<div class="empty"><div class="e-icon">🔒</div><p>Please <a href="login.html">log in</a> to view your referral code and earnings.</p></div>`;
++        `<div class="empty"><div class="e-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div><p>Please <a href="login.html">log in</a> to view your referral code and earnings.</p></div>`;
+         return;
+         }
+ 
+@@ -798,7 +799,7 @@
+         console.error(err);
+         document.getElementById('codeValue').textContent = '—';
+         document.getElementById('earningsCard').innerHTML =
+-        `<div class="empty"><div class="e-icon">⚠️</div><p>Could not load your referral data. Please try again later.</p></div>`;
++        `<div class="empty"><div class="e-icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><p>Could not load your referral data. Please try again later.</p></div>`;
+         showToast('Could not load referral data.', 'error');
+         }
+         }
+@@ -809,7 +810,7 @@
+         if (!earnings || earnings.length === 0) {
+         card.innerHTML = `
+         <div class="empty">
+-        <div class="e-icon">🌱</div>
++        <div class="e-icon"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
+         <p>No referrals yet. Share your code &mdash; when someone you refer moves into a home and pays rent, your earnings will show up here.</p>
+         </div>
+         `;
+diff --git a/sw.js b/sw.js
+index 711ccb4..eb70187 100644
+--- a/sw.js
++++ b/sw.js
+@@ -1,7 +1,7 @@
+-// QejaConnect Service Worker v3
+-const STATIC_CACHE = 'qeja-static-v3';
+-const IMAGES_CACHE = 'qeja-images-v3';
+-const API_CACHE    = 'qeja-api-v3';
++// QejaConnect Service Worker v4
++const STATIC_CACHE = 'qeja-static-v4';
++const IMAGES_CACHE = 'qeja-images-v4';
++const API_CACHE    = 'qeja-api-v4';
+ 
+ const CORE_ASSETS = [
+   "/QejaConnect/welcome.html",
+@@ -16,7 +16,9 @@ const CORE_ASSETS = [
+   "/QejaConnect/logo.jpg",
+   "/QejaConnect/logo-192.png",
+   "/QejaConnect/logo-512.png",
+-  "/QejaConnect/manifest.json"
++  "/QejaConnect/manifest.json",
++  "/QejaConnect/icons.svg",
++  "/QejaConnect/icons.css"
+ ];
+ 
+ // ── Install: pre-cache core assets ──────────────────────────────────────────
+diff --git a/tenant.html b/tenant.html
+index a052968..096306b 100644
+--- a/tenant.html
++++ b/tenant.html
+@@ -625,13 +625,14 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+     <div class="page">
+ 
+         <div class="header">
+-            <div class="logo-mark">🏠</div>
++            <div class="logo-mark" style="color:#fff"><svg class="qi"><use href="icons.svg#home"/></svg></div>
+             <h1>Tenant Sign Up</h1>
+             <p>Find your perfect home across Kenya</p>
+         </div>
+@@ -679,7 +680,7 @@
+                     <label>Password</label>
+                     <div class="pw-wrap">
+                         <input type="password" name="password" id="password" placeholder="Create a strong password" required>
+-                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁</button>
++                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
+                     </div>
+                     <div class="strength-wrap" id="strengthWrap">
+                         <div class="strength-track">
+@@ -700,7 +701,7 @@
+                     <label>Confirm Password</label>
+                     <div class="pw-wrap">
+                         <input type="password" name="confirm" id="confirm" placeholder="Repeat your password" required>
+-                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password">👁</button>
++                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
+                     </div>
+                 </div>
+ 
+@@ -828,7 +829,7 @@
+                 localStorage.setItem('role', data.role);
+                 localStorage.setItem('loggedUser', JSON.stringify(data.user));
+ 
+-                showToast('Signed in with Google 👋', 'success');
++                showToast('Signed in with Google ', 'success');
+                 setTimeout(() => redirectUser(data.role), 1000);
+             } catch (err) {
+                 showToast('Google sign-in failed. Try again.', 'error');
+@@ -866,10 +867,10 @@
+             const toast = document.getElementById('toast');
+             const icon  = document.getElementById('toast-icon');
+             const msg   = document.getElementById('toast-msg');
+-            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
++            const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
+             toast.className = '';
+             toast.classList.add(type);
+-            icon.textContent = icons[type] || 'ℹ️';
++            icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
+             msg.textContent  = message;
+             void toast.offsetWidth;
+             toast.classList.add('show');
+@@ -914,14 +915,14 @@
+             const pw = document.getElementById('password');
+             const showing = pw.type === 'text';
+             pw.type = showing ? 'password' : 'text';
+-            this.textContent = showing ? '👁' : '🙈';
++            this.innerHTML = showing ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
+         });
+ 
+         document.getElementById('toggleConfirm').addEventListener('click', function () {
+             const cf = document.getElementById('confirm');
+             const showing = cf.type === 'text';
+             cf.type = showing ? 'password' : 'text';
+-            this.textContent = showing ? '👁' : '🙈';
++            this.innerHTML = showing ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
+         });
+ 
+         // ── Password strength ──────────────────────────────────────
+diff --git a/terms.html b/terms.html
+index 37a3b89..bec4a03 100644
+--- a/terms.html
++++ b/terms.html
+@@ -175,13 +175,14 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ <body>
+     <div class="page">
+         <a class="back-link" href="javascript:history.back()">← Back</a>
+ 
+         <div class="header">
+-            <div class="logo-mark">📄</div>
++            <div class="logo-mark"><svg class="qi"><use href="icons.svg#file"/></svg></div>
+             <h1>Terms &amp; Conditions</h1>
+             <p>Accommodation Management Terms — QejaConnect Kenya Ltd.</p>
+         </div>
+diff --git a/welcome.html b/welcome.html
+index 9b2c553..4e85cab 100644
+--- a/welcome.html
++++ b/welcome.html
+@@ -568,6 +568,7 @@
+             }
+         }
+     </style>
++<link rel="stylesheet" href="icons.css">
+ </head>
+ 
+ <body>
+@@ -672,12 +673,12 @@
+             <p class="popup-sub">Choose the account type that fits you.</p>
+             <div class="popup-choices">
+                 <button class="popup-choice" id="tenant">
+-                    <span class="popup-choice-icon">🏠</span>
++                    <span class="popup-choice-icon"><svg class="qi"><use href="icons.svg#home"/></svg></span>
+                     <span class="popup-choice-label">Tenant</span>
+                     <span class="popup-choice-desc">Looking for a place to rent</span>
+                 </button>
+                 <button class="popup-choice" id="host">
+-                    <span class="popup-choice-icon">🏢</span>
++                    <span class="popup-choice-icon"><svg class="qi"><use href="icons.svg#building"/></svg></span>
+                     <span class="popup-choice-label">Host / Landlord</span>
+                     <span class="popup-choice-desc">Listing a property</span>
+                 </button>
+-- 
+2.43.0
+
