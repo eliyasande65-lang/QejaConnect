@@ -20,6 +20,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile | Qeja Connect</title>
 
+    <link rel="stylesheet" href="sidemenu.css">
     <style>
         * {
             box-sizing: border-box;
@@ -89,75 +90,6 @@
             cursor: pointer;
             z-index: 10005;
         }
-
-        /* ── SIDE MENU ── */
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -260px;
-            width: 260px;
-            height: 100%;
-            background: #1b1b1b;
-            z-index: 10002;
-            transition: 0.3s;
-            padding-top: 80px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.4);
-            overflow-y: auto;
-        }
-
-            .side-menu.active {
-                left: 0;
-            }
-
-            .side-menu a {
-                display: flex;
-                align-items: center;
-                justify-content: space-between;
-                color: white;
-                text-decoration: none;
-                padding: 16px 22px;
-                border-bottom: 1px solid #2a2a2a;
-                font-size: 15px;
-                font-weight: 500;
-                transition: background 0.2s;
-            }
-
-                .side-menu a:hover {
-                    background: rgba(99,102,241,0.3);
-                }
-
-                .side-menu a.active-link {
-                    background: rgba(99,102,241,0.22);
-                    color: #a5b4fc;
-                    border-left: 3px solid #a5b4fc;
-                    padding-left: 19px;
-                }
-
-        .menu-badge {
-            background: indigo;
-            color: white;
-            border-radius: 6px;
-            font-size: 11px;
-            font-weight: 700;
-            padding: 2px 8px;
-            min-width: 22px;
-            text-align: center;
-            flex-shrink: 0;
-        }
-
-        /* ── OVERLAY ── */
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            top: 90px;
-            display: none;
-            z-index: 10000;
-        }
-
-            .overlay.active {
-                display: block;
-            }
 
         /* ── PAGE CONTENT ── */
         .page {
@@ -592,30 +524,8 @@
     <!-- ── OVERLAY ── -->
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <!-- ── SIDE MENU ── -->
-    <div class="side-menu" id="sideMenu">
-        <a href="home.html">🏠 Home</a>
-        <a href="landlords.html">🏘 Landlords</a>
-        <a href="contact.html">📞 Contact</a>
-        <a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>
-        <a href="hostdashboard.html" id="menuDashboard">
-            📊 Dashboard
-            <span id="menuDashboardBadge" class="menu-badge" style="display:none;"></span>
-        </a>
-        <a href="myprofile.html" class="active-link">👤 Profile</a>
-        <a href="mymessages.html" id="menuMessages">
-            💬 Messages from QejaConnect
-            <span id="navNotifBadge" class="menu-badge" style="display:none;">0</span>
-        </a>
-        <a href="bookings.html">📌 My Bookings</a>
-        <a href="refer-earn.html">🎉 Refer &amp; earn</a>
-        <a href="index.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-            🚪 Log out
-        </a>
-        <button onclick="toggleTheme()" style="margin:20px;padding:10px;border:none;background:none;color:white;cursor:pointer;">
-            🌙 Theme
-        </button>
-    </div>
+    <div class="side-menu" id="sideMenu"></div>
+    <script src="sidemenu.js"></script>
 
     <!-- ── PAGE CONTENT ── -->
     <div class="page">
@@ -980,15 +890,7 @@
         });
 
         /* ── Menu / theme ── */
-        function toggleMenu() {
-        document.getElementById('sideMenu').classList.toggle('active');
-        document.getElementById('overlay').classList.toggle('active');
-        }
 
-        function closeMenu() {
-        document.getElementById('sideMenu').classList.remove('active');
-        document.getElementById('overlay').classList.remove('active');
-        }
 
         function toggleTheme() {
         document.body.classList.toggle('dark');
@@ -1098,5 +1000,6 @@
         setInterval(ping, 30000); // then every 30 seconds while the tab is open
         })();
     </script>
+    <script src="ai-widget.js" defer></script>
 </body>
 </html>

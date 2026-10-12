@@ -27,6 +27,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Refer & Earn · QejaConnect</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <link rel="stylesheet" href="sidemenu.css">
     <style>
         /* ============================================================
            RESET
@@ -115,101 +116,6 @@
                     overflow: hidden;
                     text-overflow: ellipsis;
                 }
-
-        /* ============================================================
-           SIDE MENU
-           ============================================================ */
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 60;
-            display: none;
-        }
-
-            .menu-overlay.open {
-                display: block;
-            }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 260px;
-            max-width: 80%;
-            height: 100%;
-            background: #1a1535;
-            z-index: 70;
-            transform: translateX(-100%);
-            transition: transform 0.25s ease-out;
-            overflow-y: auto;
-        }
-
-            .side-menu.open {
-                transform: translateX(0);
-            }
-
-        .side-menu-top {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px;
-            border-bottom: 1px solid rgba(255,255,255,0.15);
-        }
-
-            .side-menu-top img {
-                width: 36px;
-                height: 36px;
-                border-radius: 8px;
-            }
-
-            .side-menu-top span {
-                color: #ffffff;
-                font-weight: bold;
-                flex: 1;
-            }
-
-            .side-menu-top button {
-                background: transparent;
-                border: none;
-                color: #ffffff;
-                font-size: 20px;
-            }
-
-        .side-menu ul {
-            list-style: none;
-        }
-
-        .side-menu li a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #ffffff;
-            padding: 14px 16px;
-            font-size: 14px;
-            border-bottom: 1px solid rgba(255,255,255,0.08);
-        }
-
-            .side-menu li a:active {
-                background: rgba(255,255,255,0.1);
-            }
-
-            .side-menu li a.active-link {
-                border-left: 3px solid #ffffff;
-                background: rgba(255,255,255,0.1);
-            }
-
-            .side-menu li a .badge {
-                background: #ffffff;
-                color: #1a1535;
-                font-size: 10px;
-                font-weight: bold;
-                border-radius: 5px;
-                padding: 2px 6px;
-            }
 
         /* ============================================================
            PAGE CONTAINER
@@ -677,41 +583,10 @@
         </div>
     </div>
 
-    <div class="menu-overlay" id="overlay" onclick="closeMenu()"></div>
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <div class="side-menu" id="sideMenu">
-        <div class="side-menu-top">
-            <img src="logo.jpg" alt="logo">
-            <span>Qeja Connect</span>
-            <button onclick="closeMenu()" aria-label="Close menu">&times;</button>
-        </div>
-        <ul>
-            <li><a href="home.html">🏠 <span>Home</span></a></li>
-            <li><a href="landlords.html">🏘️ <span>Landlords</span></a></li>
-            <li><a href="contact.html">📞 <span>Contact</span></a></li>
-            <li>
-                <a href="hostdashboard.html" id="menuDashboard">
-                    📊 <span>Dashboard</span>
-                    <span id="menuDashboardBadge" class="badge" style="display:none;"></span>
-                </a>
-            </li>
-            <li><a href="myprofile.html">👤 <span>Profile</span></a></li>
-            <li>
-                <a href="mymessages.html" id="menuMessages">
-                    💬 <span>Messages</span>
-                    <span id="navNotifBadge" class="badge" style="display:none;">0</span>
-                </a>
-            </li>
-            <li><a href="bookings.html">📌 <span>My Bookings</span></a></li>
-            <li><a href="mytenancy.html">🔑 <span>My House</span></a></li>
-            <li><a href="refer-earn.html">🎉 <span>Refer & earn</span></a></li>
-            <li>
-                <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-                    🚪 <span>Log out</span>
-                </a>
-            </li>
-        </ul>
-    </div>
+    <div class="side-menu" id="sideMenu"></div>
+    <script src="sidemenu.js"></script>
 
     <div class="wrap">
 
@@ -824,15 +699,7 @@
         const SIGNUP_URL = 'https://qejaconnect.co.ke/tenant';
 
         // ── Side menu toggling ───────────────────────────────────────
-        function toggleMenu() {
-        document.getElementById("sideMenu").classList.toggle("open");
-        document.getElementById("overlay").classList.toggle("open");
-        }
 
-        function closeMenu() {
-        document.getElementById("sideMenu").classList.remove("open");
-        document.getElementById("overlay").classList.remove("open");
-        }
 
         // ── Toast ──────────────────────────────────────────────────
         let toastTimer;
@@ -1110,5 +977,6 @@
         setInterval(ping, 30000); // then every 30 seconds while the tab is open
         })();
     </script>
+    <script src="ai-widget.js" defer></script>
 </body>
 </html>

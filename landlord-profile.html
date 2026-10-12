@@ -34,6 +34,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Landlord Profile | Qeja Connect</title>
 
+    <link rel="stylesheet" href="sidemenu.css">
     <style>
         * {
             box-sizing: border-box;
@@ -86,48 +87,6 @@
                 margin: 0;
                 font-size: 14px;
                 opacity: 0.9;
-            }
-
-        .side-menu {
-            position: fixed;
-            top: 0;
-            left: -260px;
-            width: 260px;
-            height: 100%;
-            background: #1b1b1b;
-            z-index: 9999;
-            transition: 0.3s;
-            padding-top: 80px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.4);
-        }
-
-            .side-menu.active {
-                left: 0;
-            }
-
-            .side-menu a {
-                display: block;
-                color: white;
-                text-decoration: none;
-                padding: 18px 25px;
-                border-bottom: 1px solid #333;
-                font-size: 16px;
-            }
-
-                .side-menu a:hover {
-                    background: indigo;
-                }
-
-        .overlay {
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 9998;
-        }
-
-            .overlay.active {
-                display: block;
             }
 
         .container {
@@ -279,15 +238,8 @@
 
     <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
-    <div class="side-menu" id="sideMenu">
-        <a href="home.html">Home</a>
-        <a href="landlords.html">Landlords</a>
-        <a href="contact.html">Contact</a>
-        <a href="hostdashboard.html">Dashboard</a>
-        <a href="myprofile.html">Profile</a>
-        <a href="mymessages.html">Notifications</a>
-        <a href="welcome.html">Log out</a>
-    </div>
+    <div class="side-menu" id="sideMenu"></div>
+    <script src="sidemenu.js"></script>
 
     <div id="profile">
         <div class="loader">Loading profile...</div>
@@ -483,15 +435,7 @@
         }
         }
 
-        function toggleMenu() {
-        document.getElementById("sideMenu").classList.toggle("active");
-        document.getElementById("overlay").classList.toggle("active");
-        }
 
-        function closeMenu() {
-        document.getElementById("sideMenu").classList.remove("active");
-        document.getElementById("overlay").classList.remove("active");
-        }
 
         loadProfile();
 
