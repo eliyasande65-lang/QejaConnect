@@ -404,6 +404,7 @@
                 }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -419,15 +420,15 @@
     </header>
 
     <div class="page">
-        <h1 class="page-title">🏠 My Bookings</h1>
+        <h1 class="page-title"><svg class="qi"><use href="icons.svg#home"/></svg> My Bookings</h1>
         <p class="page-sub">Track all your property booking requests and their status.</p>
 
         <div class="tabs">
             <div class="tab active" onclick="filterBookings('all', this)">All</div>
-            <div class="tab" onclick="filterBookings('pending', this)">⏳ Pending</div>
-            <div class="tab" onclick="filterBookings('approved', this)">✅ Approved</div>
-            <div class="tab" onclick="filterBookings('active', this)">🔑 Active</div>
-            <div class="tab" onclick="filterBookings('rejected', this)">❌ Rejected</div>
+            <div class="tab" onclick="filterBookings('pending', this)"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending</div>
+            <div class="tab" onclick="filterBookings('approved', this)"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approved</div>
+            <div class="tab" onclick="filterBookings('active', this)"><svg class="qi"><use href="icons.svg#key"/></svg> Active</div>
+            <div class="tab" onclick="filterBookings('rejected', this)"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected</div>
         </div>
 
         <div id="bookingsContainer">
@@ -469,7 +470,7 @@
         function renderBookings(list) {
         const c = document.getElementById('bookingsContainer');
         if (!list.length) {
-        c.innerHTML = `<div class="empty"><div class="icon">📭</div><h3>No bookings yet</h3><p>Go back to <a href="home.html">Home</a> and tap "Book Property" on any listing.</p></div>`;
+        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>No bookings yet</h3><p>Go back to <a href="home.html">Home</a> and tap "Book Property" on any listing.</p></div>`;
         return;
         }
 
@@ -479,7 +480,7 @@
         const active = list.filter(b => b.status === 'approved' || b.status === 'active');
         if (active.length) {
         html += `<div class="approved-banner">
-        <div class="icon">🎉</div>
+        <div class="icon"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
         <div>
         <h4>You have an active tenancy!</h4>
         <p>Your landlord has approved your booking. Proceed to pay rent.</p>
@@ -492,7 +493,7 @@
         const statusClass = `status-${b.status || 'pending'}`;
         const statusLabel = (b.status || 'pending').toUpperCase();
         const approvedActions = (b.status === 'approved' || b.status === 'active')
-        ? `<button class="btn btn-success" onclick="window.location.href='mytenancy.html'">💳 Pay Rent</button>`
+        ? `<button class="btn btn-success" onclick="window.location.href='mytenancy.html'"><svg class="qi"><use href="icons.svg#card"/></svg> Pay Rent</button>`
         : '';
         const cancelBtn = (b.status === 'pending')
         ? `<button class="btn btn-danger" onclick="cancelBooking(${b.id})">Cancel</button>`
@@ -504,19 +505,19 @@
         <div class="booking-body">
         <h3>${b.title || 'Property'}</h3>
         <div class="booking-meta">
-        <span>📍 ${b.location || '—'}</span>
-        <span>🏠 ${b.type || 'Rental'}</span>
-        <span>📅 Booked: ${formatDate(b.created_at)}</span>
+        <span><svg class="qi"><use href="icons.svg#pin"/></svg> ${b.location || '—'}</span>
+        <span><svg class="qi"><use href="icons.svg#home"/></svg> ${b.type || 'Rental'}</span>
+        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> Booked: ${formatDate(b.created_at)}</span>
         </div>
         <div class="booking-price">Ksh ${b.price || '—'} / month</div>
         <div>
         <span class="status-pill ${statusClass}">${statusLabel}</span>
-        ${b.status === 'approved' ? '<span style="font-size:12px;color:#065f46;margin-left:10px;">✅ Landlord approved — start paying rent</span>' : ''}
+        ${b.status === 'approved' ? '<span style="font-size:12px;color:#065f46;margin-left:10px;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Landlord approved — start paying rent</span>' : ''}
         ${b.status === 'rejected' ? '<span style="font-size:12px;color:#991b1b;margin-left:10px;">The landlord has declined this request.</span>' : ''}
         ${b.status === 'pending'  ? '<span style="font-size:12px;color:#92400e;margin-left:10px;">Waiting for landlord approval…</span>' : ''}
         </div>
         <div class="booking-body-extra" style="margin-top:10px;font-size:13px;color:var(--muted);">
-        ${b.landlord_name ? `<div>🧑‍💼 Landlord: <strong>${b.landlord_name}</strong></div>` : ''}
+        ${b.landlord_name ? `<div><svg class="qi"><use href="icons.svg#briefcase"/></svg> Landlord: <strong>${b.landlord_name}</strong></div>` : ''}
         ${b.description   ? `<div style="margin-top:6px;">${b.description.slice(0,120)}…</div>` : ''}
         </div>
         <div class="booking-actions">
@@ -561,7 +562,7 @@
 
         function showError(msg) {
         document.getElementById('bookingsContainer').innerHTML =
-        `<div class="empty"><div class="icon">⚠️</div><h3>${msg}</h3></div>`;
+        `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>${msg}</h3></div>`;
         }
 
         window.onload = function () {

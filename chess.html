@@ -5,12 +5,13 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Strategos Chess</title>
 <link rel="stylesheet" href="style.css">
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
 <header class="topbar">
-  <h1>♞ Strategos Chess</h1>
-  <button id="soundToggleBtn" class="icon-btn" title="Toggle sound">🔊</button>
+  <h1><svg class="qi"><use href="icons.svg#knight"/></svg> Strategos Chess</h1>
+  <button id="soundToggleBtn" class="icon-btn" title="Toggle sound"><svg class="qi"><use href="icons.svg#volume-on"/></svg></button>
 </header>
 
 <main class="layout">
@@ -51,7 +52,7 @@
           <p>Share this code with your opponent:</p>
           <div class="code-row">
             <input type="text" id="hostCodeDisplay" readonly>
-            <button id="copyCodeBtn" class="icon-btn">📋</button>
+            <button id="copyCodeBtn" class="icon-btn"><svg class="qi"><use href="icons.svg#clipboard"/></svg></button>
           </div>
           <p class="hint">Waiting for opponent to connect…</p>
         </div>

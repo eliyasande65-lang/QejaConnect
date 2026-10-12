@@ -637,6 +637,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -652,7 +653,7 @@
     </header>
 
     <div class="page">
-        <h1 class="page-title">🏘️ My Tenants</h1>
+        <h1 class="page-title"><svg class="qi"><use href="icons.svg#houses"/></svg> My Tenants</h1>
         <p class="page-sub">Manage booking requests, approve tenants, start tenancy sessions, and respond to extension requests.</p>
 
         <div class="stats-row" id="statsRow">
@@ -665,11 +666,11 @@
 
         <div class="tabs">
             <div class="tab active" data-tab="all" onclick="selectTab('all', this)">All</div>
-            <div class="tab" data-tab="pending" onclick="selectTab('pending', this)">⏳ Pending</div>
-            <div class="tab" data-tab="approved" onclick="selectTab('approved', this)">✅ Approved</div>
-            <div class="tab" data-tab="active" onclick="selectTab('active', this)">🔑 Active</div>
-            <div class="tab" data-tab="rejected" onclick="selectTab('rejected', this)">❌ Rejected</div>
-            <div class="tab" data-tab="extensions" onclick="selectTab('extensions', this)">📆 Extensions <span class="tab-badge" id="extBadge" style="display:none;">0</span></div>
+            <div class="tab" data-tab="pending" onclick="selectTab('pending', this)"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending</div>
+            <div class="tab" data-tab="approved" onclick="selectTab('approved', this)"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approved</div>
+            <div class="tab" data-tab="active" onclick="selectTab('active', this)"><svg class="qi"><use href="icons.svg#key"/></svg> Active</div>
+            <div class="tab" data-tab="rejected" onclick="selectTab('rejected', this)"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected</div>
+            <div class="tab" data-tab="extensions" onclick="selectTab('extensions', this)"><svg class="qi"><use href="icons.svg#calendar"/></svg> Extensions <span class="tab-badge" id="extBadge" style="display:none;">0</span></div>
         </div>
 
         <div id="tenantsContainer">
@@ -685,7 +686,7 @@
     <div class="modal-backdrop" id="sessionModal">
         <div class="modal">
             <div class="modal-hd">
-                <h3>🔑 Start Tenancy Session</h3>
+                <h3><svg class="qi"><use href="icons.svg#key"/></svg> Start Tenancy Session</h3>
                 <p>Confirm the tenancy details and set the rent amount.</p>
             </div>
             <div class="modal-bd">
@@ -700,12 +701,12 @@
                     <span class="input-suffix">months</span>
                 </div>
                 <div class="modal-notice">
-                    ℹ️ Once confirmed, the tenant will be notified and their payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
+                    <svg class="qi"><use href="icons.svg#info"/></svg> Once confirmed, the tenant will be notified and their payment schedule will be activated. The tenant can pay monthly via M-Pesa STK Push and you'll receive payment confirmations here.
                 </div>
             </div>
             <div class="modal-ft">
                 <button class="btn-cancel2" onclick="closeModal()">Cancel</button>
-                <button class="btn-confirm" onclick="confirmSession()">✅ Start Tenancy</button>
+                <button class="btn-confirm" onclick="confirmSession()"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Start Tenancy</button>
             </div>
         </div>
     </div>
@@ -765,7 +766,7 @@
         function renderExtensionRequests(list) {
         const c = document.getElementById('extensionsContainer');
         if (!list.length) {
-        c.innerHTML = `<div class="empty"><div class="icon">📆</div><h3>No extension requests yet.</h3></div>`;
+        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#calendar"/></svg></div><h3>No extension requests yet.</h3></div>`;
         return;
         }
 
@@ -781,15 +782,15 @@
         const status      = r.status || 'pending';
         const initials    = (r.tenant_name || 'T').slice(0, 2).toUpperCase();
         const spClass     = status === 'approved' ? 'sp-approved' : status === 'declined' ? 'sp-declined' : 'sp-pending';
-        const emoji       = status === 'approved' ? '✅' : status === 'declined' ? '❌' : '⏳';
+        const emoji       = status === 'approved' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : status === 'declined' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
         const currentDur  = r.duration_months ?? '—';
         const newDur      = (typeof r.duration_months === 'number') ? r.duration_months + r.extra_months : null;
 
         let actions = '';
         if (status === 'pending') {
         actions = `
-        <button class="btn btn-approve" onclick="respondExtension(${r.id}, 'approve')">✅ Approve</button>
-        <button class="btn btn-reject"  onclick="respondExtension(${r.id}, 'decline')">❌ Decline</button>`;
+        <button class="btn btn-approve" onclick="respondExtension(${r.id}, 'approve')"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approve</button>
+        <button class="btn btn-reject"  onclick="respondExtension(${r.id}, 'decline')"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Decline</button>`;
         }
 
         html += `
@@ -799,8 +800,8 @@
         <div class="tenant-info">
         <h3>${r.tenant_name || 'Tenant'}</h3>
         <div class="tenant-meta">
-        <span>📞 ${r.tenant_phone || '—'}</span>
-        <span>📅 Requested ${formatDate(r.created_at)}</span>
+        <span><svg class="qi"><use href="icons.svg#phone"/></svg> ${r.tenant_phone || '—'}</span>
+        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> Requested ${formatDate(r.created_at)}</span>
         </div>
         </div>
         <span class="status-pill ${spClass}">${emoji} ${status.toUpperCase()}</span>
@@ -813,7 +814,7 @@
         <div class="item"><div class="l">Requested Extra</div><div class="v"><span class="ext-months-pill">+${r.extra_months} month${r.extra_months !== 1 ? 's' : ''}</span></div></div>
         ${newDur !== null ? `<div class="item"><div class="l">New Total Duration</div><div class="v" style="color:var(--green);">${newDur} mo</div></div>` : ''}
         </div>
-        ${r.message ? `<div class="ext-message">💬 "${r.message}"</div>` : ''}
+        ${r.message ? `<div class="ext-message"><svg class="qi"><use href="icons.svg#message"/></svg> "${r.message}"</div>` : ''}
         <div class="card-actions">${actions}</div>
         </div>`;
         });
@@ -832,7 +833,7 @@
         });
         const data = await res.json();
         if (data.success) {
-        alert(action === 'approve' ? '✅ Extension approved. The tenant has been notified and their payment schedule updated.' : 'Extension request declined. The tenant has been notified.');
+        alert(action === 'approve' ? ' Extension approved. The tenant has been notified and their payment schedule updated.' : 'Extension request declined. The tenant has been notified.');
         loadExtensionRequests();
         loadTenants();
         } else alert(data.message || 'Failed to respond to request.');
@@ -849,7 +850,7 @@
         function renderTenants(list) {
         const c = document.getElementById('tenantsContainer');
         if (!list.length) {
-        c.innerHTML = `<div class="empty"><div class="icon">📭</div><h3>No tenant requests here yet.</h3></div>`;
+        c.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>No tenant requests here yet.</h3></div>`;
         return;
         }
         let html = '';
@@ -858,19 +859,19 @@
         const initials    = (t.tenant_name || 'T').slice(0, 2).toUpperCase();
         const spClass     = `sp-${status}`;
         const statusLabel = status.toUpperCase();
-        const emoji       = status === 'active' ? '🔑' : status === 'approved' ? '✅' : status === 'rejected' ? '❌' : '⏳';
+        const emoji       = status === 'active' ? '<svg class="qi"><use href="icons.svg#key"/></svg>' : status === 'approved' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : status === 'rejected' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
 
         let actions = '';
         if (status === 'pending') {
         actions = `
-        <button class="btn btn-approve" onclick="approveBooking(${t.id}, ${t.tenant_id})">✅ Approve</button>
-        <button class="btn btn-reject"  onclick="rejectBooking(${t.id})">❌ Reject</button>`;
+        <button class="btn btn-approve" onclick="approveBooking(${t.id}, ${t.tenant_id})"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Approve</button>
+        <button class="btn btn-reject"  onclick="rejectBooking(${t.id})"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Reject</button>`;
         } else if (status === 'approved') {
         actions = `
-        <button class="btn btn-start" onclick="openSessionModal(${JSON.stringify(t).replace(/"/g,'&quot;')})">🔑 Start Tenancy Session</button>
-        <button class="btn btn-view"  onclick="viewPayments(${t.tenant_id})">💳 View Payments</button>`;
+        <button class="btn btn-start" onclick="openSessionModal(${JSON.stringify(t).replace(/"/g,'&quot;')})"><svg class="qi"><use href="icons.svg#key"/></svg> Start Tenancy Session</button>
+        <button class="btn btn-view"  onclick="viewPayments(${t.tenant_id})"><svg class="qi"><use href="icons.svg#card"/></svg> View Payments</button>`;
         } else if (status === 'active') {
-        actions = `<button class="btn btn-view" onclick="viewPayments(${t.tenant_id})">💳 View Payments</button>`;
+        actions = `<button class="btn btn-view" onclick="viewPayments(${t.tenant_id})"><svg class="qi"><use href="icons.svg#card"/></svg> View Payments</button>`;
         }
 
         html += `
@@ -880,9 +881,9 @@
         <div class="tenant-info">
         <h3>${t.tenant_name || 'Tenant'}</h3>
         <div class="tenant-meta">
-        <span>📞 ${t.tenant_phone || '—'}</span>
-        <span>📧 ${t.tenant_email || '—'}</span>
-        <span>📅 ${formatDate(t.created_at)}</span>
+        <span><svg class="qi"><use href="icons.svg#phone"/></svg> ${t.tenant_phone || '—'}</span>
+        <span><svg class="qi"><use href="icons.svg#mail"/></svg> ${t.tenant_email || '—'}</span>
+        <span><svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(t.created_at)}</span>
         </div>
         </div>
         <span class="status-pill ${spClass}">${emoji} ${statusLabel}</span>
@@ -893,7 +894,7 @@
         <div class="item"><div class="l">Asking Price</div><div class="v">Ksh ${t.price || '—'}/mo</div></div>
         ${t.rent_amount ? `<div class="item"><div class="l">Set Rent</div><div class="v" style="color:var(--green);">Ksh ${Number(t.rent_amount).toLocaleString()}/mo</div></div>` : ''}
         </div>
-        ${t.message ? `<div style="font-size:13px;color:var(--muted);margin-bottom:12px;">💬 "${t.message}"</div>` : ''}
+        ${t.message ? `<div style="font-size:13px;color:var(--muted);margin-bottom:12px;"><svg class="qi"><use href="icons.svg#message"/></svg> "${t.message}"</div>` : ''}
         <div class="card-actions">${actions}</div>
         </div>`;
         });
@@ -930,7 +931,7 @@
         });
         const data = await res.json();
         if (data.success) {
-        alert('✅ Booking approved! The tenant has been notified.');
+        alert(' Booking approved! The tenant has been notified.');
         loadTenants();
         } else alert(data.message || 'Failed to approve.');
         } catch { alert('Network error.'); }
@@ -954,8 +955,8 @@
         selectedBooking = t;
         document.getElementById('sessionTenantInfo').innerHTML = `
         <strong>${t.tenant_name || 'Tenant'}</strong><br>
-        📍 ${t.property_title || 'Property'} — ${t.location || ''}<br>
-        📞 ${t.tenant_phone || '—'}`;
+        <svg class="qi"><use href="icons.svg#pin"/></svg> ${t.property_title || 'Property'} — ${t.location || ''}<br>
+        <svg class="qi"><use href="icons.svg#phone"/></svg> ${t.tenant_phone || '—'}`;
         const today = new Date().toISOString().split('T')[0];
         document.getElementById('startDate').value = today;
         document.getElementById('rentAmount').value = t.price || '';
@@ -992,12 +993,12 @@
         const data = await res.json();
         if (data.success) {
         closeModal();
-        alert(`🎉 Tenancy session started!\n\nThe tenant has been notified. They can now begin paying rent monthly via M-Pesa.`);
+        alert(` Tenancy session started!\n\nThe tenant has been notified. They can now begin paying rent monthly via M-Pesa.`);
         loadTenants();
         } else alert(data.message || 'Failed to start session.');
         } catch { alert('Network error.'); }
 
-        btn.disabled = false; btn.textContent = '✅ Start Tenancy';
+        btn.disabled = false; btn.innerHTML = '<svg class="qi"><use href="icons.svg#check-circle"/></svg> Start Tenancy';
         }
 
         function viewPayments(tenantId) {
@@ -1016,7 +1017,7 @@
 
         function showEmpty(msg) {
         document.getElementById('tenantsContainer').innerHTML =
-        `<div class="empty"><div class="icon">📭</div><h3>${msg}</h3></div>`;
+        `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#inbox"/></svg></div><h3>${msg}</h3></div>`;
         }
 
         window.onload = function () {

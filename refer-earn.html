@@ -571,6 +571,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -610,15 +611,15 @@
 
         <div class="steps">
             <div class="step-box">
-                <div class="icon">🔗</div>
+                <div class="icon"><svg class="qi"><use href="icons.svg#link"/></svg></div>
                 <p>Share your code or link with friends</p>
             </div>
             <div class="step-box">
-                <div class="icon">🏠</div>
+                <div class="icon"><svg class="qi"><use href="icons.svg#home"/></svg></div>
                 <p>They sign up & move into a home</p>
             </div>
             <div class="step-box">
-                <div class="icon">💰</div>
+                <div class="icon"><svg class="qi"><use href="icons.svg#coins"/></svg></div>
                 <p>You earn 1% of their rent monthly</p>
             </div>
         </div>
@@ -707,10 +708,10 @@
         const toast = document.getElementById('toast');
         const icon  = document.getElementById('toast-icon');
         const msg   = document.getElementById('toast-msg');
-        const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>' };
         toast.className = '';
         toast.classList.add(type);
-        icon.textContent = icons[type] || 'ℹ️';
+        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
         msg.textContent  = message;
         void toast.offsetWidth;
         toast.classList.add('show');
@@ -765,7 +766,7 @@
         document.getElementById('totalPending').textContent = '—';
         document.getElementById('totalPaid').textContent    = '—';
         document.getElementById('earningsCard').innerHTML =
-        `<div class="empty"><div class="e-icon">🔒</div><p>Please <a href="login.html">log in</a> to view your referral code and earnings.</p></div>`;
+        `<div class="empty"><div class="e-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div><p>Please <a href="login.html">log in</a> to view your referral code and earnings.</p></div>`;
         return;
         }
 
@@ -798,7 +799,7 @@
         console.error(err);
         document.getElementById('codeValue').textContent = '—';
         document.getElementById('earningsCard').innerHTML =
-        `<div class="empty"><div class="e-icon">⚠️</div><p>Could not load your referral data. Please try again later.</p></div>`;
+        `<div class="empty"><div class="e-icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><p>Could not load your referral data. Please try again later.</p></div>`;
         showToast('Could not load referral data.', 'error');
         }
         }
@@ -809,7 +810,7 @@
         if (!earnings || earnings.length === 0) {
         card.innerHTML = `
         <div class="empty">
-        <div class="e-icon">🌱</div>
+        <div class="e-icon"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
         <p>No referrals yet. Share your code &mdash; when someone you refer moves into a home and pays rent, your earnings will show up here.</p>
         </div>
         `;

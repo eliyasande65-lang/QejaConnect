@@ -160,6 +160,7 @@
             padding: 30px;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -176,7 +177,7 @@
             <a href="landlords.html">Landlords</a>
             <a href="contact.html">Contact</a>
             <a href="welcome.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-                🚪 Log out
+                <svg class="qi"><use href="icons.svg#logout"/></svg> Log out
             </a>
         </nav>
     </header>

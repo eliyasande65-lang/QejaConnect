@@ -722,13 +722,14 @@
                 font-weight: 700;
             }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
     <div class="page">
 
         <div class="header">
-            <div class="logo-mark">🏠</div>
+            <div class="logo-mark" style="color:#fff"><svg class="qi"><use href="icons.svg#home"/></svg></div>
             <h1>Host / Landlord Sign Up</h1>
             <p>List your property and connect with tenants across Kenya</p>
         </div>
@@ -737,7 +738,7 @@
             <form id="signupForm">
 
                 <!-- Personal Info -->
-                <div class="section-label">👤 Personal Information</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#user"/></svg> Personal Information</div>
 
                 <div class="field">
                     <label>Full Name</label>
@@ -766,7 +767,7 @@
                     </div>
                 </div>
 
-                <div class="section-label">🎁 Referral (Optional)</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#gift"/></svg> Referral (Optional)</div>
 
                 <div class="field">
                     <label>Referral Code</label>
@@ -774,7 +775,7 @@
                 </div>
 
                 <!-- Property Info -->
-                <div class="section-label">🏢 Property Details</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#building"/></svg> Property Details</div>
 
                 <div class="row row-2">
                     <div class="field">
@@ -817,33 +818,33 @@
                 </div>
 
                 <!-- Uploads -->
-                <div class="section-label">📸 Profile Picture</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#camera"/></svg> Profile Picture</div>
 
                 <label class="upload-btn" id="uploadLabel" for="profile_pic">
-                    <span class="upload-icon">📷</span>
+                    <span class="upload-icon"><svg class="qi"><use href="icons.svg#camera"/></svg></span>
                     <span class="upload-name" id="fileNameDisplay">Click to choose a photo…</span>
                 </label>
                 <input type="file" id="profile_pic" accept="image/*">
 
-                <div class="section-label">🪪 Identity Verification</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#id-card"/></svg> Identity Verification</div>
 
                 <div class="id-box">
                     <p class="id-box-note">Upload a clear photo of your National ID (front side). Used only by our team to verify your identity — never shared publicly.</p>
                     <label class="upload-btn" id="idUploadLabel" for="id_photo">
-                        <span class="upload-icon">🪪</span>
+                        <span class="upload-icon"><svg class="qi"><use href="icons.svg#id-card"/></svg></span>
                         <span class="upload-name" id="idFileNameDisplay">Click to choose ID photo…</span>
                     </label>
                     <input type="file" id="id_photo" accept="image/*">
                 </div>
 
                 <!-- Password -->
-                <div class="section-label">🔒 Set Password</div>
+                <div class="section-label"><svg class="qi"><use href="icons.svg#lock"/></svg> Set Password</div>
 
                 <div class="field">
                     <label>Password</label>
                     <div class="pw-wrap">
                         <input type="password" id="password" placeholder="Create a strong password" autocomplete="new-password">
-                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility">👁️</button>
+                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Toggle password visibility"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
                     </div>
                     <div class="strength-wrap" id="strengthWrap">
                         <div class="strength-track">
@@ -864,7 +865,7 @@
                     <label>Confirm Password</label>
                     <div class="pw-wrap">
                         <input type="password" id="confirm" placeholder="Repeat your password" autocomplete="new-password">
-                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Toggle confirm password visibility">👁️</button>
+                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Toggle confirm password visibility"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
                     </div>
                 </div>
 
@@ -994,10 +995,10 @@
         const toast = document.getElementById('toast');
         const icon  = document.getElementById('toast-icon');
         const msg   = document.getElementById('toast-msg');
-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
         toast.className = '';
         toast.classList.add(type);
-        icon.textContent = icons[type] || 'ℹ️';
+        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
         msg.textContent  = message;
         void toast.offsetWidth;
         toast.classList.add('show');
@@ -1067,14 +1068,14 @@
         const pw = document.getElementById('password');
         const isText = pw.type === 'text';
         pw.type = isText ? 'password' : 'text';
-        this.textContent = isText ? '👁️' : '🙈';
+        this.innerHTML = isText ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
         });
 
         document.getElementById('toggleConfirm').addEventListener('click', function () {
         const cf = document.getElementById('confirm');
         const isText = cf.type === 'text';
         cf.type = isText ? 'password' : 'text';
-        this.textContent = isText ? '👁️' : '🙈';
+        this.innerHTML = isText ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
         });
 
         // ── Password strength ───────────────────────────────────────────────────

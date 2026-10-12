@@ -213,6 +213,7 @@
             padding: 30px;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -309,7 +310,7 @@
         <div class="group-meta">${g.member_count} tenant${g.member_count === 1 ? "" : "s"} · ${g.post_count} message${g.post_count === 1 ? "" : "s"} · ${timeAgo(g.last_activity)}</div>
         </div>
         <div class="group-actions">
-        <button class="rename-btn" onclick="toggleRename(${g.property_id})">✏️ Rename</button>
+        <button class="rename-btn" onclick="toggleRename(${g.property_id})"><svg class="qi"><use href="icons.svg#edit"/></svg> Rename</button>
         <button class="open-btn" onclick="window.location.href='property-group.html?property_id=${g.property_id}'">Open Chat</button>
         </div>
         <div class="rename-row" id="rename-${g.property_id}">

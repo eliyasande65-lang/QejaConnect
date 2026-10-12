@@ -763,6 +763,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -778,7 +779,7 @@
     </header>
 
     <div class="page">
-        <h1 class="page-title">💳 My Tenancy</h1>
+        <h1 class="page-title"><svg class="qi"><use href="icons.svg#card"/></svg> My Tenancy</h1>
         <p class="page-sub">Your active tenancy details and monthly rent payments.</p>
 
         <div id="tenancyContent">
@@ -795,7 +796,7 @@
     <div class="modal-backdrop" id="extModal">
         <div class="modal">
             <div class="modal-header ext-hd">
-                <h3>📆 Request Tenancy Extension</h3>
+                <h3><svg class="qi"><use href="icons.svg#calendar"/></svg> Request Tenancy Extension</h3>
                 <p>Send an extension request to your landlord.</p>
             </div>
             <div class="modal-body">
@@ -807,12 +808,12 @@
                 <label>Message to Landlord (optional)</label>
                 <textarea id="extMessage" rows="3" placeholder="e.g. I'd like to extend for 6 more months as I'm settling in well…"></textarea>
                 <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:12px;font-size:12px;color:#1e40af;line-height:1.6;">
-                    ℹ️ Your landlord will be notified of your request. They can approve or decline it from their dashboard.
+                    <svg class="qi"><use href="icons.svg#info"/></svg> Your landlord will be notified of your request. They can approve or decline it from their dashboard.
                 </div>
             </div>
             <div class="modal-footer">
                 <button class="btn-cancel2" onclick="closeExtModal()">Cancel</button>
-                <button class="btn-confirm indigo" onclick="submitExtensionRequest()">📤 Send Request</button>
+                <button class="btn-confirm indigo" onclick="submitExtensionRequest()"><svg class="qi"><use href="icons.svg#send"/></svg> Send Request</button>
             </div>
         </div>
     </div>
@@ -913,25 +914,25 @@
         </div>
 
         <div class="tax-banner">
-        ℹ️ <strong>Note:</strong> A 4% service tax is added to your monthly rent for every payment.
+        <svg class="qi"><use href="icons.svg#info"/></svg> <strong>Note:</strong> A 4% service tax is added to your monthly rent for every payment.
         Monthly Rent: <strong>Ksh ${rent.toLocaleString()}</strong> + Tax (4%): <strong>Ksh ${tax.toLocaleString()}</strong>
         = Total Payable: <strong>Ksh ${total.toLocaleString()}</strong> per month.
         </div>
 
         <div class="extend-banner">
         <div class="ext-text">
-        <h3>📆 Need more time?</h3>
+        <h3><svg class="qi"><use href="icons.svg#calendar"/></svg> Need more time?</h3>
         <p>Request an extension from your landlord directly here.</p>
         </div>
         <button class="btn-extend" onclick="openExtModal()">Request Extension</button>
         </div>
 
         <div class="section-hd">
-        <h2>📅 Payment Schedule (${duration} Month${duration !== 1 ? 's' : ''})</h2>
+        <h2><svg class="qi"><use href="icons.svg#calendar"/></svg> Payment Schedule (${duration} Month${duration !== 1 ? 's' : ''})</h2>
         <div style="display:flex;gap:12px;font-size:12px;flex-wrap:wrap;">
-        <span style="color:var(--green);font-weight:600;">✅ ${paidCount} Paid</span>
-        <span style="color:var(--amber);font-weight:600;">⏳ ${pendingCount} Pending</span>
-        <span style="color:var(--red);font-weight:600;">🔴 ${overdueCount} Overdue</span>
+        <span style="color:var(--green);font-weight:600;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> ${paidCount} Paid</span>
+        <span style="color:var(--amber);font-weight:600;"><svg class="qi"><use href="icons.svg#hourglass"/></svg> ${pendingCount} Pending</span>
+        <span style="color:var(--red);font-weight:600;"><svg class="qi qi-red"><use href="icons.svg#dot"/></svg> ${overdueCount} Overdue</span>
         </div>
         </div>
 
@@ -944,8 +945,8 @@
         let actionHtml = '';
         if (m.status === 'paid') {
         actionHtml = `
-        <div class="btn-paid-indicator">✅ Paid</div>
-        <button class="btn btn-pdf" onclick="generateReceipt(${i})">📄 Get Receipt</button>`;
+        <div class="btn-paid-indicator"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Paid</div>
+        <button class="btn btn-pdf" onclick="generateReceipt(${i})"><svg class="qi"><use href="icons.svg#file"/></svg> Get Receipt</button>`;
         } else {
         actionHtml = `<button class="btn btn-pay" onclick="openPayModal(${i})">Pay Now — Ksh ${total.toLocaleString()}</button>`;
         }
@@ -956,7 +957,7 @@
         <div class="month-price">Ksh ${total.toLocaleString()}</div>
         <div class="month-price-tax">Rent Ksh ${rent.toLocaleString()} + 4% tax (Ksh ${tax.toLocaleString()})</div>
         <div class="month-status ms-${m.status}">
-        ${m.status === 'paid' ? '✅' : m.status === 'overdue' ? '🔴' : '⏳'} ${m.status.toUpperCase()}
+        ${m.status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : m.status === 'overdue' ? '<svg class="qi qi-red"><use href="icons.svg#dot"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>'} ${m.status.toUpperCase()}
         </div>
         <div class="month-due">Due: ${m.dueDate}</div>
         ${refHtml}
@@ -991,7 +992,7 @@
         function showNoTenancy() {
         document.getElementById('tenancyContent').innerHTML = `
         <div class="empty">
-        <div class="icon">🔑</div>
+        <div class="icon"><svg class="qi"><use href="icons.svg#key"/></svg></div>
         <h3>No active tenancy</h3>
         <p>You don't have an active tenancy yet. Once your landlord approves your booking and confirms your session, your tenancy details will appear here.</p>
         <br>
@@ -1035,7 +1036,7 @@
         const data = await res.json();
         if (data.success) {
         closeExtModal();
-        alert(`✅ Extension request sent!\n\nYour landlord has been notified of your request for ${months} additional month${months !== 1 ? 's' : ''}. You'll be notified when they respond.`);
+        alert(` Extension request sent!\n\nYour landlord has been notified of your request for ${months} additional month${months !== 1 ? 's' : ''}. You'll be notified when they respond.`);
         } else {
         alert(data.message || 'Failed to send request. Please try again.');
         }
@@ -1044,7 +1045,7 @@
         }
 
         btn.disabled    = false;
-        btn.textContent = '📤 Send Request';
+        btn.innerHTML = '<svg class="qi"><use href="icons.svg#send"/></svg> Send Request';
         }
 
         // ── PAY MODAL ──
@@ -1060,7 +1061,7 @@
         function showPayForm(monthIdx, rent, tax, total) {
         document.getElementById('modalInner').innerHTML = `
         <div class="modal-header">
-        <h3>💚 Pay Rent via M-Pesa</h3>
+        <h3><svg class="qi"><use href="icons.svg#heart"/></svg> Pay Rent via M-Pesa</h3>
         <p>Month ${window._months[monthIdx].number} — ${window._months[monthIdx].label}</p>
         </div>
         <div class="modal-body">
@@ -1074,13 +1075,13 @@
         <div class="row total"><span>Total Payable</span><span>Ksh ${total.toLocaleString()}</span></div>
         </div>
         <div class="tax-note">
-        ℹ️ A 4% service tax is added to every rent payment in addition to your monthly rent. This is reflected in the amount charged via M-Pesa and on your receipt.
+        <svg class="qi"><use href="icons.svg#info"/></svg> A 4% service tax is added to every rent payment in addition to your monthly rent. This is reflected in the amount charged via M-Pesa and on your receipt.
         </div>
         <label style="margin-top:14px;display:block;">M-Pesa Phone Number</label>
         <input type="tel" id="payPhone" placeholder="e.g. 0712345678 or 254712345678"
         value="${loggedUser.phone || ''}" maxlength="13">
         <p style="font-size:12px;color:var(--muted);">
-        ⚡ You will receive an M-Pesa STK push on your phone. Enter your M-Pesa PIN to complete payment.
+        <svg class="qi"><use href="icons.svg#zap"/></svg> You will receive an M-Pesa STK push on your phone. Enter your M-Pesa PIN to complete payment.
         </p>
         </div>
         <div class="modal-footer">
@@ -1103,7 +1104,7 @@
         <div class="spinner"></div>
         <h3>STK Push Sent!</h3>
         <p>Check your phone and enter your M-Pesa PIN to complete payment.</p>
-        <div class="phone-display">📱 ${phone}</div>
+        <div class="phone-display"><svg class="qi"><use href="icons.svg#smartphone"/></svg> ${phone}</div>
         <p style="margin-top:8px;font-size:12px;">You'll be charged <strong>Ksh ${total.toLocaleString()}</strong> (Rent Ksh ${rent.toLocaleString()} + 4% tax Ksh ${tax.toLocaleString()}).</p>
         <p style="margin-top:12px;font-size:12px;">Waiting for payment confirmation…<br>This may take up to 30 seconds.</p>
         <button class="btn btn-cancel2" style="margin-top:20px;width:auto;padding:10px 24px;" onclick="closeModal()">Cancel</button>
@@ -1171,13 +1172,13 @@
         if (mc) {
         mc.className = 'month-card paid';
         mc.querySelector('.month-status').className   = 'month-status ms-paid';
-        mc.querySelector('.month-status').textContent = '✅ PAID';
+        mc.querySelector('.month-status').innerHTML = '<svg class="qi"><use href="icons.svg#check-circle"/></svg> PAID';
         if (mc.querySelector('.month-ref')) mc.querySelector('.month-ref').textContent = `Ref: ${ref}`;
         }
 
         document.getElementById('modalInner').innerHTML = `
         <div class="success-box">
-        <div class="check">🎉</div>
+        <div class="check"><svg class="qi"><use href="icons.svg#sparkles"/></svg></div>
         <h3>Payment Successful!</h3>
         <p style="color:var(--muted);font-size:13px;">Your rent for Month ${m.number} (${m.label}) has been received.</p>
         <div class="amount-breakdown" style="text-align:left;">
@@ -1189,10 +1190,10 @@
         <div class="ref-label">M-Pesa Reference Number</div>
         <div>${ref}</div>
         </div>
-        <p style="font-size:12px;color:var(--muted);">📩 Reference sent to your landlord for confirmation.</p>
+        <p style="font-size:12px;color:var(--muted);"><svg class="qi"><use href="icons.svg#mail"/></svg> Reference sent to your landlord for confirmation.</p>
         </div>
         <div class="success-footer">
-        <button class="btn-full" style="background:var(--indigo);color:white;" onclick="generateReceipt(${monthIdx}, '${ref}')">📄 Download Receipt</button>
+        <button class="btn-full" style="background:var(--indigo);color:white;" onclick="generateReceipt(${monthIdx}, '${ref}')"><svg class="qi"><use href="icons.svg#file"/></svg> Download Receipt</button>
         <button class="btn-full" style="background:#f1f5f9;color:var(--text);" onclick="closeModal()">Close</button>
         </div>`;
 
@@ -1221,7 +1222,7 @@
         function showPayError(msg) {
         document.getElementById('modalInner').innerHTML = `
         <div style="padding:28px;text-align:center;">
-        <div style="font-size:3rem;margin-bottom:12px;">❌</div>
+        <div style="font-size:3rem;margin-bottom:12px;"><svg class="qi"><use href="icons.svg#x-circle"/></svg></div>
         <h3 style="color:var(--red);margin-bottom:10px;">Payment Failed</h3>
         <p style="color:var(--muted);font-size:13px;margin-bottom:20px;">${msg}</p>
         <div style="display:flex;gap:10px;justify-content:center;">

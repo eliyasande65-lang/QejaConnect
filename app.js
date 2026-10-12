@@ -242,7 +242,7 @@
   };
   document.getElementById('soundToggleBtn').addEventListener('click', function () {
     soundEnabled = !soundEnabled;
-    this.textContent = soundEnabled ? '🔊' : '🔇';
+    this.innerHTML = soundEnabled ? '<svg class="qi"><use href="icons.svg#volume-on"/></svg>' : '<svg class="qi"><use href="icons.svg#volume-off"/></svg>';
     if (soundEnabled) ensureAudio();
   });
 

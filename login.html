@@ -528,6 +528,7 @@
             color: var(--text);
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -537,13 +538,13 @@
             <img id="logo" src="https://eliyasande65-lang.github.io/QejaConnect/logo.jpg" alt="QejaConnect logo">
             <h2>Qeja Connect</h2>
         </div>
-        <a href="welcome.html">🏠 Home</a>
+        <a href="welcome.html"><svg class="qi"><use href="icons.svg#home"/></svg> Home</a>
     </header>
 
     <div class="page">
 
         <div class="page-heading">
-            <div class="logo-mark">🔑</div>
+            <div class="logo-mark"><svg class="qi"><use href="icons.svg#key"/></svg></div>
             <h1>Welcome back</h1>
             <p>Sign in to your QejaConnect account</p>
         </div>
@@ -602,7 +603,7 @@
     <!-- Fingerprint modal -->
     <div id="fp-modal-overlay">
         <div id="fp-modal">
-            <div class="modal-icon">🔐</div>
+            <div class="modal-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
             <p>Enable fingerprint login?</p>
             <small>Next time you can sign in with just your fingerprint — no password needed.</small>
             <div class="fp-modal-buttons">
@@ -615,7 +616,7 @@
     <!-- Forgot password modal -->
     <div id="forgot-modal-overlay">
         <div id="forgot-modal">
-            <div class="modal-icon">🔒</div>
+            <div class="modal-icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
             <p id="forgotTitle">Reset your password</p>
             <small id="forgotSubtitle">Enter your email and we'll send you a code.</small>
 
@@ -677,7 +678,7 @@
                 localStorage.setItem('role', data.role);
                 localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-                showToast('Signed in with Google 👋', 'success');
+                showToast('Signed in with Google ', 'success');
                 setTimeout(() => redirectUser(data.role), 1000);
             } catch (err) {
                 showToast('Google sign-in failed. Try again.', 'error');
@@ -699,10 +700,10 @@
             const toast = document.getElementById('toast');
             const icon  = document.getElementById('toast-icon');
             const msg   = document.getElementById('toast-msg');
-            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>' };
             toast.className = '';
             toast.classList.add(type);
-            icon.textContent = icons[type] || 'ℹ️';
+            icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
             msg.textContent  = message;
             void toast.offsetWidth;
             toast.classList.add('show');
@@ -753,7 +754,7 @@
                     localStorage.setItem('role', data.role);
                     localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-                    showToast('Login successful! Welcome back 👋', 'success');
+                    showToast('Login successful! Welcome back ', 'success');
 
                     const alreadyRegistered = localStorage.getItem('webauthn_user_id');
 
@@ -797,7 +798,7 @@
             );
 
             if (success) {
-                showToast('Fingerprint enabled! ✅', 'success');
+                showToast('Fingerprint enabled! ', 'success');
                 setTimeout(() => redirectUser(user.role), 1500);
             } else {
                 showToast('Fingerprint setup failed. Redirecting...', 'error');
@@ -888,7 +889,7 @@
                     localStorage.setItem('token', data.token);
                     localStorage.setItem('role', data.role);
                     localStorage.setItem('loggedUser', JSON.stringify(data.user));
-                    showToast('Fingerprint verified! 👆', 'success');
+                    showToast('Fingerprint verified! ', 'success');
                     setTimeout(() => redirectUser(data.role), 1200);
                 } else {
                     showToast(data.message || 'Fingerprint login failed', 'error');

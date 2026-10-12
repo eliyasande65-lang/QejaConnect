@@ -223,6 +223,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -259,7 +260,7 @@
         const toast = document.createElement("div");
         toast.className = "toast" + (type !== "default" ? " " + type : "");
 
-        const icon = type === "error" ? "⚠️" : (type === "success" ? "✅" : "ℹ️");
+        const icon = type === "error" ? "<svg class='qi'><use href='icons.svg#alert'/></svg>" : (type === "success" ? "<svg class='qi'><use href='icons.svg#check-circle'/></svg>" : "<svg class='qi'><use href='icons.svg#info'/></svg>");
         toast.innerHTML = `<span class="toast-icon">${icon}</span><span>${message}</span>`;
 
         container.appendChild(toast);
@@ -308,7 +309,7 @@
         <div class="top-banner">
         <img src="${img}">
         <h2>${l.fullname}</h2>
-        <p>✔ Verified Host</p>
+        <p><svg class="qi"><use href="icons.svg#verified"/></svg> Verified Host</p>
         </div>
 
         <div class="content">
@@ -323,7 +324,7 @@
         ${l.description ? `<div class="info-card"><b>About:</b> ${l.description}</div>` : ""}
 
         <button class="action-btn" onclick='startChat(${l.id}, ${JSON.stringify(l.fullname)})'>
-        💬 Message This Landlord
+        <svg class="qi"><use href="icons.svg#message"/></svg> Message This Landlord
         </button>
 
         

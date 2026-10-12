@@ -1,7 +1,7 @@
-// QejaConnect Service Worker v3
-const STATIC_CACHE = 'qeja-static-v3';
-const IMAGES_CACHE = 'qeja-images-v3';
-const API_CACHE    = 'qeja-api-v3';
+// QejaConnect Service Worker v4
+const STATIC_CACHE = 'qeja-static-v4';
+const IMAGES_CACHE = 'qeja-images-v4';
+const API_CACHE    = 'qeja-api-v4';
 
 const CORE_ASSETS = [
   "/QejaConnect/welcome.html",
@@ -16,7 +16,9 @@ const CORE_ASSETS = [
   "/QejaConnect/logo.jpg",
   "/QejaConnect/logo-192.png",
   "/QejaConnect/logo-512.png",
-  "/QejaConnect/manifest.json"
+  "/QejaConnect/manifest.json",
+  "/QejaConnect/icons.svg",
+  "/QejaConnect/icons.css"
 ];
 
 // ── Install: pre-cache core assets ──────────────────────────────────────────

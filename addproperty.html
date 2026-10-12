@@ -399,17 +399,18 @@
             justify-content: center;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
 
     <div class="container">
 
-        <h1>🏠 Add Property</h1>
+        <h1><svg class="qi"><use href="icons.svg#home"/></svg> Add Property</h1>
 
         <!-- Payment notice -->
         <div class="pay-notice">
-            <span class="icon">💳</span>
+            <span class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></span>
             <div>
                 Listings are free. Your property stays live on the feed for <strong>30 days</strong>. Upload now.
             </div>
@@ -421,7 +422,7 @@
             <input type="text" id="units" placeholder="How many units are available" required>
             <input type="text" id="price" placeholder="Price e.g Ksh 7000/month" required>
             <input type="text" id="location" placeholder="Location" required>
-            <input type="url" id="maps_url" placeholder="📍 Google Maps URL (optional)">
+            <input type="url" id="maps_url" placeholder=" Google Maps URL (optional)">
 
             <select id="type">
                 <option>Apartment</option>
@@ -431,7 +432,7 @@
             </select>
 
             <label for="image" class="upload-label" id="uploadLabel">
-                📷 Choose Property Image
+                <svg class="qi"><use href="icons.svg#camera"/></svg> Choose Property Image
             </label>
             <input type="file" id="image" accept="image/*" required>
 
@@ -443,7 +444,7 @@
 
         </form>
         <div class="customalert">
-            <h3 style="color:red">⚠️ Only landlords are allowed to list products</h3>
+            <h3 style="color:red"><svg class="qi"><use href="icons.svg#alert"/></svg> Only landlords are allowed to list products</h3>
             <a href="home.html"><button style="width:60px;background:indigo; border:none;color:red">Ok</button></a>
         </div>
     </div>
@@ -452,13 +453,13 @@
 
     <div class="modal-overlay" id="mpesaModal">
         <div class="modal">
-            <div class="mpesa-logo">📲</div>
+            <div class="mpesa-logo"><svg class="qi"><use href="icons.svg#smartphone"/></svg></div>
             <h2>M-Pesa Payment</h2>
             <div class="amount-badge"></div>
             <p class="sub">Enter your Safaricom number. An STK push will be sent to your phone. Enter your M-Pesa PIN to complete.</p>
 
             <div class="phone-wrapper">
-                <div class="phone-prefix">🇰🇪 +254</div>
+                <div class="phone-prefix"><svg class="qi"><use href="icons.svg#flag-ke"/></svg> +254</div>
                 <input type="tel" id="phoneInput" placeholder="712 345 678" maxlength="9" inputmode="numeric">
             </div>
 
@@ -499,10 +500,11 @@
         document.getElementById("image").addEventListener("change", function () {
         const label = document.getElementById("uploadLabel");
         if (this.files[0]) {
-        label.textContent = "🟢 " + this.files[0].name;
+        label.innerHTML = "<svg class='qi qi-green'><use href='icons.svg#dot'/></svg> ";
+        label.appendChild(document.createTextNode(this.files[0].name));
         label.classList.add("has-file");
         } else {
-        label.textContent = "📷 Choose Property Image";
+        label.innerHTML = "<svg class='qi'><use href='icons.svg#camera'/></svg> Choose Property Image";
         label.classList.remove("has-file");
         }
         });
@@ -629,7 +631,7 @@
 
         const checkoutRequestId = stkData.CheckoutRequestID;
 
-        // 2️⃣ Poll for payment confirmation
+        // 2. Poll for payment confirmation
         statusEl.innerHTML = `<div class="spinner"></div><p style="color:#94a3b8;font-size:13px;">Waiting for payment confirmation…</p>`;
         await pollPayment(checkoutRequestId, token);
 
@@ -662,10 +664,10 @@
         const data = await res.json();
 
         if (data.success && data.status === "completed") {
-        // ✅ Payment confirmed — proceed to upload
+        //  Payment confirmed — proceed to upload
         setStep(3);
         document.getElementById("mpesaStatus").innerHTML =
-        `<p style="color:#4ade80;font-weight:600;">✅ Payment confirmed!</p>`;
+        `<p style="color:#4ade80;font-weight:600;"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Payment confirmed!</p>`;
 
         await sleep(800);
         closeModal();
@@ -725,9 +727,9 @@
         const data = await res.json();
 
         if (data.success) {
-        status.innerHTML = `<p class="success-text">✅ Property uploaded! Redirecting…</p>`;
+        status.innerHTML = `<p class="success-text"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Property uploaded! Redirecting…</p>`;
         document.getElementById("propertyForm").reset();
-        document.getElementById("uploadLabel").textContent = "📷 Choose Property Image";
+        document.getElementById("uploadLabel").innerHTML = "<svg class='qi'><use href='icons.svg#camera'/></svg> Choose Property Image";
         document.getElementById("uploadLabel").classList.remove("has-file");
 
         setTimeout(() => {
@@ -735,13 +737,13 @@
         "hostdashboard.html";
         }, 1800);
         } else {
-        status.innerHTML = `<p class="error-text">❌ ${data.message || "Upload failed."}</p>`;
+        status.innerHTML = `<p class="error-text"><svg class="qi"><use href="icons.svg#x-circle"/></svg> ${data.message || "Upload failed."}</p>`;
         submitBtn.disabled = false;
         submitBtn.textContent = "Publish & Upload";
         }
 
         } catch (err) {
-        status.innerHTML = `<p class="error-text">❌ Server error. Contact support with your M-Pesa ref.</p>`;
+        status.innerHTML = `<p class="error-text"><svg class="qi"><use href="icons.svg#x-circle"/></svg> Server error. Contact support with your M-Pesa ref.</p>`;
         submitBtn.disabled = false;
         submitBtn.textContent = "Publish & Upload";
         }

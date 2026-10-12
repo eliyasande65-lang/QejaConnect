@@ -505,6 +505,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -534,8 +535,8 @@
             <div class="avatar-section">
                 <div class="avatar-wrap">
                     <img id="avatarImg" src="" alt="Profile photo">
-                    <div class="avatar-uploading" id="avatarUploading">⏳</div>
-                    <label for="pic-input" class="edit-badge" title="Change photo">✏️</label>
+                    <div class="avatar-uploading" id="avatarUploading"><svg class="qi"><use href="icons.svg#hourglass"/></svg></div>
+                    <label for="pic-input" class="edit-badge" title="Change photo"><svg class="qi"><use href="icons.svg#edit"/></svg></label>
                 </div>
                 <input type="file" id="pic-input" accept="image/*">
                 <div>
@@ -557,7 +558,7 @@
             <div class="field-row">
                 <label>Email address</label>
                 <div class="value" id="fieldEmail">—</div>
-                <span class="locked-note">🔒 Cannot be changed</span>
+                <span class="locked-note"><svg class="qi"><use href="icons.svg#lock"/></svg> Cannot be changed</span>
             </div>
             <div class="field-row">
                 <label>User ID</label>
@@ -638,10 +639,10 @@
         const toast = document.getElementById('toast');
         const icon  = document.getElementById('toast-icon');
         const msg   = document.getElementById('toast-msg');
-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
         toast.className = '';
         toast.classList.add(type);
-        icon.textContent = icons[type] || 'ℹ️';
+        icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
         msg.textContent  = message;
         void toast.offsetWidth;
         toast.classList.add('show');
@@ -686,7 +687,7 @@
 
         setText('displayName', user.fullname);
         document.getElementById('displayRole').textContent =
-        role === 'landlord' ? '🏠 Landlord' : '🧑 Tenant';
+        role === 'landlord' ? '<svg class="qi"><use href="icons.svg#home"/></svg> Landlord' : '<svg class="qi"><use href="icons.svg#user"/></svg> Tenant';
 
         setText('fieldName',  user.fullname);
         setText('fieldEmail', user.email);
@@ -754,7 +755,7 @@
         const updated = { ...user, profile_pic: data.image };
         localStorage.setItem('loggedUser', JSON.stringify(updated));
         user = updated;
-        showToast('Profile photo updated! ✅', 'success');
+        showToast('Profile photo updated! ', 'success');
         } else {
         showToast(data.message || 'Upload failed.', 'error');
         }
@@ -808,7 +809,7 @@
         const updated = { ...user, phone };
         localStorage.setItem('loggedUser', JSON.stringify(updated));
         user = updated;
-        showToast('Phone number updated! ✅', 'success');
+        showToast('Phone number updated! ', 'success');
         } else {
         showToast(data.message || 'Update failed.', 'error');
         }

@@ -339,6 +339,7 @@
                 display: block;
             }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -367,7 +368,7 @@
 
     <!-- ── TENANT-ONLY ACTIONS ── -->
     <div id="tenantActions" style="display:none;">
-        <button class="add" onclick="location.href='bookings.html'">📋 Track My Booking</button>
+        <button class="add" onclick="location.href='bookings.html'"><svg class="qi"><use href="icons.svg#clipboard"/></svg> Track My Booking</button>
     </div>
 
     <!-- FIX: wrapped so this whole section (heading + cards) can be
@@ -491,7 +492,7 @@
         <div class="card" onclick="openChat(${chat.conversation_id}, '${escapeAttr(chat.fullname)}')">
         <h3>${chat.fullname}</h3>
         <p>${chat.email}</p>
-        ${chat.last_message ? `<div class="last-msg">💬 ${chat.last_message}</div>` : ""}
+        ${chat.last_message ? `<div class="last-msg"><svg class="qi"><use href="icons.svg#message"/></svg> ${chat.last_message}</div>` : ""}
         <button class="open-btn">Open Chat →</button>
         </div>
         `).join("");
@@ -525,7 +526,7 @@
         <div class="card" onclick="openTenantChat(${chat.conversation_id}, '${escapeAttr(chat.fullname)}')">
         <h3>${chat.fullname}</h3>
         <p>${chat.email}</p>
-        ${chat.last_message ? `<div class="last-msg">💬 ${chat.last_message}</div>` : ""}
+        ${chat.last_message ? `<div class="last-msg"><svg class="qi"><use href="icons.svg#message"/></svg> ${chat.last_message}</div>` : ""}
         <button class="open-btn">Open Chat →</button>
         </div>
         `).join("");
@@ -644,7 +645,7 @@
         const renewData = await renewRes.json();
 
         if (renewData.success) {
-        alert("✅ Payment received and listing renewed! It's live on Home again.");
+        alert(" Payment received and listing renewed! It's live on Home again.");
         loadMyProperties();
         } else {
         alert(renewData.message || "Payment received but renewal failed. Please contact support.");
@@ -714,17 +715,17 @@
         const unitCount = p.units || 1;
 
         const badge = isExpired
-        ? `<span class="inactive-badge">⛔ Inactive</span>`
+        ? `<span class="inactive-badge"><svg class="qi"><use href="icons.svg#ban"/></svg> Inactive</span>`
         : `<span class="pub-badge">✓ Published</span>`;
 
         const expiryLine = expiry
         ? isExpired
-        ? `<div class="prop-expires">⛔ Expired: ${expiry.toLocaleDateString()}<div class="prop-hidden-note">Hidden from Home until renewed</div></div>`
-        : `<div class="prop-expires">🗓 Expires: ${expiry.toLocaleDateString()}</div>`
+        ? `<div class="prop-expires"><svg class="qi"><use href="icons.svg#ban"/></svg> Expired: ${expiry.toLocaleDateString()}<div class="prop-hidden-note">Hidden from Home until renewed</div></div>`
+        : `<div class="prop-expires"><svg class="qi"><use href="icons.svg#calendar"/></svg> Expires: ${expiry.toLocaleDateString()}</div>`
         : "";
 
         const relistBtn = isExpired
-        ? `<br><button class="relist-btn" onclick="renewProperty(${p.id}, ${unitCount}, this)">🔄 Renew Listing (KSh ${95 * unitCount})</button>`
+        ? `<br><button class="relist-btn" onclick="renewProperty(${p.id}, ${unitCount}, this)"><svg class="qi"><use href="icons.svg#refresh"/></svg> Renew Listing (KSh ${95 * unitCount})</button>`
         : "";
 
         return `
@@ -732,8 +733,8 @@
         ${badge}
         <h3>${p.title}</h3>
         <div class="prop-meta">
-        <div class="prop-row">💰 <strong class="prop-price">${p.price}</strong></div>
-        <div class="prop-row">📍 ${p.location}</div>
+        <div class="prop-row"><svg class="qi"><use href="icons.svg#coins"/></svg> <strong class="prop-price">${p.price}</strong></div>
+        <div class="prop-row"><svg class="qi"><use href="icons.svg#pin"/></svg> ${p.location}</div>
         </div>
         <span class="prop-type">${p.type}</span>
         ${expiryLine}

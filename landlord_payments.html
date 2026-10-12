@@ -797,6 +797,7 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -810,14 +811,14 @@
         </div>
         <div class="header-actions">
             <button class="withdraw-btn-header" onclick="openWithdrawModal()">
-                💸 <span class="btn-label">Request Withdrawal</span>
+                <svg class="qi"><use href="icons.svg#money"/></svg> <span class="btn-label">Request Withdrawal</span>
             </button>
             <a href="landlord_tenants.html" class="back-btn">← My Tenants</a>
         </div>
     </header>
 
     <div class="page">
-        <h1 class="page-title">💰 Rent Payments</h1>
+        <h1 class="page-title"><svg class="qi"><use href="icons.svg#coins"/></svg> Rent Payments</h1>
         <p class="page-sub">Track all rent payments from your tenants with M-Pesa references.</p>
 
         <div class="summary-row" id="summaryRow">
@@ -836,12 +837,12 @@
         </div>
 
         <div class="payments-section">
-            <h2>📋 Recent Payments</h2>
+            <h2><svg class="qi"><use href="icons.svg#clipboard"/></svg> Recent Payments</h2>
             <div id="recentFeed"><div class="loader">Loading payments…</div></div>
         </div>
 
         <div class="payments-section">
-            <h2>📅 Payment Schedule</h2>
+            <h2><svg class="qi"><use href="icons.svg#calendar"/></svg> Payment Schedule</h2>
             <div class="payments-table">
                 <div class="pt-header">
                     <div>#</div>
@@ -856,7 +857,7 @@
         </div>
 
         <div class="payments-section">
-            <h2>💸 Withdrawal History</h2>
+            <h2><svg class="qi"><use href="icons.svg#money"/></svg> Withdrawal History</h2>
             <div id="withdrawalHistory"><div class="loader">Loading…</div></div>
         </div>
     </div>
@@ -865,7 +866,7 @@
     <div class="modal-overlay" id="withdrawModal">
         <div class="modal">
             <button class="modal-close" onclick="closeWithdrawModal()">✕</button>
-            <h2>💸 Request Withdrawal</h2>
+            <h2><svg class="qi"><use href="icons.svg#money"/></svg> Request Withdrawal</h2>
             <p class="modal-sub">Submit your M-Pesa payout details. Admin will process within 24 hours.</p>
 
             <div class="modal-balance">
@@ -873,7 +874,7 @@
                     <div class="bal-label">Available Balance</div>
                     <div class="bal-amount" id="modalBalance">Calculating…</div>
                 </div>
-                <div style="font-size:2rem;">🏦</div>
+                <div style="font-size:2rem;"><svg class="qi"><use href="icons.svg#bank"/></svg></div>
             </div>
 
             <div class="form-group">
@@ -914,7 +915,7 @@
             <button class="modal-submit" id="wdSubmitBtn" onclick="submitWithdrawal()">
                 Submit Withdrawal Request
             </button>
-            <p class="modal-note">⚠️ Ensure your M-Pesa number is correct. Incorrect details may delay processing.</p>
+            <p class="modal-note"><svg class="qi"><use href="icons.svg#alert"/></svg> Ensure your M-Pesa number is correct. Incorrect details may delay processing.</p>
         </div>
     </div>
 
@@ -935,10 +936,10 @@
         // ── TOAST ──────────────────────────────────────────────
         function showToast(message, type = 'info', duration = 3500) {
         const toast = document.getElementById('toast');
-        const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+        const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
         toast.className = '';
         toast.classList.add(type);
-        document.getElementById('toast-icon').textContent = icons[type] || 'ℹ️';
+        document.getElementById('toast-icon').innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
         document.getElementById('toast-msg').textContent  = message;
         void toast.offsetWidth;
         toast.classList.add('show');
@@ -1026,7 +1027,7 @@
         const data = await res.json();
         const container = document.getElementById('withdrawalHistory');
         if (!data.success || !data.withdrawals?.length) {
-        container.innerHTML = `<div class="empty"><div class="icon">💸</div><h3>No withdrawal requests yet.</h3><p>Use the "Request Withdrawal" button above.</p></div>`;
+        container.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#money"/></svg></div><h3>No withdrawal requests yet.</h3><p>Use the "Request Withdrawal" button above.</p></div>`;
         document.getElementById('sumWithdrawn').textContent = '0';
         return;
         }
@@ -1036,15 +1037,15 @@
         let html = '';
         data.withdrawals.sort((a,b) => new Date(b.created_at) - new Date(a.created_at)).forEach(w => {
         const statusClass = w.status === 'paid' ? 'wdp-paid' : w.status === 'rejected' ? 'wdp-rejected' : 'wdp-pending';
-        const statusLabel = w.status === 'paid' ? '✅ Paid' : w.status === 'rejected' ? '❌ Rejected' : '⏳ Pending';
+        const statusLabel = w.status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg> Paid' : w.status === 'rejected' ? '<svg class="qi"><use href="icons.svg#x-circle"/></svg> Rejected' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg> Pending';
         html += `
         <div class="withdrawal-card">
-        <div class="wd-icon">💸</div>
+        <div class="wd-icon"><svg class="qi"><use href="icons.svg#money"/></svg></div>
         <div class="wd-body">
         <h4>${w.account_name || 'Withdrawal'} — ${w.method?.toUpperCase() || 'M-PESA'}</h4>
-        <div class="meta">📱 ${w.phone} &nbsp;|&nbsp; 📅 ${formatDate(w.created_at)}
-        ${w.note ? ` &nbsp;|&nbsp; 📝 ${w.note}` : ''}</div>
-        ${w.bank_details ? `<div class="meta" style="margin-top:3px;">🏦 ${w.bank_details}</div>` : ''}
+        <div class="meta"><svg class="qi"><use href="icons.svg#smartphone"/></svg> ${w.phone} &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(w.created_at)}
+        ${w.note ? ` &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#edit"/></svg> ${w.note}` : ''}</div>
+        ${w.bank_details ? `<div class="meta" style="margin-top:3px;"><svg class="qi"><use href="icons.svg#bank"/></svg> ${w.bank_details}</div>` : ''}
         ${w.admin_note ? `<div class="meta" style="margin-top:3px;color:#7c3aed;">Admin: ${w.admin_note}</div>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
@@ -1055,7 +1056,7 @@
         });
         container.innerHTML = html;
         } catch(e) {
-        document.getElementById('withdrawalHistory').innerHTML = `<div class="empty"><div class="icon">⚠️</div><h3>Failed to load withdrawal history.</h3></div>`;
+        document.getElementById('withdrawalHistory').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>Failed to load withdrawal history.</h3></div>`;
         }
         }
 
@@ -1079,11 +1080,11 @@
         renderRecentFeed(allPayments);
         renderSchedule(allTenancies, allPayments);
         } else {
-        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon">💳</div><h3>No payments recorded yet.</h3></div>`;
+        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></div><h3>No payments recorded yet.</h3></div>`;
         if (allTenancies.length) renderSchedule(allTenancies, []);
         }
         } catch (e) {
-        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon">⚠️</div><h3>Failed to load payments.</h3></div>`;
+        document.getElementById('recentFeed').innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#alert"/></svg></div><h3>Failed to load payments.</h3></div>`;
         }
         }
 
@@ -1122,27 +1123,27 @@
         function renderRecentFeed(payments) {
         const feed = document.getElementById('recentFeed');
         if (!payments.length) {
-        feed.innerHTML = `<div class="empty"><div class="icon">💳</div><h3>No payments received yet.</h3><p>Payments will appear here once tenants begin paying rent.</p></div>`;
+        feed.innerHTML = `<div class="empty"><div class="icon"><svg class="qi"><use href="icons.svg#card"/></svg></div><h3>No payments received yet.</h3><p>Payments will appear here once tenants begin paying rent.</p></div>`;
         return;
         }
         const sorted = [...payments].sort((a, b) => new Date(b.paid_at || b.created_at) - new Date(a.paid_at || a.created_at));
         let html = '';
         sorted.slice(0, 20).forEach(p => {
         const status  = p.status === 'confirmed' || p.status === 'paid' ? 'paid' : 'pending';
-        const emoji   = status === 'paid' ? '✅' : '⏳';
+        const emoji   = status === 'paid' ? '<svg class="qi"><use href="icons.svg#check-circle"/></svg>' : '<svg class="qi"><use href="icons.svg#hourglass"/></svg>';
         const confirmed = p.landlord_confirmed;
         html += `
         <div class="feed-card">
         <div class="feed-icon fi-${status}">${emoji}</div>
         <div class="feed-body">
         <h4>${p.tenant_name || 'Tenant'} — Month ${p.month_number || (p.month_index + 1) || '?'}</h4>
-        <div class="meta">📍 ${p.property_title || '—'} &nbsp;|&nbsp; 📅 ${formatDate(p.paid_at || p.created_at)}</div>
+        <div class="meta"><svg class="qi"><use href="icons.svg#pin"/></svg> ${p.property_title || '—'} &nbsp;|&nbsp; <svg class="qi"><use href="icons.svg#calendar"/></svg> ${formatDate(p.paid_at || p.created_at)}</div>
         ${p.mpesa_ref ? `<div class="ref">M-Pesa: <strong>${p.mpesa_ref}</strong></div>` : ''}
         </div>
         <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
         <div class="feed-amount">Ksh ${Number(p.amount).toLocaleString()}</div>
         ${confirmed
-        ? `<span class="confirmed-badge">✅ Confirmed</span>`
+        ? `<span class="confirmed-badge"><svg class="qi"><use href="icons.svg#check-circle"/></svg> Confirmed</span>`
         : `<button class="btn-confirm-pay" onclick="confirmPayment(${p.id})">Confirm Receipt</button>`}
         </div>
         </div>`;
@@ -1153,7 +1154,7 @@
         function renderSchedule(tenancies, payments) {
         const body = document.getElementById('scheduleBody');
         if (!tenancies.length) {
-        body.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon">📅</div><h3>No active tenancies yet.</h3></div>`;
+        body.innerHTML = `<div class="empty" style="grid-column:1/-1;"><div class="icon"><svg class="qi"><use href="icons.svg#calendar"/></svg></div><h3>No active tenancies yet.</h3></div>`;
         return;
         }
         let html = '', row = 0;
@@ -1184,7 +1185,7 @@
         ${paid && !confirmed
         ? `<button class="btn-confirm-pay" onclick="confirmPayment(${paid.id})">Confirm</button>`
         : paid && confirmed
-        ? `<span class="confirmed-badge">✅</span>`
+        ? `<span class="confirmed-badge"><svg class="qi"><use href="icons.svg#check-circle"/></svg></span>`
         : '<span style="color:#ccc;font-size:12px;">—</span>'}
         </div>
         </div>`;

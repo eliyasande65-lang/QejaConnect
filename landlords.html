@@ -245,6 +245,7 @@
             padding: 30px;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -262,10 +263,10 @@
             <a href="landlords.html">Landlords</a>
             <a href="contact.html">Contact</a>
             <a href="hostdashboard.html">Dashboard</a>
-            <a href="#" onclick="goToMyGroup(); return false;">💬 Chat with housemates</a>
+            <a href="#" onclick="goToMyGroup(); return false;"><svg class="qi"><use href="icons.svg#message"/></svg> Chat with housemates</a>
             <a href="myprofile.html">Profile</a>
             <a href="index.html" onclick="localStorage.removeItem('token'); localStorage.removeItem('role'); localStorage.removeItem('loggedUser');">
-                🚪 Log out
+                <svg class="qi"><use href="icons.svg#logout"/></svg> Log out
             </a>
         </nav>
 
@@ -380,7 +381,7 @@
 
         <h3>${landlord.fullname}</h3>
 
-        <p class="verified">✔ Verified Host</p>
+        <p class="verified"><svg class="qi"><use href="icons.svg#verified"/></svg> Verified Host</p>
 
         <p>${landlord.property_name || "No property listed yet"}</p>
 

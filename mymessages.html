@@ -351,6 +351,7 @@
             font-size: 13px;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -375,7 +376,7 @@
 
         <!-- New message form -->
         <div class="new-msg-card">
-            <h3>✉️ Send New Message</h3>
+            <h3><svg class="qi"><use href="icons.svg#mail"/></svg> Send New Message</h3>
             <textarea id="newMsgBox" placeholder="Type your message to support..."></textarea>
             <br>
             <button class="send-btn" id="sendNewBtn" onclick="sendNewMessage()">Send Message</button>
@@ -421,7 +422,7 @@
         if (!token || !loggedUser) {
         list.innerHTML = `
         <div class="empty-state">
-        <div class="icon">🔒</div>
+        <div class="icon"><svg class="qi"><use href="icons.svg#lock"/></svg></div>
         <p>Please <a href="login.html" style="color:indigo;font-weight:bold;">log in</a> to view your messages.</p>
         </div>`;
         return;
@@ -438,7 +439,7 @@
         if (!data.messages || data.messages.length === 0) {
         list.innerHTML = `
         <div class="empty-state">
-        <div class="icon">💬</div>
+        <div class="icon"><svg class="qi"><use href="icons.svg#message"/></svg></div>
         <p>You haven't sent any messages yet.</p>
         </div>`;
         return;
@@ -468,7 +469,7 @@
         <div class="reply-time">${fmtDate(m.replied_at)}</div>
         </div>` : `
         <div class="pending-wrap">
-        <span class="pending-badge">⏳ Awaiting reply from support</span>
+        <span class="pending-badge"><svg class="qi"><use href="icons.svg#hourglass"/></svg> Awaiting reply from support</span>
         </div>`}
         </div>`;
         }).join('');
@@ -476,7 +477,7 @@
         markAllSeen(data.messages);
 
         } catch (err) {
-        list.innerHTML = `<div class="empty-state"><p>⚠️ ${escH(err.message)}</p></div>`;
+        list.innerHTML = `<div class="empty-state"><p><svg class="qi"><use href="icons.svg#alert"/></svg> ${escH(err.message)}</p></div>`;
         }
         }
 
@@ -550,14 +551,14 @@
         if (!data.success) throw new Error(data.message);
 
         alert.className = 'alert success';
-        alert.textContent = '✅ Message sent! We\'ll reply soon.';
+        alert.textContent = ' Message sent! We\'ll reply soon.';
         box.value = '';
         setTimeout(() => { alert.style.display = 'none'; }, 3000);
         loadMessages();
 
         } catch (err) {
         alert.className = 'alert error';
-        alert.textContent = '⚠️ ' + err.message;
+        alert.textContent = ' ' + err.message;
         }
 
         btn.disabled = false;

@@ -625,13 +625,14 @@
             }
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
     <div class="page">
 
         <div class="header">
-            <div class="logo-mark">🏠</div>
+            <div class="logo-mark" style="color:#fff"><svg class="qi"><use href="icons.svg#home"/></svg></div>
             <h1>Tenant Sign Up</h1>
             <p>Find your perfect home across Kenya</p>
         </div>
@@ -679,7 +680,7 @@
                     <label>Password</label>
                     <div class="pw-wrap">
                         <input type="password" name="password" id="password" placeholder="Create a strong password" required>
-                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password">👁</button>
+                        <button type="button" class="toggle-pw" id="togglePw" aria-label="Show password"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
                     </div>
                     <div class="strength-wrap" id="strengthWrap">
                         <div class="strength-track">
@@ -700,7 +701,7 @@
                     <label>Confirm Password</label>
                     <div class="pw-wrap">
                         <input type="password" name="confirm" id="confirm" placeholder="Repeat your password" required>
-                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password">👁</button>
+                        <button type="button" class="toggle-pw" id="toggleConfirm" aria-label="Show confirm password"><svg class="qi"><use href="icons.svg#eye"/></svg></button>
                     </div>
                 </div>
 
@@ -828,7 +829,7 @@
                 localStorage.setItem('role', data.role);
                 localStorage.setItem('loggedUser', JSON.stringify(data.user));
 
-                showToast('Signed in with Google 👋', 'success');
+                showToast('Signed in with Google ', 'success');
                 setTimeout(() => redirectUser(data.role), 1000);
             } catch (err) {
                 showToast('Google sign-in failed. Try again.', 'error');
@@ -866,10 +867,10 @@
             const toast = document.getElementById('toast');
             const icon  = document.getElementById('toast-icon');
             const msg   = document.getElementById('toast-msg');
-            const icons = { success: '✅', error: '❌', info: 'ℹ️', warning: '⚠️' };
+            const icons = { success: '<svg class="qi"><use href="icons.svg#check-circle"/></svg>', error: '<svg class="qi"><use href="icons.svg#x-circle"/></svg>', info: '<svg class="qi"><use href="icons.svg#info"/></svg>', warning: '<svg class="qi"><use href="icons.svg#alert"/></svg>' };
             toast.className = '';
             toast.classList.add(type);
-            icon.textContent = icons[type] || 'ℹ️';
+            icon.innerHTML = icons[type] || '<svg class="qi"><use href="icons.svg#info"/></svg>';
             msg.textContent  = message;
             void toast.offsetWidth;
             toast.classList.add('show');
@@ -914,14 +915,14 @@
             const pw = document.getElementById('password');
             const showing = pw.type === 'text';
             pw.type = showing ? 'password' : 'text';
-            this.textContent = showing ? '👁' : '🙈';
+            this.innerHTML = showing ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
         });
 
         document.getElementById('toggleConfirm').addEventListener('click', function () {
             const cf = document.getElementById('confirm');
             const showing = cf.type === 'text';
             cf.type = showing ? 'password' : 'text';
-            this.textContent = showing ? '👁' : '🙈';
+            this.innerHTML = showing ? '<svg class="qi"><use href="icons.svg#eye"/></svg>' : '<svg class="qi"><use href="icons.svg#eye-off"/></svg>';
         });
 
         // ── Password strength ──────────────────────────────────────

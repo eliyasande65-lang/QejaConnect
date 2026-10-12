@@ -252,6 +252,7 @@
                 color: #dc2626;
             }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 <body>
 
@@ -344,12 +345,12 @@
         const res  = await fetch(`${API_BASE}/updates`);
         const data = await res.json();
         if (data.success) {
-        const iconMap = { announcement: "📢", maintenance: "🛠", alert: "⚠️", feature: "✨", promotion: "🎉" };
+        const iconMap = { announcement: "<svg class='qi'><use href='icons.svg#megaphone'/></svg>", maintenance: "<svg class='qi'><use href='icons.svg#wrench'/></svg>", alert: "<svg class='qi'><use href='icons.svg#alert'/></svg>", feature: "<svg class='qi'><use href='icons.svg#sparkles'/></svg>", promotion: "<svg class='qi'><use href='icons.svg#sparkles'/></svg>" };
         data.updates.forEach(u => {
         out.push({
         id:    `update-${u.id}`,
         type:  "update",
-        icon:  iconMap[u.type] || "📢",
+        icon:  iconMap[u.type] || "<svg class='qi'><use href='icons.svg#megaphone'/></svg>",
         title: u.title,
         body:  u.body,
         date:  u.created_at,
@@ -369,7 +370,7 @@
         out.push({
         id:    `support-${m.id}`,
         type:  "support",
-        icon:  "📩",
+        icon:  "<svg class='qi'><use href='icons.svg#mail'/></svg>",
         title: "Support replied to your message",
         body:  m.reply,
         date:  m.replied_at,
@@ -401,7 +402,7 @@
         out.push({
         id:      `msg-${m.id}`,
         type:    "message",
-        icon:    "💬",
+        icon:    "<svg class='qi'><use href='icons.svg#message'/></svg>",
         title:   `Message from ${chat.fullname}`,
         body:    m.message,
         date:    m.created_at,
@@ -431,7 +432,7 @@
         out.push({
         id:    `booking-${b.id}`,
         type:  "booking",
-        icon:  "📋",
+        icon:  "<svg class='qi'><use href='icons.svg#clipboard'/></svg>",
         title: `New booking interest — ${b.property_title || "Property"}`,
         body:  `${b.tenant_name || "A tenant"}: "${b.message || ""}"`,
         date:  b.created_at,
@@ -442,7 +443,7 @@
         out.push({
         id:    `tenancy-${b.tenancy_id}`,
         type:  "tenancy",
-        icon:  "✅",
+        icon:  "<svg class='qi'><use href='icons.svg#check-circle'/></svg>",
         title: `Tenancy approved & started — ${b.property_title || "Property"}`,
         body:  `${b.tenant_name || "Tenant"}'s tenancy began ${b.start_date ? new Date(b.start_date).toLocaleDateString() : "recently"}.`,
         date:  b.start_date || b.created_at,
@@ -462,7 +463,7 @@
         out.push({
         id:    `extension-${r.id}`,
         type:  "tenancy",
-        icon:  "🗓",
+        icon:  "<svg class='qi'><use href='icons.svg#calendar'/></svg>",
         title: `Extension request — ${r.property_title || "Property"}`,
         body:  `${r.tenant_name || "Tenant"} asked for ${r.extra_months} more month${r.extra_months === 1 ? "" : "s"} (status: ${r.status}).`,
         date:  r.created_at,
@@ -494,7 +495,7 @@
         const data = await res.json();
         if (data.success) {
         data.bookings.forEach(b => {
-        const statusIcon = b.status === "approved" ? "✅" : b.status === "rejected" ? "❌" : "📋";
+        const statusIcon = b.status === "approved" ? "<svg class='qi'><use href='icons.svg#check-circle'/></svg>" : b.status === "rejected" ? "<svg class='qi'><use href='icons.svg#x-circle'/></svg>" : "<svg class='qi'><use href='icons.svg#clipboard'/></svg>";
         const statusText = b.status === "approved" ? "approved" : b.status === "rejected" ? "declined" : "pending";
         out.push({
         id:    `booking-${b.id}`,
@@ -518,7 +519,7 @@
         out.push({
         id:    `tenancy-${t.id}`,
         type:  "tenancy",
-        icon:  "🏠",
+        icon:  "<svg class='qi'><use href='icons.svg#home'/></svg>",
         title: `Tenancy active — ${t.property_title}`,
         body:  `Started ${new Date(t.start_date).toLocaleDateString()} with ${t.landlord_name}.`,
         date:  t.start_date,

@@ -394,6 +394,7 @@
             padding: 30px;
         }
     </style>
+<link rel="stylesheet" href="icons.css">
 </head>
 
 <body>
@@ -524,7 +525,7 @@
         function renderFeed() {
         const feed = document.getElementById("feed");
         if (!currentThread.length) {
-        feed.innerHTML = '<p class="state-msg">No messages yet. Say hello 👋</p>';
+        feed.innerHTML = '<p class="state-msg">No messages yet.</p>';
         return;
         }
         feed.innerHTML = currentThread.map(renderPost).join("");
@@ -686,8 +687,8 @@
         const canModerate = postEl.dataset.canModerate === "true";
 
         let html = "";
-        if (isMine) html += `<button onclick="startEdit(${postId}); closeCtxMenu();">✏️ Edit</button>`;
-        if (isMine || canModerate) html += `<button class="danger" onclick="deletePost(${postId}); closeCtxMenu();">🗑️ Delete</button>`;
+        if (isMine) html += `<button onclick="startEdit(${postId}); closeCtxMenu();"><svg class="qi"><use href="icons.svg#edit"/></svg> Edit</button>`;
+        if (isMine || canModerate) html += `<button class="danger" onclick="deletePost(${postId}); closeCtxMenu();"><svg class="qi"><use href="icons.svg#trash"/></svg> Delete</button>`;
         if (!html) return;
 
         ctxMenu.innerHTML = html;
