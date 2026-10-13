@@ -686,7 +686,7 @@
         document.getElementById('avatarImg').src = user.profile_pic || defaultAvatar;
 
         setText('displayName', user.fullname);
-        document.getElementById('displayRole').textContent =
+        document.getElementById('displayRole').innerHTML=
         role === 'landlord' ? '<svg class="qi"><use href="icons.svg#home"/></svg> Landlord' : '<svg class="qi"><use href="icons.svg#user"/></svg> Tenant';
 
         setText('fieldName',  user.fullname);
