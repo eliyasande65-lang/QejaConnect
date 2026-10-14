@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>SwiftSite v6</title>
+<style>
+:root{--bg:#0f172a;--p:#1e293b;--p2:#334155;--b:#475569;--tx:#f1f5f9;--mu:#94a3b8;--ac:#22c55e;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:light){:root:not([data-theme=dark]){--bg:#e2e8f0;--p:#fff;--p2:#e2e8f0;--b:#cbd5e1;--tx:#0f172a;--mu:#64748b;--ac:#16a34a}}
+:root[data-theme=dark]{--bg:#0f172a;--p:#1e293b;--p2:#334155;--b:#475569;--tx:#f1f5f9;--mu:#94a3b8;--ac:#22c55e}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Segoe UI,system-ui,Arial,sans-serif}
+html,body{height:100%}body{background:var(--bg);color:var(--tx);overflow:hidden}
+#app{height:100%;display:flex;flex-direction:column}
+button,select,input,textarea{background:var(--p2);color:var(--tx);border:1px solid var(--b);border-radius:6px;padding:6px 8px;font-size:13px}
+button{cursor:pointer}button:hover{filter:brightness(1.15)}button.on,button.pri{background:var(--ac);color:#fff;border-color:var(--ac);font-weight:600}
+#top{display:flex;gap:8px;align-items:center;padding:8px 10px;background:var(--p);border-bottom:1px solid var(--b);flex-wrap:wrap}
+.logo{color:var(--ac);font-size:16px}.logo i{font-size:11px;color:var(--mu)}.g{display:flex;gap:4px}.sp{flex:1}.m{display:none}
+#title{width:140px}
+main{flex:1;display:flex;min-height:0}
+aside{width:280px;background:var(--p);display:flex;flex-direction:column;min-height:0}
+#L{border-right:1px solid var(--b)}#R{border-left:1px solid var(--b);width:310px}
+.tabs{display:flex}.tabs button{flex:1;border-radius:0;border-width:0 0 2px;background:none}.tabs button.on{border-color:var(--ac);color:var(--ac);background:none}
+.pane{display:none;overflow:auto;padding:10px;flex:1}.pane.on{display:block}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.lbl{font-size:11px;color:var(--mu);margin:8px 0 4px;text-transform:uppercase;letter-spacing:.5px}
+.ly{font-size:12px;padding:4px 6px;border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.ly:hover{background:var(--p2)}.ly.on{background:var(--ac);color:#fff}.ly small{opacity:.6}.ly.dr{outline:2px dashed var(--ac)}
+#stage{flex:1;display:flex;flex-direction:column;min-width:0}
+#act{display:flex;gap:4px;padding:6px 8px;background:var(--p);border-bottom:1px solid var(--b);flex-wrap:wrap;align-items:center}
+#crumb{font-size:12px;color:var(--mu);margin-left:8px;overflow:hidden;white-space:nowrap}#crumb span{cursor:pointer;color:var(--ac)}
+#cv{flex:1;position:relative;display:flex;justify-content:center;min-height:0;background:repeating-conic-gradient(var(--p2) 0 25%,var(--bg) 0 50%) 0 0/20px 20px}
+#frame{width:100%;height:100%;border:0;background:#fff;transition:width .25s}
+.ov{position:absolute;pointer-events:none;display:none;z-index:5}
+#hov{outline:1px solid #38bdf8}#selb{outline:2px solid var(--ac);background:rgba(34,197,94,.08)}
+#selb b{position:absolute;top:-20px;left:0;background:var(--ac);color:#fff;font-size:11px;padding:2px 6px;border-radius:4px 4px 0 0;white-space:nowrap}
+#R .pane{padding:0}.ih{padding:10px;background:var(--bg);font-size:13px;position:sticky;top:0;z-index:2}
+details{border-bottom:1px solid var(--b)}summary{padding:9px 10px;cursor:pointer;font-size:12px;font-weight:600;color:var(--ac);text-transform:uppercase}
+.sb{padding:4px 10px 10px}.row{display:grid;grid-template-columns:92px 1fr 24px;gap:4px;align-items:center;margin-bottom:5px}.row label{font-size:12px;color:var(--mu)}
+.row input,.row select,.row textarea{width:100%;min-width:0}.row input[type=color]{padding:0;height:28px}.row .x{padding:2px;font-size:11px;background:none;border:0;color:var(--mu)}
+.full{width:100%;margin-bottom:6px}textarea{resize:vertical;font-family:Consolas,monospace}
+#modal{position:fixed;inset:0;background:rgba(0,0,0,.75);display:none;align-items:center;justify-content:center;z-index:50}
+#mbox{width:min(1000px,94%);height:88%;background:var(--p);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px}
+#mbox textarea{flex:1;width:100%;background:#020617;color:#4ade80;font-size:13px}
+.mp{display:none;flex:1;min-height:0;flex-direction:column;gap:8px}.mp.on{display:flex}
+#jsout{height:34%;flex:none;color:#7dd3fc}#jsin{flex:none!important;height:26%}
+.chips{display:flex;gap:4px;flex-wrap:wrap}.chips button{font-size:11px}
+/* close button + dark backdrop for the side menus (mobile only) */
+.cl{align-self:flex-end;margin:8px;font-weight:600}
+#bd{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:39}
+@media(max-width:900px){.m{display:block}#title{display:none}aside{position:fixed;top:0;bottom:0;z-index:40;transform:translateX(-105%);transition:transform .2s;padding-top:env(safe-area-inset-top,0px)}#R{right:0;left:auto;transform:translateX(105%)}aside.open,#R.open{transform:none}body.menu #bd{display:block}}
+</style>
+</head>
+<body>
+<div id="app">
+<header id="top">
+  <button class="m" onclick="pan('L')">☰</button><b class="logo">🚀 SwiftSite <i>v6</i></b>
+  <div class="g"><button onclick="undo()" title="Undo Ctrl+Z">↶</button><button onclick="redo()" title="Redo Ctrl+Y">↷</button></div>
+  <div class="g" id="dev"><button data-w="100%" class="on" title="Desktop">🖥</button><button data-w="768px" title="Tablet">▭</button><button data-w="375px" title="Mobile">📱</button></div>
+  <input id="title" value="My Site" title="Page title">
+  <span class="sp"></span>
+  <button onclick="openCode('html')">{ } Code</button><button onclick="openCode('js')">⚡ DOM Console</button><button class="pri" onclick="download()">Download</button><button class="m" onclick="pan('R')">⚙</button>
+</header>
+<main>
+<aside id="L">
+  <button class="m cl" onclick="clmenu()">✕ Close</button>
+  <div class="tabs" id="ltabs"><button class="on" data-p="pAdd">Add</button><button data-p="pTpl">Templates</button><button data-p="pLay">Layers</button></div>
+  <div class="pane on" id="pAdd"><div class="lbl">Insert position</div><select id="insMode" class="full"><option value="auto">Auto (inside containers)</option><option value="inside">Inside selected</option><option value="after">After selected</option><option value="before">Before selected</option></select><div class="grid" id="elGrid"></div></div>
+  <div class="pane" id="pTpl"><div class="grid" id="tplGrid"></div><div class="lbl">Replaces the whole page — undo with Ctrl+Z</div></div>
+  <div class="pane" id="pLay"></div>
+</aside>
+<section id="stage">
+  <div id="act">
+    <button onclick="up()" title="Select parent (Esc)">⬆ Parent</button><button onclick="move(-1)" title="Alt+↑">▲</button><button onclick="move(1)" title="Alt+↓">▼</button>
+    <button onclick="dup()" title="Ctrl+D">⧉</button><button onclick="wrap()">Wrap</button><button onclick="copy()" title="Ctrl+C">Copy</button><button onclick="paste()" title="Ctrl+V">Paste</button><button onclick="del()" title="Delete">🗑</button>
+    <span id="crumb"></span>
+  </div>
+  <div id="cv"><iframe id="frame"></iframe><div class="ov" id="hov"></div><div class="ov" id="selb"><b></b></div></div>
+</section>
+<aside id="R">
+  <button class="m cl" onclick="clmenu()">✕ Close</button>
+  <div class="pane on" id="insp"></div>
+</aside>
+</main>
+</div>
+<div id="bd" onclick="clmenu()"></div>
+<div id="modal"><div id="mbox">
+  <div class="tabs" id="mtabs"><button data-p="mHtml">HTML</button><button data-p="mCss">Custom CSS</button><button data-p="mJs">DOM Console</button><button onclick="closeCode()" style="flex:none;color:#ef4444">✕ Close</button></div>
+  <div class="mp" id="mHtml"><textarea id="codeOut" spellcheck="false"></textarea><div class="g"><button class="pri" onclick="applyCode()">Apply to canvas</button><button onclick="copyCode()">Copy</button><button onclick="download()">Download</button></div></div>
+  <div class="mp" id="mCss"><textarea id="cssOut" spellcheck="false" placeholder="/* Add classes, hover states, media queries... */"></textarea></div>
+  <div class="mp" id="mJs">
+    <div class="chips" id="chips"></div>
+    <textarea id="jsin" spellcheck="false">$$('h1,h2,h3').map(h => h.tagName + ': ' + h.textContent)</textarea>
+    <div class="g"><button class="pri" onclick="runJS()">▶ Run</button><span style="font-size:12px;color:var(--mu);align-self:center">Globals: doc, $ (querySelector), $$ (querySelectorAll → array), sel (selected), API</span></div>
+    <textarea id="jsout" readonly></textarea>
+  </div>
+</div></div>
+<script>
+const PH="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='600' height='360'%3E%3Crect width='100%25' height='100%25' fill='%23cbd5e1'/%3E%3Ctext x='50%25' y='50%25' fill='%2364748b' font-family='Arial' font-size='28' text-anchor='middle'%3EImage%3C/text%3E%3C/svg%3E";
+const BASECSS="*{box-sizing:border-box}body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;line-height:1.5}img{max-width:100%}";
+const $=s=>document.querySelector(s),mk=(t,c,h)=>{const e=document.createElement(t);if(c)e.className=c;if(h!=null)e.innerHTML=h;return e};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const frame=$('#frame');let doc,win,sel=null,hist=[],hi=-1,clip=null,timer,dragEl=null;
+const VOID=new Set(['IMG','INPUT','HR','BR','VIDEO','IFRAME','TEXTAREA']);
+const th='border:1px solid #cbd5e1;padding:8px',card='<div style="padding:20px;border-radius:12px;background:#fff;box-shadow:0 4px 14px rgba(0,0,0,.12)"><h3 style="margin:0 0 8px">Card title</h3><p style="margin:0">Card description.</p></div>';
+const ELS={
+Heading:'<h2 style="margin:16px 0">Heading</h2>',Paragraph:'<p style="margin:12px 0">Write your text here.</p>',
+Button:'<button style="padding:12px 24px;border:none;border-radius:8px;background:#22c55e;color:#fff;font-weight:600;cursor:pointer">Button</button>',
+Link:'<a href="#">Link text</a>',Image:`<img src="${PH}" alt="Placeholder" style="display:block;border-radius:8px">`,
+Container:'<div style="padding:20px;min-height:80px;border:1px dashed #94a3b8"></div>',Section:'<section style="padding:60px 20px"></section>',
+Columns:'<div style="display:flex;gap:20px;flex-wrap:wrap"><div style="flex:1;min-width:200px;padding:20px;background:#f1f5f9">Column 1</div><div style="flex:1;min-width:200px;padding:20px;background:#f1f5f9">Column 2</div></div>',
+Grid:`<section style="padding:40px 20px"><div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">${card}${card}${card}</div></section>`,
+Navbar:'<nav style="display:flex;justify-content:space-between;align-items:center;padding:16px 24px;background:#0f172a;color:#fff"><strong>Brand</strong><div style="display:flex;gap:16px"><a href="#" style="color:#fff;text-decoration:none">Home</a><a href="#" style="color:#fff;text-decoration:none">About</a><a href="#" style="color:#fff;text-decoration:none">Contact</a></div></nav>',
+Hero:'<section style="padding:90px 20px;text-align:center;background:linear-gradient(135deg,#22c55e,#0ea5e9);color:#fff"><h1 style="margin:0 0 12px;font-size:44px">Big headline</h1><p style="margin:0 0 24px">Supporting text goes here.</p><a href="#" style="padding:12px 24px;background:#fff;color:#0f172a;border-radius:8px;text-decoration:none;font-weight:600">Get started</a></section>',
+Card:card,List:'<ul style="margin:12px 0 12px 24px"><li>Item 1</li><li>Item 2</li></ul>',
+Table:`<table style="width:100%;border-collapse:collapse"><tbody><tr><th style="${th}">Head</th><th style="${th}">Head</th></tr><tr><td style="${th}">Cell</td><td style="${th}">Cell</td></tr></tbody></table>`,
+Form:'<form style="display:grid;gap:10px;max-width:360px;padding:10px"><input placeholder="Name" style="padding:10px"><input type="email" placeholder="Email" style="padding:10px"><textarea placeholder="Message" style="padding:10px"></textarea><button type="submit" style="padding:10px;background:#22c55e;color:#fff;border:0;border-radius:6px">Send</button></form>',
+Input:'<input placeholder="Type here..." style="padding:10px;margin:6px">',Textarea:'<textarea placeholder="Message" style="padding:10px;margin:6px"></textarea>',
+Video:'<video controls style="width:100%"></video>',Iframe:'<iframe src="about:blank" style="width:100%;height:300px;border:1px solid #ccc"></iframe>',Divider:'<hr style="margin:16px 0">'};
+const TPL={Landing:['Navbar','Hero','Grid'],Portfolio:['Navbar','Heading','Grid'],Pricing:['Heading','Columns','Grid'],Blank:[]};
+const FONTS=['','system-ui','Arial','Georgia','"Times New Roman"','"Courier New"','Verdana','"Trebuchet MS"'];
+const DISP=['','block','inline-block','inline','flex','grid','none'];
+const SEC=[
+['Typography',[['fontFamily','Font','sel',FONTS],['fontSize','Size'],['fontWeight','Weight','sel',['','300','400','500','600','700','800']],['color','Color','color'],['textAlign','Align','sel',['','left','center','right','justify']],['lineHeight','Line height'],['letterSpacing','Letter spacing'],['textTransform','Transform','sel',['','none','uppercase','capitalize','lowercase']],['textDecoration','Decoration','sel',['','none','underline','line-through']]]],
+['Spacing',[['margin','Margin'],['padding','Padding']]],
+['Size',[['width','Width'],['height','Height'],['minHeight','Min height'],['maxWidth','Max width']]],
+['Background',[['backgroundColor','Color','color'],['backgroundImage','Image/gradient'],['backgroundSize','Size','sel',['','cover','contain','auto']]]],
+['Border & Effects',[['border','Border'],['borderRadius','Radius'],['boxShadow','Shadow'],['opacity','Opacity','range'],['transform','Transform'],['transition','Transition'],['cursor','Cursor']]],
+['Layout',[['display','Display','sel',DISP],['flexDirection','Direction','sel',['','row','column','row-reverse','column-reverse']],['flexWrap','Wrap','sel',['','nowrap','wrap']],['justifyContent','Justify','sel',['','flex-start','center','flex-end','space-between','space-around']],['alignItems','Align items','sel',['','stretch','flex-start','center','flex-end']],['gap','Gap'],['gridTemplateColumns','Grid columns'],['position','Position','sel',['','static','relative','absolute','fixed','sticky']],['top','Top'],['left','Left'],['zIndex','Z-index'],['overflow','Overflow','sel',['','visible','hidden','auto','scroll']]]]];
+const NOUNIT=new Set(['opacity','fontWeight','lineHeight','zIndex']);
+
+/* ---------- canvas ---------- */
+const ucss=()=>doc.getElementById('user-css');
+function init(html,css){
+  doc=frame.contentDocument;doc.open();
+  doc.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><style>${BASECSS}</style><style id="user-css"></style></head><body></body></html>`);doc.close();
+  win=frame.contentWindow;doc.body.innerHTML=html||'';ucss().textContent=css||'';
+  doc.addEventListener('click',e=>{e.preventDefault();select(e.target)},true);
+  doc.addEventListener('mouseover',e=>box($('#hov'),e.target===doc.body||e.target===sel?null:e.target));
+  doc.addEventListener('mouseleave',()=>box($('#hov'),null));
+  doc.addEventListener('dblclick',e=>edit(e.target));
+  doc.addEventListener('input',commitSoon);doc.addEventListener('keydown',key);doc.addEventListener('scroll',place,true);
+}
+function box(b,el,label){
+  if(!el){b.style.display='none';return}
+  const r=el.getBoundingClientRect();Object.assign(b.style,{display:'block',left:frame.offsetLeft+r.left+'px',top:r.top+'px',width:r.width+'px',height:r.height+'px'});
+  if(label){const t=b.querySelector('b');t.textContent=label;t.style.top=r.top<22?'100%':'-20px'}
+}
+function place(){box($('#selb'),sel,sel&&sel.tagName.toLowerCase()+(sel.id?'#'+sel.id:'')+' · '+Math.round(sel.getBoundingClientRect().width)+'×'+Math.round(sel.getBoundingClientRect().height))}
+function select(el){
+  if(!el||el.nodeType!==1||el===doc.documentElement)el=doc.body;
+  sel=el;box($('#hov'),null);inspect();layers();crumb();place();
+}
+function edit(el){
+  if(el===doc.body||VOID.has(el.tagName))return;
+  el.contentEditable='true';el.focus();
+  el.onblur=()=>{el.removeAttribute('contenteditable');el.onblur=null;commit();inspect()};
+}
+function crumb(){
+  const c=$('#crumb');c.innerHTML='';const p=[];for(let n=sel;n;n=n.parentElement)p.unshift(n);
+  p.forEach((n,i)=>{const s=mk('span','',n.tagName.toLowerCase());s.onclick=()=>select(n);c.append(s);if(i<p.length-1)c.append(' › ')});
+}
+
+/* ---------- history ---------- */
+const pathOf=el=>{const p=[];for(let n=el;n&&n!==doc.body;n=n.parentElement)p.unshift([...n.parentElement.children].indexOf(n));return p};
+const nodeAt=p=>p.reduce((n,i)=>n&&n.children[i],doc.body);
+const snap=()=>JSON.stringify({h:doc.body.innerHTML.replace(/ contenteditable="true"/g,''),c:ucss().textContent,p:sel?pathOf(sel):[]});
+function commit(){
+  const s=snap();if(hist[hi]===s)return;
+  hist=hist.slice(0,hi+1);hist.push(s);if(hist.length>100)hist.shift();hi=hist.length-1;
+  try{localStorage.setItem('swiftsite6',s)}catch(e){}
+  layers();place();
+}
+function commitSoon(){clearTimeout(timer);timer=setTimeout(commit,350)}
+function restore(){const s=JSON.parse(hist[hi]);doc.body.innerHTML=s.h;ucss().textContent=s.c;select(nodeAt(s.p))}
+function undo(){clearTimeout(timer);commit();if(hi>0){hi--;restore()}}
+function redo(){if(hi<hist.length-1){hi++;restore()}}
+
+/* ---------- actions ---------- */
+const isCont=el=>!VOID.has(el.tagName)&&['BODY','DIV','SECTION','NAV','HEADER','FOOTER','MAIN','ARTICLE','ASIDE','FORM','UL','OL','LI','BUTTON'].includes(el.tagName)&&el.tagName!=='BUTTON';
+function insertHTML(html){
+  const t=doc.createElement('template');t.innerHTML=html;const n=t.content.firstElementChild;if(!n)return;
+  const tg=sel||doc.body,m=$('#insMode').value;
+  if(tg===doc.body||m==='inside'&&!VOID.has(tg.tagName)||m==='auto'&&isCont(tg))tg.append(n);
+  else if(m==='before')tg.before(n);else tg.after(n);
+  select(n);commit();n.scrollIntoView({block:'nearest'});
+}
+function dup(){if(sel===doc.body)return;const c=sel.cloneNode(true);sel.after(c);select(c);commit()}
+function del(){if(sel===doc.body)return;const p=sel.parentElement;sel.remove();select(p);commit()}
+function move(d){if(sel===doc.body)return;const s=d<0?sel.previousElementSibling:sel.nextElementSibling;if(!s)return;d<0?s.before(sel):s.after(sel);commit()}
+function up(){if(sel&&sel.parentElement)select(sel.parentElement)}
+function wrap(){if(sel===doc.body)return;const w=doc.createElement('div');w.style.padding='10px';sel.before(w);w.append(sel);select(w);commit()}
+function copy(){if(sel&&sel!==doc.body)clip=sel.outerHTML}
+function paste(){if(clip)insertHTML(clip)}
+function key(e){
+  const t=e.target;if(/^(INPUT|TEXTAREA|SELECT)$/.test(t.tagName)||t.isContentEditable)return;
+  const m=e.ctrlKey||e.metaKey,k=e.key.toLowerCase();
+  if(m&&k==='z'){e.preventDefault();e.shiftKey?redo():undo()}else if(m&&k==='y')redo();
+  else if(m&&k==='d'){e.preventDefault();dup()}else if(m&&k==='c')copy();else if(m&&k==='v')paste();
+  else if(e.key==='Delete'||e.key==='Backspace'){e.preventDefault();del()}else if(e.key==='Escape')up();
+  else if(e.altKey&&e.key==='ArrowUp'){e.preventDefault();move(-1)}else if(e.altKey&&e.key==='ArrowDown'){e.preventDefault();move(1)}
+}
+document.addEventListener('keydown',key);window.addEventListener('resize',place);
+
+/* ---------- layers ---------- */
+function layers(){
+  const L=$('#pLay');L.innerHTML='';
+  (function walk(n,d){
+    const r=mk('div','ly'+(n===sel?' on':''));r.style.paddingLeft=6+d*12+'px';
+    r.innerHTML=`&lt;${n.tagName.toLowerCase()}&gt;${n.id?'#'+esc(n.id):''}${n.children.length?'':' <small>'+esc(n.textContent.trim().slice(0,18))+'</small>'}`;
+    r.onclick=()=>select(n);
+    if(n!==doc.body){r.draggable=true;r.ondragstart=()=>dragEl=n}
+    r.ondragover=e=>{e.preventDefault();r.classList.add('dr')};r.ondragleave=()=>r.classList.remove('dr');
+    r.ondrop=e=>{e.preventDefault();r.classList.remove('dr');if(!dragEl||dragEl.contains(n))return;
+      if(n===doc.body||e.shiftKey&&isCont(n))n.append(dragEl);else e.offsetY>r.offsetHeight/2?n.after(dragEl):n.before(dragEl);
+      select(dragEl);dragEl=null;commit()};
+    L.append(r);[...n.children].forEach(c=>walk(c,d+1));
+  })(doc.body,0);
+}
+
+/* ---------- inspector ---------- */
+function hex(c){
+  if(!c)return'#000000';if(/^#[0-9a-f]{6}$/i.test(c))return c;
+  const m=c.match(/[\d.]+/g);if(!m||c.startsWith('rgba')&&+m[3]===0)return'#ffffff';
+  return'#'+m.slice(0,3).map(x=>(+x).toString(16).padStart(2,'0')).join('');
+}
+function setStyle(p,v){
+  if(!NOUNIT.has(p)&&/^-?\d+(\.\d+)?$/.test(v)&&+v!==0)v+='px';
+  sel.style[p]=v;place();commitSoon();
+}
+function inspect(){
+  const P=$('#insp');P.innerHTML='';if(!sel)return;
+  const tag=sel.tagName.toLowerCase(),cs=win.getComputedStyle(sel);
+  P.append(mk('div','ih',`<b>&lt;${tag}&gt;</b>${sel.id?' #'+esc(sel.id):''}`));
+  const sec=(t,open)=>{const d=mk('details');d.open=open;d.append(mk('summary','',t));const b=mk('div','sb');d.append(b);P.append(d);return b};
+  const row=(b,l,inp,clear)=>{const r=mk('div','row');r.append(mk('label','',l),inp);if(clear)r.append(clear);else r.append(mk('span'));b.append(r)};
+  // content
+  const c=sec('Content',true);
+  if(!sel.children.length&&!VOID.has(sel.tagName)&&sel!==doc.body){
+    const ta=mk('textarea','full');ta.rows=3;ta.value=sel.textContent;ta.oninput=()=>{sel.textContent=ta.value;place();commitSoon()};c.append(ta);
+  }
+  const ih=mk('textarea','full');ih.rows=4;ih.value=sel.innerHTML;c.append(mk('div','lbl','Inner HTML'),ih);
+  ih.onchange=()=>{sel.innerHTML=ih.value;commit();select(sel)};
+  if(tag==='img'){const f=mk('input','full');f.type='file';f.accept='image/*';f.onchange=()=>{const r=new FileReader();r.onload=()=>{sel.src=r.result;commit();inspect()};r.readAsDataURL(f.files[0])};c.append(mk('div','lbl','Upload image'),f)}
+  // attributes
+  const a=sec('Attributes',tag==='a'||tag==='img');
+  const AT=['id','class','title'];if(tag==='a')AT.push('href','target');if(tag==='img')AT.push('src','alt');
+  if(['input','textarea','select','button','form'].includes(tag))AT.push('name','type','placeholder','value');if(['video','iframe'].includes(tag))AT.push('src');
+  AT.forEach(n=>{const i=mk('input');i.value=n==='src'&&sel.src.startsWith('data:')?'(embedded data)':sel.getAttribute(n)||'';
+    i.oninput=()=>{if(n==='src'&&i.value==='(embedded data)')return;i.value?sel.setAttribute(n,i.value):sel.removeAttribute(n);commitSoon();if(n==='id')crumb()};row(a,n,i)});
+  const kn=mk('input');kn.placeholder='data-x';const kv=mk('input');kv.placeholder='value';const kb=mk('button','',' + ');
+  kb.onclick=()=>{if(kn.value){sel.setAttribute(kn.value,kv.value);commit();inspect()}};
+  a.append(mk('div','lbl','Custom attribute'),kn,kv,kb);
+  // styles
+  SEC.forEach(([t,fs],i)=>{
+    const b=sec(t,i===0||i===1);
+    fs.forEach(([p,l,type,opts])=>{
+      const v=sel.style[p]||'';let inp;
+      if(type==='sel'){inp=mk('select');opts.forEach(o=>inp.add(new Option(o||'—',o)));if(v&&!opts.includes(v))inp.add(new Option(v,v));inp.value=v}
+      else if(type==='color'){inp=mk('input');inp.type='color';inp.value=hex(v||cs[p])}
+      else if(type==='range'){inp=mk('input');inp.type='range';inp.min=0;inp.max=1;inp.step=.05;inp.value=v||1}
+      else{inp=mk('input');inp.value=v;inp.placeholder=cs[p]||''}
+      inp.oninput=()=>setStyle(p,inp.value);
+      const x=mk('button','x','✕');x.onclick=()=>{sel.style[p]='';inp.value=type==='color'?hex(cs[p]):'';commit()};
+      row(b,l,inp,x);
+    });
+  });
+}
+
+/* ---------- code / export ---------- */
+function exportHTML(){
+  const c=doc.body.cloneNode(true);c.querySelectorAll('[contenteditable]').forEach(e=>e.removeAttribute('contenteditable'));
+  const css=ucss().textContent.trim();
+  return`<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>${esc($('#title').value)}</title>\n<style>\n${BASECSS}${css?'\n'+css:''}\n</style>\n</head>\n<body>\n${c.innerHTML}\n</body>\n</html>`;
+}
+function download(){const a=mk('a');a.href=URL.createObjectURL(new Blob([exportHTML()],{type:'text/html'}));a.download='swiftsite.html';a.click()}
+function openCode(tab){
+  $('#codeOut').value=exportHTML();$('#cssOut').value=ucss().textContent;$('#modal').style.display='flex';
+  [...$('#mtabs').querySelectorAll('[data-p]')].find(b=>b.dataset.p==={html:'mHtml',js:'mJs'}[tab]).click();
+}
+function closeCode(){$('#modal').style.display='none'}
+function copyCode(){const t=$('#codeOut');t.select();try{navigator.clipboard.writeText(t.value)}catch(e){document.execCommand('copy')}}
+function applyCode(){
+  const d=new DOMParser().parseFromString($('#codeOut').value,'text/html');
+  const css=[...d.querySelectorAll('head style')].map(s=>s.textContent.replace(BASECSS,'').trim()).join('\n');
+  doc.body.innerHTML=d.body.innerHTML;ucss().textContent=css;if(d.title)$('#title').value=d.title;select(doc.body);commit();closeCode();
+}
+$('#cssOut').oninput=e=>{ucss().textContent=e.target.value;commitSoon()};
+
+/* ---------- DOM console + ready helpers ---------- */
+const API=window.SwiftAPI={
+  doc:()=>doc,$:s=>doc.querySelector(s),$$:s=>[...doc.querySelectorAll(s)],selected:()=>sel,
+  byId:id=>doc.getElementById(id),byTag:t=>[...doc.getElementsByTagName(t)],byClass:c=>[...doc.getElementsByClassName(c)],
+  tree:(n=doc.body)=>({tag:n.tagName.toLowerCase(),id:n.id||undefined,class:n.className||undefined,text:n.children.length?undefined:n.textContent.trim().slice(0,50),children:[...n.children].map(c=>API.tree(c))}),
+  headings:()=>API.$$('h1,h2,h3,h4,h5,h6').map(h=>h.tagName+': '+h.textContent.trim()),
+  links:()=>API.$$('a').map(a=>({text:a.textContent.trim(),href:a.getAttribute('href')})),
+  images:()=>API.$$('img').map(i=>({src:i.src.slice(0,40),alt:i.getAttribute('alt')})),
+  styles:el=>{const o={};for(const k of(el||sel).style)o[k]=(el||sel).style.getPropertyValue(k);return o},
+  a11y:()=>({imgsNoAlt:API.$$('img:not([alt])').length,h1Count:API.$$('h1').length,emptyLinks:API.$$('a').filter(a=>!a.textContent.trim()).length,inputsNoLabel:API.$$('input:not([placeholder]):not([aria-label])').length}),
+  html:exportHTML,commit
+};
+const SNIP={
+'Headings':"API.headings()",'Links':"API.links()",'Images':"API.images()",'Missing alt':"$$('img:not([alt])')",
+'Selected info':"({tag:sel.tagName, id:sel.id, class:sel.className, size:sel.getBoundingClientRect().toJSON(), inline:API.styles(sel)})",
+'Tree (JSON)':"API.tree()",'Tag counts':"$$('*').reduce((o,e)=>(o[e.tagName]=(o[e.tagName]||0)+1,o),{})",
+'Text of page':"doc.body.innerText",'A11y check':"API.a11y()",'All colors used':"[...new Set($$('*').flatMap(e=>[e.style.color,e.style.backgroundColor]).filter(Boolean))]",
+'Children of sel':"[...sel.children]",'Line-height 1.7 on <p>':"$$('p').forEach(p=>p.style.lineHeight=1.7); 'done'",'Round all images':"$$('img').forEach(i=>i.style.borderRadius='12px'); 'done'"};
+Object.entries(SNIP).forEach(([k,v])=>{const b=mk('button','',k);b.onclick=()=>{$('#jsin').value=v};$('#chips').append(b)});
+function fmt(v,d=0){
+  if(v instanceof Element)return'<'+v.tagName.toLowerCase()+(v.id?'#'+v.id:'')+(v.className&&typeof v.className==='string'?'.'+v.className.trim().split(/\s+/).join('.'):'')+'>';
+  if(Array.isArray(v)||v instanceof NodeList||v instanceof HTMLCollection)return'[\n'+[...v].map(x=>'  '+fmt(x,1)).join(',\n')+'\n]';
+  if(v&&typeof v==='object'){try{return JSON.stringify(v,(k,x)=>x instanceof Element?fmt(x):x,d?0:2)}catch(e){return String(v)}}
+  return String(v);
+}
+function runJS(){
+  const code=$('#jsin').value,out=$('#jsout');
+  Object.assign(win,{$:API.$,$$:API.$$,sel,API});win.__ran=0;win.__r=undefined;win.__e=null;
+  const go=body=>{const s=doc.createElement('script');s.textContent=`window.__ran=1;try{${body}}catch(e){window.__e=e}`;doc.head.append(s);s.remove()};
+  go(`window.__r=(\n${code}\n)`);
+  if(!win.__ran)go(`window.__r=(function(){\n${code}\n})()`);
+  out.value=win.__e?'⚠ '+win.__e:win.__ran?fmt(win.__r):'⚠ Syntax error, or scripts are blocked in this environment';
+  commit();inspect();
+}
+
+/* ---------- UI wiring ---------- */
+// open/close the slide-in side panels (mobile). Opening one also shows the dark backdrop.
+function pan(s){
+  const a=$('#'+s),o=a.classList.contains('open');
+  document.querySelectorAll('aside').forEach(x=>x.classList.remove('open'));
+  if(!o)a.classList.add('open');
+  document.body.classList.toggle('menu',!o);
+}
+// close every side panel (used by the ✕ Close buttons and by tapping the dark backdrop)
+function clmenu(){
+  document.querySelectorAll('aside').forEach(x=>x.classList.remove('open'));
+  document.body.classList.remove('menu');
+}
+function tabs(root,mode){
+  const bs=[...$(root).querySelectorAll('[data-p]')];
+  bs.forEach(b=>b.onclick=()=>{bs.forEach(x=>{x.classList.toggle('on',x===b);$('#'+x.dataset.p).classList.toggle('on',x===b)})});
+}
+tabs('#ltabs');tabs('#mtabs');
+document.querySelectorAll('#dev button').forEach(b=>b.onclick=()=>{document.querySelectorAll('#dev button').forEach(x=>x.classList.toggle('on',x===b));frame.style.width=b.dataset.w;setTimeout(place,300)});
+Object.keys(ELS).forEach(k=>{const b=mk('button','',k);b.onclick=()=>insertHTML(ELS[k]);$('#elGrid').append(b)});
+Object.keys(TPL).forEach(k=>{const b=mk('button','',k);b.onclick=()=>{doc.body.innerHTML='';ucss().textContent='';TPL[k].forEach(n=>insertHTML(ELS[n]));select(doc.body);commit()};$('#tplGrid').append(b)});
+
+let saved=null;try{saved=JSON.parse(localStorage.getItem('swiftsite6'))}catch(e){}
+init(saved&&saved.h,saved&&saved.c);select(doc.body);commit();
+</script>
+</body>
+</html>
