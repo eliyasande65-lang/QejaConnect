@@ -29,6 +29,8 @@
         ".qc-user{background:#1a1535;color:#fff;margin-left:auto}" +
         ".qc-ai{background:#fff;border:1px solid #ddd}" +
         ".qc-typing{font-style:italic;color:#666}" +
+        ".qc-ai a.qc-link{color:#0b57d0;font-weight:700;text-decoration:underline;word-break:break-all;cursor:pointer}" +
+        ".qc-ai a.qc-link:hover{color:#0842a0}" +
         "#qc-ai-input-area{display:flex;padding:10px;border-top:1px solid #ddd;background:#fff}" +
         "#qc-ai-input{flex:1;min-width:0;border:1px solid #ccc;border-radius:12px;padding:12px;outline:none;font:inherit;font-size:14px}" +
         "#qc-ai-send{margin-left:8px;border:none;background:#1a1535;color:#fff;border-radius:12px;padding:12px 18px;cursor:pointer;font:inherit;font-size:14px}" +
@@ -46,10 +48,37 @@
         return sid;
     }
 
+    // Turns http(s):// and www. URLs into bold blue clickable links.
+    // Built from DOM nodes (no innerHTML), so message text can never inject markup.
+    var URL_RE = /(https?:\/\/[^\s<>"']+|www\.[^\s<>"']+)/gi;
+    function fillWithLinks(el, text) {
+        var last = 0, m;
+        URL_RE.lastIndex = 0;
+        while ((m = URL_RE.exec(text)) !== null) {
+            var url = m[0], trail = "";
+            // keep sentence punctuation outside the link
+            var t = url.match(/[.,;:!?)\]}]+$/);
+            if (t) { trail = t[0]; url = url.slice(0, -trail.length); }
+            if (!url) continue;
+            if (m.index > last) el.appendChild(document.createTextNode(text.slice(last, m.index)));
+            var a = document.createElement("a");
+            a.className = "qc-link";
+            a.href = /^https?:\/\//i.test(url) ? url : "https://" + url;
+            a.target = "_blank";
+            a.rel = "noopener noreferrer";
+            a.textContent = url;
+            el.appendChild(a);
+            last = m.index + url.length;
+            URL_RE.lastIndex = last;
+        }
+        if (last < text.length) el.appendChild(document.createTextNode(text.slice(last)));
+    }
+
     function addMessage(text, cls) {
         var div = document.createElement("div");
         div.className = "qc-message " + cls;
-        div.textContent = text;
+        if (/\bqc-ai\b/.test(cls) && !/qc-typing/.test(cls)) fillWithLinks(div, String(text));
+        else div.textContent = text;
         messages.appendChild(div);
         messages.scrollTop = messages.scrollHeight;
         return div;
