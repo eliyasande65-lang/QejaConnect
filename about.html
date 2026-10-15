@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!-- ============================================================
+     QejaConnect PWA — paste this block inside <head> on EVERY page
+     ============================================================ -->
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/QejaConnect/manifest.json">
+
+    <!-- Theme colour (browser chrome / Android status bar) -->
+    <meta name="theme-color" content="#4f46e5">
+
+    <!-- iOS home-screen support -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="QejaConnect">
+    <link rel="apple-touch-icon" href="/QejaConnect/logo.jpg">
+
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/QejaConnect/sw.js')
+                    .then(reg => console.log('SW registered:', reg.scope))
+                    .catch(err => console.error('SW error:', err));
+            });
+        }
+    </script>
+
+    <!-- ============================================================
+         END QejaConnect PWA block
+         ============================================================ -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us | Qeja Connect</title>
+    <meta name="description" content="Learn about QejaConnect, Kenya's housing connection platform linking tenants with landlords, and find our phone, WhatsApp and WhatsApp channel contacts.">
+    <link rel="stylesheet" href="sidemenu.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background: #f4f4f4;
+            color: #222;
+            line-height: 1.6;
+        }
+
+        /* ── HEADER (same look as the homepage) ── */
+        header {
+            width: 100%;
+            background: #1a1535;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            position: sticky;
+            top: 0;
+            z-index: 10003;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        .logo-area {
+            display: flex;
+            align-items: center;
+            margin-left: 40px;
+            gap: 15px;
+        }
+
+        #logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 12px;
+            object-fit: cover;
+        }
+
+        .brand {
+            color: white;
+        }
+
+            .brand h2 {
+                margin: 0;
+            }
+
+            .brand p {
+                margin: 0;
+                font-size: 14px;
+                opacity: 0.9;
+            }
+
+        .menu-btn {
+            position: fixed;
+            top: 20px;
+            left: 1px;
+            width: 50px;
+            height: 50px;
+            border: none;
+            border-radius: 12px;
+            background: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            z-index: 10006;
+        }
+
+        .header-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 8px 14px;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.25);
+        }
+
+            .header-link:hover {
+                background: rgba(255,255,255,0.18);
+            }
+
+        /* ── HERO ── */
+        .hero {
+            background: linear-gradient(135deg, #1a1535 0%, #3b2f8f 60%, #4f46e5 100%);
+            color: white;
+            text-align: center;
+            padding: 60px 20px 90px;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255,255,255,0.14);
+            border-radius: 999px;
+            padding: 6px 16px;
+            font-size: 13px;
+            font-weight: bold;
+            letter-spacing: 0.5px;
+            margin-bottom: 18px;
+        }
+
+        .hero h1 {
+            font-size: clamp(28px, 5vw, 42px);
+            line-height: 1.2;
+            margin: 0 auto 14px;
+            max-width: 760px;
+        }
+
+        .hero p {
+            max-width: 640px;
+            margin: 0 auto;
+            font-size: 17px;
+            opacity: 0.92;
+        }
+
+        /* ── LAYOUT ── */
+        .container {
+            max-width: 1000px;
+            margin: -50px auto 0;
+            padding: 0 20px 50px;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            margin-bottom: 25px;
+        }
+
+            .card h2 {
+                color: indigo;
+                margin: 0 0 12px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .card h2 .ic {
+                width: 26px;
+                height: 26px;
+            }
+
+            .card p {
+                margin: 0 0 14px;
+                color: #444;
+            }
+
+                .card p:last-child {
+                    margin-bottom: 0;
+                }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 20px;
+        }
+
+        .feature {
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            background: #fafafe;
+        }
+
+            .feature .icon-box {
+                width: 46px;
+                height: 46px;
+                border-radius: 12px;
+                background: #1a1535;
+                color: #c7d2fe;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                margin-bottom: 12px;
+            }
+
+                .feature .icon-box .ic {
+                    width: 24px;
+                    height: 24px;
+                }
+
+            .feature h3 {
+                margin: 0 0 6px;
+                font-size: 17px;
+                color: #1a1535;
+            }
+
+            .feature p {
+                margin: 0;
+                font-size: 14.5px;
+            }
+
+        .highlight {
+            background: #eef2ff;
+            border-left: 4px solid #4f46e5;
+            border-radius: 0 10px 10px 0;
+            padding: 16px 18px;
+            color: #312e81;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        /* ── CONTACT ── */
+        .contact-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 16px;
+            margin-top: 10px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            text-decoration: none;
+            color: inherit;
+            background: white;
+            transition: box-shadow 0.2s, transform 0.2s, border-color 0.2s;
+        }
+
+            .contact-item:hover {
+                box-shadow: 0 6px 18px rgba(26,21,53,0.12);
+                transform: translateY(-2px);
+                border-color: #a5b4fc;
+            }
+
+            .contact-item .icon-box {
+                width: 46px;
+                height: 46px;
+                border-radius: 12px;
+                background: #1a1535;
+                color: #c7d2fe;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+                .contact-item .icon-box .ic {
+                    width: 23px;
+                    height: 23px;
+                }
+
+            .contact-item.wa .icon-box {
+                background: #128c7e;
+                color: #ffffff;
+            }
+
+            .contact-item small {
+                display: block;
+                font-size: 12px;
+                color: #6b7280;
+                font-weight: bold;
+                letter-spacing: 0.5px;
+                text-transform: uppercase;
+            }
+
+            .contact-item strong {
+                display: block;
+                font-size: 17px;
+                color: #1a1535;
+                word-break: break-word;
+            }
+
+        .channel {
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            background: linear-gradient(135deg, #0f766e, #128c7e);
+            color: white;
+            border-radius: 14px;
+            padding: 22px;
+        }
+
+            .channel .icon-box {
+                width: 54px;
+                height: 54px;
+                border-radius: 14px;
+                background: rgba(255,255,255,0.18);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+                .channel .icon-box .ic {
+                    width: 28px;
+                    height: 28px;
+                }
+
+            .channel .text {
+                flex: 1;
+                min-width: 200px;
+            }
+
+                .channel .text strong {
+                    display: block;
+                    font-size: 18px;
+                    margin-bottom: 2px;
+                }
+
+                .channel .text span {
+                    font-size: 14px;
+                    opacity: 0.92;
+                }
+
+            .channel .btn {
+                display: inline-flex;
+                align-items: center;
+                gap: 8px;
+                background: white;
+                color: #0f766e;
+                text-decoration: none;
+                font-weight: bold;
+                padding: 12px 20px;
+                border-radius: 10px;
+                white-space: nowrap;
+            }
+
+                .channel .btn:hover {
+                    background: #ecfdf5;
+                }
+
+                .channel .btn .ic {
+                    width: 18px;
+                    height: 18px;
+                }
+
+        .founder-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 6px;
+            color: #4f46e5;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+            .founder-link:hover {
+                text-decoration: underline;
+            }
+
+            .founder-link .ic {
+                width: 18px;
+                height: 18px;
+            }
+
+        /* ── FOOTER (same as the other pages) ── */
+        footer {
+            background: #1a1a1a;
+            color: white;
+            text-align: center;
+            padding: 30px;
+        }
+
+            footer a {
+                color: #c7d2fe;
+                text-decoration: none;
+                margin: 0 8px;
+            }
+
+                footer a:hover {
+                    text-decoration: underline;
+                }
+
+        @media (max-width: 600px) {
+            header {
+                padding: 12px 16px;
+            }
+
+            .logo-area {
+                margin-left: 36px;
+            }
+
+            .hero {
+                padding: 45px 16px 80px;
+            }
+
+            .card {
+                padding: 22px;
+            }
+
+            .header-link span {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-area">
+            <button class="menu-btn" onclick="toggleMenu()" aria-label="Open menu"><svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
+            <img src="logo.jpg" id="logo" alt="QejaConnect logo">
+            <div class="brand">
+                <h2>Qeja Connect</h2>
+                <p>Quality accommodation providence</p>
+            </div>
+        </div>
+        <a href="home.html" class="header-link" aria-label="Back to home">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+            <span>Home</span>
+        </a>
+    </header>
+
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
+
+    <div class="side-menu" id="sideMenu"></div>
+    <script src="sidemenu.js"></script>
+
+    <section class="hero">
+        <div class="hero-badge">
+            <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false" style="width:16px;height:16px;"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>
+            About us
+        </div>
+        <h1>Connecting Kenyans to trusted homes</h1>
+        <p>QejaConnect links tenants with landlords and property owners directly, so finding a place to live is simple, transparent and safe.</p>
+    </section>
+
+    <main class="container">
+
+        <section class="card">
+            <h2>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 9 9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                Who we are
+            </h2>
+            <p>QejaConnect is a modern housing connection platform built in Kenya. We help people looking for a house, apartment, bedsitter or hostel connect with landlords and property owners without unnecessary middlemen.</p>
+            <p>The platform was co-founded by two university students, Eliya Sande of JKUAT and Peterwise Lusava of the University of Nairobi, who set out to make renting easier and more trustworthy for everyone.</p>
+            <a href="founder.html" class="founder-link">
+                Meet the founders
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+            </a>
+        </section>
+
+        <section class="card">
+            <h2>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+                What we offer
+            </h2>
+            <div class="grid">
+                <div class="feature">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <h3>Find a home</h3>
+                    <p>Browse rentals, hostels and apartments across Kenya and filter by area, type and budget.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="16" height="20" x="4" y="2" rx="2"/><path d="M9 22v-4h6v4"/><path d="M8 6h.01"/><path d="M16 6h.01"/><path d="M12 6h.01"/><path d="M12 10h.01"/><path d="M12 14h.01"/><path d="M16 10h.01"/><path d="M16 14h.01"/><path d="M8 10h.01"/><path d="M8 14h.01"/></svg>
+                    </div>
+                    <h3>List your property</h3>
+                    <p>Landlords post vacancies directly and manage their tenants and bookings from one dashboard.</p>
+                </div>
+                <div class="feature">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+                    </div>
+                    <h3>Talk directly</h3>
+                    <p>Chat with landlords and housemates, and reach our support team whenever you need help.</p>
+                </div>
+            </div>
+            <div class="highlight">Our goal is a trusted rental ecosystem where tenants and landlords connect directly, safely and fairly.</div>
+        </section>
+
+        <section class="card" id="contact">
+            <h2>
+                <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                Contact us
+            </h2>
+            <p>Reach the QejaConnect team on any of the lines below.</p>
+
+            <div class="contact-list">
+                <a class="contact-item" href="tel:+254714104737">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+                    </div>
+                    <div>
+                        <small>Phone</small>
+                        <strong>0714104737</strong>
+                    </div>
+                </a>
+
+                <a class="contact-item wa" href="https://wa.me/254748712680" target="_blank" rel="noopener">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"/><g transform="translate(7.1 7.1) scale(0.4)"><path stroke-width="3" d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></g></svg>
+                    </div>
+                    <div>
+                        <small>WhatsApp</small>
+                        <strong>0748712680</strong>
+                    </div>
+                </a>
+
+                <a class="contact-item" href="mailto:qejaconnect@outlook.com">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+                    </div>
+                    <div>
+                        <small>Email</small>
+                        <strong>qejaconnect@outlook.com</strong>
+                    </div>
+                </a>
+
+                <div class="contact-item" style="cursor:default;">
+                    <div class="icon-box">
+                        <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                    </div>
+                    <div>
+                        <small>Location</small>
+                        <strong>Nairobi, Kenya</strong>
+                    </div>
+                </div>
+            </div>
+
+            <div class="channel">
+                <div class="icon-box">
+                    <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="m3 11 18-5v12L3 14v-3z"/><path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/></svg>
+                </div>
+                <div class="text">
+                    <strong>Follow the QejaConnect channel on WhatsApp</strong>
+                    <span>Get news, updates and new listings straight to your WhatsApp.</span>
+                </div>
+                <a class="btn" href="https://whatsapp.com/channel/0029Vb8uMdo5q08bcEEetD0x" target="_blank" rel="noopener">
+                    Follow channel
+                    <svg class="ic" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M7 7h10v10"/><path d="M7 17 17 7"/></svg>
+                </a>
+            </div>
+        </section>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Qeja Connect Kenya Ltd. All Rights Reserved.</p>
+        <p>
+            <a href="privacy_policy.html">Privacy Policy</a>
+            <a href="terms.html">Terms and Conditions</a>
+            <a href="contact.html">Contact</a>
+        </p>
+    </footer>
+
+    <script src="ai-widget.js" defer></script>
+</body>
+</html>

@@ -62,6 +62,7 @@
         section("Help") +
         item({ href: "mymessages.html",      icon: "life-buoy", label: "Support team", id: "menuMessages", badgeId: "navNotifBadge" }) +
         item({ href: "#",                    icon: "bot",       label: "Ask QejaConnect AI", action: "ai" }) +
+        item({ href: "about.html",           icon: "info",      label: "About us" }) +
         item({ href: "contact.html",         icon: "mail",      label: "Contact" });
 
     var footer = "";
